@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoreCraft Studio - Creative Writer & World Vault</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f3ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#1e1b4b',
+                            accent: '#a855f7',
+                            neon: '#ec4899'
+                        },
+                        darkbg: '#0b0f19',
+                        panel: '#151c2c',
+                        card: '#1e293b'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Cinzel:wght@500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+        }
+        .font-serif-title {
+            font-family: 'Cinzel', serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4b5563;
+        }
+        .glass {
+            background: rgba(21, 28, 44, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-darkbg text-gray-100 overflow-x-hidden">
+
+    <header class="sticky top-0 z-40 glass border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Brand Logo -->
+                <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('studio')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 via-brand-accent to-pink-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                        <i class="fa-solid fa-book-journal-whills text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-bold bg-gradient-to-r from-white via-indigo-200 to-brand-accent bg-clip-text text-transparent font-serif-title tracking-wider">
+                            LoreCraft Studio
+                        </h1>
+                        <p class="text-[10px] text-gray-400 hidden sm:block">Storyteller & World Vault</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-2">
+                    <button onclick="switchTab('studio')" id="nav-studio" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-2 bg-brand-600/20 text-brand-accent border border-brand-500/30">
+                        <i class="fa-solid fa-pen-nib"></i>
+                        <span>Story Studio</span>
+                    </button>
+                    <button onclick="switchTab('library')" id="nav-library" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                        <span>World Library</span>
+                    </button>
+                    <button onclick="switchTab('media')" id="nav-media" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-compact-disc"></i>
+                        <span>Suno & YouTube Hub</span>
+                    </button>
+                    <button onclick="switchTab('published')" id="nav-published" class="tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800 transition-all flex items-center space-x-2">
+                        <i class="fa-solid fa-scroll"></i>
+                        <span>Published Showcase</span>
+                    </button>
+                </nav>
+
+                <!-- Auth & Settings Action Buttons -->
+                <div class="flex items-center space-x-2">
+                    <!-- Backup Export/Import -->
+                    <button onclick="exportBackupJSON()" title="Export JSON Backup" class="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs p-2 rounded-lg border border-gray-700 transition-all">
+                        <i class="fa-solid fa-download text-brand-accent"></i>
+                    </button>
+                    <label title="Import JSON Backup" class="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs p-2 rounded-lg border border-gray-700 transition-all cursor-pointer">
+                        <i class="fa-solid fa-file-import text-pink-400"></i>
+                        <input type="file" id="import-backup-file" accept=".json" onchange="importBackupJSON(event)" class="hidden">
+                    </label>
+
+                    <!-- Auth Button / Account Dropdown -->
+                    <div id="auth-section" class="relative">
+                        <button onclick="openModal('auth-modal')" id="auth-btn" class="bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center space-x-1.5 transition-all shadow">
+                            <i class="fa-solid fa-user-circle"></i>
+                            <span id="auth-btn-label">Sign In</span>
+                        </button>
+                    </div>
+
+                    <button onclick="openModal('add-project-modal')" class="bg-gradient-to-r from-brand-600 to-brand-accent hover:from-brand-500 hover:to-purple-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg shadow-md transition-all hidden sm:flex items-center">
+                        <i class="fa-solid fa-folder-plus mr-1"></i> New Project
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Toast Notification -->
+    <div id="notification-toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-panel border border-brand-500/50 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 pointer-events-none">
+        <div class="w-8 h-8 rounded-lg bg-brand-500/20 text-brand-accent flex items-center justify-center">
+            <i class="fa-solid fa-check text-sm"></i>
+        </div>
+        <span id="toast-message" class="text-xs font-semibold">Notification</span>
+    </div>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+        <!-- SECTION 1: STORY STUDIO -->
+        <section id="section-studio" class="tab-content space-y-6">
+            
+            <!-- Project Header Bar -->
+            <div class="glass p-4 rounded-xl border border-gray-800 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+                <div class="flex items-center space-x-3 flex-wrap sm:flex-nowrap">
+                    <div class="flex items-center space-x-2 shrink-0">
+                        <i class="fa-solid fa-book text-brand-accent text-sm"></i>
+                        <span class="text-xs font-bold text-gray-300 uppercase tracking-wider">Project:</span>
+                    </div>
+                    <select id="project-select" onchange="switchProject()" class="bg-darkbg border border-gray-700 text-white text-xs font-semibold rounded-lg px-3 py-2 focus:outline-none focus:border-brand-500 min-w-[200px]">
+                        <!-- Populated via JS -->
+                    </select>
+                    <button onclick="openModal('add-project-modal')" class="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs px-2.5 py-2 rounded-lg border border-gray-700 shrink-0">
+                        <i class="fa-solid fa-plus text-brand-accent"></i>
+                    </button>
+                </div>
+
+                <div class="flex items-center space-x-2 justify-end">
+                    <button onclick="openReaderMode()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center space-x-2 shadow-md transition-all">
+                        <i class="fa-solid fa-eye"></i>
+                        <span>Read Story (Reader View)</span>
+                    </button>
+                    <button onclick="publishCurrentProject()" class="bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold px-3.5 py-2 rounded-lg flex items-center space-x-1.5 transition-all">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Publish</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Workspace: Chapters + Text Editor -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                
+                <!-- Chapters Navigation Sidebar -->
+                <div class="lg:col-span-4 space-y-4">
+                    <div class="glass p-4 rounded-xl border border-gray-800 space-y-3">
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-2">
+                            <span class="text-xs font-bold text-gray-200 flex items-center gap-1.5">
+                                <i class="fa-solid fa-list-ol text-brand-accent"></i> Chapters
+                            </span>
+                            <button onclick="createNewChapter()" class="text-xs bg-brand-600 hover:bg-brand-500 text-white px-2.5 py-1 rounded font-semibold transition-all">
+                                <i class="fa-solid fa-plus mr-1"></i> Add Chapter
+                            </button>
+                        </div>
+                        <div id="chapter-list-container" class="space-y-2 max-h-[450px] overflow-y-auto pr-1">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Audio Attachment Select -->
+                    <div class="glass p-4 rounded-xl border border-gray-800 space-y-3">
+                        <h3 class="text-xs font-bold text-white flex items-center justify-between border-b border-gray-800 pb-2">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-music text-pink-400"></i> Attached Chapter Audio</span>
+                        </h3>
+                        <div class="space-y-2">
+                            <label class="block text-[11px] text-gray-400">Attach Suno or YouTube Track:</label>
+                            <select id="chapter-audio-select" onchange="assignAudioToActiveChapter()" class="w-full bg-darkbg border border-gray-700 text-xs text-gray-200 rounded-lg p-2 focus:outline-none focus:border-brand-500">
+                                <option value="">-- No Soundtrack Attached --</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Editor -->
+                <div class="lg:col-span-8 flex flex-col space-y-4">
+                    <div class="glass p-4 rounded-xl border border-gray-800 flex items-center justify-between gap-3">
+                        <input type="text" id="chapter-title-input" oninput="updateChapterTitle()" class="bg-darkbg border border-gray-700 text-white text-sm font-bold rounded-lg px-3 py-1.5 focus:outline-none focus:border-brand-500 flex-grow" placeholder="Chapter Title...">
+                        
+                        <div class="flex items-center space-x-2 shrink-0">
+                            <span id="word-count" class="text-xs font-mono text-gray-400 bg-gray-900 px-2.5 py-1.5 rounded-md border border-gray-800">0 Words</span>
+                            <button onclick="saveActiveChapter()" class="bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold px-4 py-1.5 rounded-lg flex items-center space-x-1.5 transition-colors">
+                                <i class="fa-solid fa-floppy-disk"></i>
+                                <span>Save Chapter</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="glass rounded-xl p-4 border border-gray-800 flex-1 flex flex-col min-h-[480px]">
+                        <textarea id="chapter-editor-textarea" oninput="updateWordCount()" class="w-full flex-1 bg-transparent text-gray-200 text-sm leading-relaxed p-2 focus:outline-none resize-none font-sans" placeholder="Write your chapter prose here... Attach Suno music from the sidebar so readers can listen while reading!"></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: WORLD LIBRARY -->
+        <section id="section-library" class="tab-content hidden space-y-6">
+            <div class="glass p-4 rounded-xl border border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center space-x-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+                    <button onclick="filterLibrary('ALL')" class="lib-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-brand-600 text-white">All Lore</button>
+                    <button onclick="filterLibrary('CHARACTER')" class="lib-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 text-gray-400 hover:text-white">Characters</button>
+                    <button onclick="filterLibrary('FACTION')" class="lib-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 text-gray-400 hover:text-white">Factions</button>
+                    <button onclick="filterLibrary('LOCATION')" class="lib-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 text-gray-400 hover:text-white">Locations</button>
+                    <button onclick="filterLibrary('MAGIC')" class="lib-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 text-gray-400 hover:text-white">Magic/Tech</button>
+                    <button onclick="filterLibrary('NOTE')" class="lib-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 text-gray-400 hover:text-white">Notes</button>
+                </div>
+
+                <div class="flex items-center space-x-3 w-full sm:w-auto">
+                    <input type="text" id="library-search-input" oninput="renderLibrary()" class="bg-darkbg border border-gray-700 text-xs text-white rounded-lg px-3 py-2 w-full sm:w-48 focus:outline-none focus:border-brand-500" placeholder="Search world lore...">
+                    <button onclick="openModal('add-lore-modal')" class="bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center space-x-1.5 shrink-0">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>New Entry</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Library Grid Cards -->
+            <div id="library-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 3: SUNO & YOUTUBE MEDIA HUB -->
+        <section id="section-media" class="tab-content hidden space-y-6">
+            <div class="glass p-5 rounded-xl border border-gray-800 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2 font-serif-title">
+                        <i class="fa-solid fa-compact-disc text-pink-400"></i> Suno & YouTube Media Hub
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Manage audio tracks and lore videos to attach directly to your chapters.</p>
+                </div>
+                <button onclick="openModal('add-media-modal')" class="bg-gradient-to-r from-pink-600 to-purple-600 text-white text-xs font-bold px-4 py-2 rounded-lg flex items-center gap-1.5 shadow">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add Track / Link</span>
+                </button>
+            </div>
+
+            <div id="media-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+        <!-- SECTION 4: PUBLISHED SHOWCASE -->
+        <section id="section-published" class="tab-content hidden space-y-6">
+            <div class="glass p-5 rounded-xl border border-gray-800 flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-bold text-white flex items-center gap-2 font-serif-title">
+                        <i class="fa-solid fa-scroll text-brand-accent"></i> Published Showcase
+                    </h2>
+                    <p class="text-xs text-gray-400 mt-0.5">Read completed stories, novels, and series.</p>
+                </div>
+            </div>
+
+            <div id="published-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Populated via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- AUTHENTICATION MODAL -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass max-w-md w-full rounded-2xl p-6 border border-gray-800 shadow-2xl relative">
+            <button onclick="closeModal('auth-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+            
+            <div id="auth-signed-out-view" class="space-y-4">
+                <div class="text-center space-y-1">
+                    <h3 class="text-xl font-bold text-white font-serif-title">Cloud Story Sync</h3>
+                    <p class="text-xs text-gray-400">Sign in to save your stories, characters, and tracks to the cloud across devices.</p>
+                </div>
+
+                <form onsubmit="handleEmailAuth(event)" class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Email Address</label>
+                        <input type="email" id="auth-email" required class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Password</label>
+                        <input type="password" id="auth-password" required class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                    </div>
+
+                    <div class="flex gap-2 pt-2">
+                        <button type="submit" id="auth-submit-signin" onclick="authMode='signin'" class="flex-1 bg-brand-600 hover:bg-brand-500 text-white text-xs font-bold py-2.5 rounded-lg shadow">Sign In</button>
+                        <button type="submit" id="auth-submit-signup" onclick="authMode='signup'" class="flex-1 bg-gray-800 hover:bg-gray-700 text-brand-accent border border-brand-500/30 text-xs font-bold py-2.5 rounded-lg">Create Account</button>
+                    </div>
+                </form>
+
+                <div class="relative flex py-2 items-center">
+                    <div class="flex-grow border-t border-gray-800"></div>
+                    <span class="flex-shrink mx-2 text-[10px] text-gray-500 uppercase">Or</span>
+                    <div class="flex-grow border-t border-gray-800"></div>
+                </div>
+
+                <button onclick="handleAnonymousAuth()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold py-2 rounded-lg border border-gray-700 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-secret text-brand-accent"></i> Continue as Guest (Local Only)
+                </button>
+            </div>
+
+            <div id="auth-signed-in-view" class="space-y-4 hidden">
+                <div class="text-center space-y-1">
+                    <div class="w-12 h-12 rounded-full bg-brand-500/20 border border-brand-500/40 text-brand-accent flex items-center justify-center mx-auto text-lg">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <h3 id="auth-user-email" class="text-sm font-bold text-white">user@example.com</h3>
+                    <p class="text-[11px] text-emerald-400"><i class="fa-solid fa-cloud-check"></i> Cloud Sync Active</p>
+                </div>
+
+                <div class="border-t border-gray-800 pt-3">
+                    <button onclick="handleSignOut()" class="w-full bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-500/30 text-xs font-bold py-2 rounded-lg">
+                        <i class="fa-solid fa-right-from-bracket mr-1"></i> Sign Out
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- READER PERSPECTIVE MODAL (FULLSCREEN) -->
+    <div id="reader-modal" class="fixed inset-0 bg-darkbg z-50 flex flex-col hidden overflow-hidden">
+        
+        <!-- Reader Sticky Top Bar -->
+        <div class="glass border-b border-gray-800 px-6 py-3 flex items-center justify-between shrink-0">
+            <div class="flex items-center space-x-4">
+                <button onclick="closeReaderMode()" class="text-gray-400 hover:text-white flex items-center gap-1.5 text-xs font-semibold bg-gray-800 px-3 py-1.5 rounded-lg border border-gray-700">
+                    <i class="fa-solid fa-arrow-left"></i> Exit Reader View
+                </button>
+                <div class="border-l border-gray-700 h-5"></div>
+                <div>
+                    <h3 id="reader-project-title" class="text-sm font-bold text-white font-serif-title">Project Title</h3>
+                    <p id="reader-project-type" class="text-[10px] text-gray-400">Novel • Reader Perspective</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button onclick="toggleReaderLoreDrawer()" class="text-xs bg-brand-600/30 hover:bg-brand-600/50 text-brand-accent border border-brand-500/40 px-3 py-1.5 rounded-lg flex items-center gap-1 font-semibold">
+                    <i class="fa-solid fa-id-card"></i> <span class="hidden sm:inline">Lore Quick View</span>
+                </button>
+                
+                <button onclick="readerNavPrev()" id="reader-top-prev-btn" class="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs px-3 py-1.5 rounded-lg border border-gray-700 font-semibold disabled:opacity-40 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-chevron-left"></i> <span class="hidden sm:inline">Prev</span>
+                </button>
+                
+                <select id="reader-chapter-select" onchange="readerSwitchChapter()" class="bg-gray-900 border border-gray-700 text-xs text-white rounded-lg px-2.5 py-1.5 focus:outline-none focus:border-brand-500">
+                    <!-- Populated via JS -->
+                </select>
+
+                <button onclick="readerNavNext()" id="reader-top-next-btn" class="bg-brand-600 hover:bg-brand-500 text-white text-xs px-3 py-1.5 rounded-lg font-bold disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1">
+                    <span class="hidden sm:inline">Next</span> <i class="fa-solid fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Sticky Audio Header for Suno / YouTube Tracks -->
+        <div id="reader-audio-header" class="hidden bg-gradient-to-r from-purple-950 via-indigo-950 to-panel border-b border-purple-800/40 px-6 py-2.5 flex items-center justify-between shrink-0">
+            <div class="flex items-center space-x-3">
+                <div class="w-8 h-8 rounded-lg bg-pink-500/20 border border-pink-500/40 text-pink-400 flex items-center justify-center animate-pulse">
+                    <i class="fa-solid fa-music"></i>
+                </div>
+                <div>
+                    <span class="text-[10px] text-pink-300 uppercase tracking-wider font-bold block">Attached Chapter Soundtrack</span>
+                    <span id="reader-audio-title" class="text-xs font-bold text-white">Track Title</span>
+                </div>
+            </div>
+            <a id="reader-audio-link" href="#" target="_blank" class="bg-pink-600 hover:bg-pink-500 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shadow-md">
+                <i class="fa-solid fa-play"></i> Listen on Suno / YouTube
+            </a>
+        </div>
+
+        <!-- Main Reader Scrollable Canvas -->
+        <div class="flex-1 overflow-hidden flex relative">
+            <div id="reader-scroll-container" class="flex-1 overflow-y-auto px-4 py-8">
+                <div class="max-w-3xl mx-auto space-y-8">
+                    
+                    <div class="text-center space-y-2 border-b border-gray-800 pb-6">
+                        <h1 id="reader-chapter-title" class="text-2xl sm:text-3xl font-bold text-white font-serif-title">Chapter Title</h1>
+                        <p id="reader-word-count" class="text-xs text-gray-400 font-mono">0 Words</p>
+                    </div>
+
+                    <!-- Paragraph Content -->
+                    <div id="reader-chapter-body" class="text-gray-200 text-base sm:text-lg leading-relaxed whitespace-pre-wrap font-sans space-y-4">
+                        <!-- Content -->
+                    </div>
+
+                    <!-- Bottom Sequential Chapter Reader Buttons -->
+                    <div class="border-t border-gray-800 pt-8 mt-12 flex items-center justify-between">
+                        <button onclick="readerNavPrev()" id="reader-bottom-prev-btn" class="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs sm:text-sm px-4 py-2.5 rounded-xl border border-gray-700 font-semibold flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-arrow-left"></i>
+                            <span>Previous Chapter</span>
+                        </button>
+
+                        <button onclick="readerNavNext()" id="reader-bottom-next-btn" class="bg-gradient-to-r from-brand-600 to-brand-accent hover:from-brand-500 hover:to-purple-500 text-white text-xs sm:text-sm font-bold px-5 py-2.5 rounded-xl shadow-lg flex items-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                            <span>Next Chapter</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In-Reader World Lore Side Drawer -->
+            <div id="reader-lore-drawer" class="w-80 glass border-l border-gray-800 p-4 overflow-y-auto hidden flex-col space-y-4 shrink-0 transition-all">
+                <div class="flex items-center justify-between border-b border-gray-800 pb-3">
+                    <h4 class="text-xs font-bold text-white flex items-center gap-1.5 font-serif-title">
+                        <i class="fa-solid fa-book-bookmark text-brand-accent"></i> Lore Quick Reference
+                    </h4>
+                    <button onclick="toggleReaderLoreDrawer()" class="text-gray-400 hover:text-white p-1 text-xs"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <div id="reader-lore-drawer-list" class="space-y-3">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LORE ENTRY MODAL -->
+    <div id="lore-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass max-w-2xl w-full rounded-2xl p-6 border border-gray-800 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <button onclick="closeModal('lore-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2 font-serif-title">
+                <i class="fa-solid fa-book-bookmark text-brand-accent"></i> View & Edit Lore Entry
+            </h3>
+
+            <div class="flex-1 overflow-y-auto pr-2 space-y-4">
+                <input type="hidden" id="edit-lore-id">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Title / Name</label>
+                        <input type="text" id="edit-lore-title" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Category</label>
+                        <select id="edit-lore-category" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                            <option value="CHARACTER">Character</option>
+                            <option value="FACTION">Faction</option>
+                            <option value="LOCATION">Location</option>
+                            <option value="MAGIC">Magic / Tech System</option>
+                            <option value="NOTE">Lore Note</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Short Summary / Role</label>
+                    <input type="text" id="edit-lore-summary" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500">
+                </div>
+
+                <!-- IMAGE SOURCE: FILE UPLOAD OR URL -->
+                <div class="space-y-3 bg-darkbg/60 p-3.5 rounded-xl border border-gray-800">
+                    <label class="block text-xs font-bold text-gray-200">Character Image / Lore Portrait</label>
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                        <div>
+                            <span class="block text-[11px] text-gray-400 mb-1">Upload from Computer / Phone:</span>
+                            <label class="flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 px-3 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all">
+                                <i class="fa-solid fa-upload text-brand-accent"></i>
+                                <span>Choose Local Photo File</span>
+                                <input type="file" id="edit-lore-file-input" accept="image/*" onchange="handleModalFileUpload(event)" class="hidden">
+                            </label>
+                        </div>
+
+                        <div>
+                            <span class="block text-[11px] text-gray-400 mb-1">Or Enter Web Image URL:</span>
+                            <input type="url" id="edit-lore-image" oninput="previewModalImage()" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500" placeholder="https://...">
+                        </div>
+                    </div>
+
+                    <!-- Live Image Preview Container -->
+                    <div id="modal-image-preview-container" class="w-full h-44 rounded-xl bg-gray-900 border border-gray-800 overflow-hidden flex items-center justify-center relative mt-2">
+                        <img id="modal-image-preview" src="" alt="Lore Image Preview" class="w-full h-full object-cover hidden" onerror="onModalImageError()">
+                        <span id="modal-image-placeholder" class="text-xs text-gray-500 flex items-center gap-1.5"><i class="fa-solid fa-image"></i> No Image Selected</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Full Lore Description & Background</label>
+                    <textarea id="edit-lore-content" rows="4" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-brand-500 resize-none"></textarea>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-gray-800 mt-2">
+                <button onclick="deleteCurrentLore()" class="text-xs bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 px-3 py-2 rounded-lg">
+                    <i class="fa-solid fa-trash mr-1"></i> Delete
+                </button>
+                <div class="flex space-x-2">
+                    <button onclick="closeModal('lore-modal')" class="px-4 py-2 rounded-lg text-xs bg-gray-800 text-gray-300">Cancel</button>
+                    <button onclick="saveLoreModalChanges()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white shadow">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW LORE ENTRY MODAL -->
+    <div id="add-lore-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass max-w-lg w-full rounded-2xl p-6 border border-gray-800 shadow-2xl relative max-h-[90vh] flex flex-col">
+            <button onclick="closeModal('add-lore-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2 font-serif-title">
+                <i class="fa-solid fa-plus text-brand-accent"></i> Create Lore Entry
+            </h3>
+
+            <form onsubmit="createNewLoreEntry(event)" class="flex-1 overflow-y-auto pr-1 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Title / Name</label>
+                    <input type="text" id="new-lore-title" required class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Category</label>
+                        <select id="new-lore-category" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                            <option value="CHARACTER">Character</option>
+                            <option value="FACTION">Faction</option>
+                            <option value="LOCATION">Location</option>
+                            <option value="MAGIC">Magic / Tech System</option>
+                            <option value="NOTE">Lore Note</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Summary / Role</label>
+                        <input type="text" id="new-lore-summary" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                    </div>
+                </div>
+
+                <div class="space-y-2 bg-darkbg/60 p-3.5 rounded-xl border border-gray-800">
+                    <label class="block text-xs font-bold text-gray-200">Character Photo / Lore Image</label>
+                    
+                    <div class="space-y-2">
+                        <label class="flex items-center justify-center gap-2 bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-700 px-3 py-2 rounded-lg text-xs font-semibold cursor-pointer transition-all">
+                            <i class="fa-solid fa-upload text-brand-accent"></i>
+                            <span>Upload Local Photo File</span>
+                            <input type="file" id="new-lore-file-input" accept="image/*" onchange="handleNewLoreFileUpload(event)" class="hidden">
+                        </label>
+                        
+                        <input type="url" id="new-lore-image" oninput="previewNewLoreImage()" placeholder="Or paste image URL (https://...)" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                    </div>
+
+                    <div id="new-lore-preview-box" class="w-full h-36 rounded-lg bg-gray-900 border border-gray-800 hidden overflow-hidden">
+                        <img id="new-lore-preview-img" src="" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Description & Details</label>
+                    <textarea id="new-lore-content" rows="3" required class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white resize-none"></textarea>
+                </div>
+
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('add-lore-modal')" class="px-4 py-2 rounded-lg text-xs bg-gray-800 text-gray-300">Cancel</button>
+                    <button type="submit" class="px-4 py-2 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white">Create Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MEDIA MODAL -->
+    <div id="media-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass max-w-lg w-full rounded-2xl p-6 border border-gray-800 shadow-2xl relative space-y-4">
+            <button onclick="closeModal('media-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-lg font-bold text-white flex items-center gap-2 font-serif-title">
+                <i class="fa-solid fa-compact-disc text-pink-400"></i> Media Track Details
+            </h3>
+
+            <input type="hidden" id="edit-media-id">
+            <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">Track / Video Title</label>
+                <input type="text" id="edit-media-title" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Platform Type</label>
+                    <select id="edit-media-type" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                        <option value="suno">Suno Audio Song</option>
+                        <option value="youtube">YouTube Lore Video</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Genre / Tag</label>
+                    <input type="text" id="edit-media-genre" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-gray-300 mb-1">URL Link</label>
+                <input type="url" id="edit-media-url" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+            </div>
+
+            <div class="flex items-center justify-between pt-4 border-t border-gray-800">
+                <button onclick="deleteCurrentMedia()" class="text-xs bg-red-600/20 hover:bg-red-600/40 text-red-400 border border-red-500/30 px-3 py-2 rounded-lg">
+                    <i class="fa-solid fa-trash mr-1"></i> Delete
+                </button>
+                <div class="flex space-x-2">
+                    <button onclick="closeModal('media-modal')" class="px-4 py-2 rounded-lg text-xs bg-gray-800 text-gray-300">Cancel</button>
+                    <button onclick="saveMediaModalChanges()" class="px-4 py-2 rounded-lg text-xs font-semibold bg-pink-600 hover:bg-pink-500 text-white">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW MEDIA MODAL -->
+    <div id="add-media-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass max-w-lg w-full rounded-2xl p-6 border border-gray-800 shadow-2xl relative">
+            <button onclick="closeModal('add-media-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2 font-serif-title">
+                <i class="fa-solid fa-plus text-pink-400"></i> Add Track or Video Link
+            </h3>
+
+            <form onsubmit="createNewMediaTrack(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Track / Video Title</label>
+                    <input type="text" id="new-media-title" required class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Platform Type</label>
+                        <select id="new-media-type" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                            <option value="suno">Suno AI Track</option>
+                            <option value="youtube">YouTube Lore Video</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Genre</label>
+                        <input type="text" id="new-media-genre" placeholder="Cyber Synthwave" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">URL Link</label>
+                    <input type="url" id="new-media-url" required placeholder="https://suno.com/song/..." class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('add-media-modal')" class="px-4 py-2 rounded-lg text-xs bg-gray-800 text-gray-300">Cancel</button>
+                    <button type="submit" class="px-4 py-2 rounded-lg text-xs font-semibold bg-pink-600 hover:bg-pink-500 text-white">Add Link</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- NEW PROJECT MODAL -->
+    <div id="add-project-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+        <div class="glass max-w-lg w-full rounded-2xl p-6 border border-gray-800 shadow-2xl relative">
+            <button onclick="closeModal('add-project-modal')" class="absolute top-4 right-4 text-gray-400 hover:text-white p-2"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2 font-serif-title">
+                <i class="fa-solid fa-folder-plus text-brand-accent"></i> Create New Project
+            </h3>
+
+            <form onsubmit="createNewProject(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1">Project Name / Book Title</label>
+                    <input type="text" id="new-project-title" required class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Project Type</label>
+                        <select id="new-project-type" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                            <option value="Novel">Full Novel</option>
+                            <option value="Series">Book Series</option>
+                            <option value="Standalone Story">Standalone Short Story</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1">Genre</label>
+                        <input type="text" id="new-project-genre" placeholder="Dark Cyber-Fantasy" class="w-full bg-darkbg border border-gray-700 rounded-lg px-3 py-2 text-xs text-white">
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-2 pt-2">
+                    <button type="button" onclick="closeModal('add-project-modal')" class="px-4 py-2 rounded-lg text-xs bg-gray-800 text-gray-300">Cancel</button>
+                    <button type="submit" class="px-4 py-2 rounded-lg text-xs font-semibold bg-brand-600 hover:bg-brand-500 text-white">Create Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- FIREBASE & APPS SCRIPT LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase Configuration setup
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            apiKey: "demo-key",
+            authDomain: "demo-app.firebaseapp.com",
+            projectId: "demo-app",
+            storageBucket: "demo-app.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:demo"
+        };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'lorecraft-studio';
+
+        let app, auth, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+        } catch (err) {
+            console.log("Running in offline local mode:", err);
+        }
+
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+        window.appId = appId;
+
+        // Auth state listener
+        if (auth) {
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    window.currentUser = user;
+                    updateAuthUI(user);
+                    await loadDataFromCloud(user.uid);
+                } else {
+                    window.currentUser = null;
+                    updateAuthUI(null);
+                }
+            });
+        }
+
+        async function loadDataFromCloud(uid) {
+            if (!db) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', uid, 'data', 'userStore');
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    if (data.projects) window.projects = data.projects;
+                    if (data.lore) window.loreData = data.lore;
+                    if (data.media) window.mediaData = data.media;
+                    window.syncDataToUI();
+                    window.showToast('Cloud data synced successfully!');
+                } else {
+                    window.saveAllToStorage(); // Initial sync to cloud
+                }
+            } catch (e) {
+                console.error("Cloud load error:", e);
+            }
+        }
+
+        window.syncToCloud = async function() {
+            if (!db || !window.currentUser) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'users', window.currentUser.uid, 'data', 'userStore');
+                await setDoc(docRef, {
+                    projects: window.projects,
+                    lore: window.loreData,
+                    media: window.mediaData,
+                    updatedAt: new Date().toISOString()
+                }, { merge: true });
+            } catch (e) {
+                console.error("Cloud save error:", e);
+            }
+        };
+
+        window.handleEmailAuthModule = async function(email, password, isSignUp) {
+            if (!auth) {
+                window.showToast("Cloud Auth disabled in preview environment");
+                return;
+            }
+            try {
+                if (isSignUp) {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    window.showToast("Account created successfully!");
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    window.showToast("Signed in successfully!");
+                }
+                window.closeModal('auth-modal');
+            } catch (err) {
+                alert("Auth Error: " + err.message);
+            }
+        };
+
+        window.handleSignOutModule = async function() {
+            if (auth) {
+                await signOut(auth);
+                window.showToast("Signed out.");
+                window.closeModal('auth-modal');
+            }
+        };
+
+        window.handleAnonymousAuthModule = async function() {
+            if (auth) {
+                await signInAnonymously(auth);
+                window.showToast("Signed in as Guest.");
+                window.closeModal('auth-modal');
+            }
+        };
+
+        function updateAuthUI(user) {
+            const btnLabel = document.getElementById('auth-btn-label');
+            const signedOutView = document.getElementById('auth-signed-out-view');
+            const signedInView = document.getElementById('auth-signed-in-view');
+            const userEmailLabel = document.getElementById('auth-user-email');
+
+            if (user) {
+                const label = user.isAnonymous ? 'Guest User' : (user.email || 'Signed In');
+                if (btnLabel) btnLabel.innerText = label.split('@')[0];
+                if (userEmailLabel) userEmailLabel.innerText = user.email || 'Guest User';
+                if (signedOutView) signedOutView.classList.add('hidden');
+                if (signedInView) signedInView.classList.remove('hidden');
+            } else {
+                if (btnLabel) btnLabel.innerText = 'Sign In';
+                if (signedOutView) signedOutView.classList.remove('hidden');
+                if (signedInView) signedInView.classList.add('hidden');
+            }
+        }
+    </script>
+
+    <script>
+        // Default Fallback Data
+        const defaultProjects = [
+            {
+                id: 'p1',
+                title: 'Chronicles of Aetheria',
+                type: 'Novel',
+                genre: 'Dark Cyber-Fantasy',
+                published: true,
+                chapters: [
+                    { 
+                        id: 'c1', 
+                        title: 'Chapter 1: Whispers of the Void', 
+                        content: 'The rain in the Undercity tasted of copper and ozone. Caelen Vane adjusted the straps of his gauntlet as neon lights flickered over wet pavement.\n\nBeneath the towering floating spires of Aetheria, down in the smog-choked alleys known as the Sinks, survival was a daily haggling game. A quiet murmur echoed down the pipe shafts, carrying whispers of solar crystals being smuggled out of the High Spires...', 
+                        audioId: 'm1' 
+                    },
+                    { 
+                        id: 'c2', 
+                        title: 'Chapter 2: The Sun-Shatter Ritual', 
+                        content: 'High above the cloud barrier, crystal monoliths harvested raw sunlight, converting it into kinetic barriers.\n\nCaelen looked up towards the sky Spires through a crack in the metal grate. The Luminari Order was preparing for the annual ritual, unaware that the Sinks below were already rising...', 
+                        audioId: 'm2' 
+                    }
+                ]
+            }
+        ];
+
+        const defaultLore = [
+            { 
+                id: 'l1', 
+                title: 'Caelen Vane', 
+                category: 'CHARACTER', 
+                summary: 'Voidblade Vanguard Officer', 
+                content: 'Protagonist. Former vanguard officer empowered by ancient Aether flux. Protects his sister Elyse and fights to uncover corrupted Spires.',
+                image: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80'
+            },
+            { 
+                id: 'l2', 
+                title: 'The Luminari Order', 
+                category: 'FACTION', 
+                summary: 'Ruling Oligarchy of Floating Spires', 
+                content: 'A secretive high council wielding sun-charged crystal monoliths to regulate power and levitation across Aetheria.',
+                image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80'
+            },
+            { 
+                id: 'l3', 
+                title: 'The Sinks (Lower Undercity)', 
+                category: 'LOCATION', 
+                summary: 'Sub-cloud Industrial Zone', 
+                content: 'A dense maze of brass steam pipes, neon alleys, and subterranean markets below floating Spires.',
+                image: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80'
+            }
+        ];
+
+        const defaultMedia = [
+            { id: 'm1', title: 'Theme of Caelen Vane', type: 'suno', genre: 'Dark Synthwave', url: 'https://suno.com' },
+            { id: 'm2', title: 'Aetheria High Spires Ambience', type: 'youtube', genre: 'Soundtrack', url: 'https://youtube.com' }
+        ];
+
+        // Global State & Local Storage Sync
+        window.projects = JSON.parse(localStorage.getItem('loreCraft_projects')) || defaultProjects;
+        window.loreData = JSON.parse(localStorage.getItem('loreCraft_lore')) || defaultLore;
+        window.mediaData = JSON.parse(localStorage.getItem('loreCraft_media')) || defaultMedia;
+
+        let activeProjectId = window.projects[0]?.id || 'p1';
+        let activeChapterId = window.projects[0]?.chapters[0]?.id || 'c1';
+        let activeLibraryFilter = 'ALL';
+        let authMode = 'signin';
+
+        window.onload = function() {
+            window.syncDataToUI();
+        };
+
+        window.syncDataToUI = function() {
+            renderProjectSelect();
+            renderChapterList();
+            loadActiveChapterIntoEditor();
+            renderLibrary();
+            renderMediaHub();
+            renderPublishedShowcase();
+            populateChapterAudioDropdown();
+        };
+
+        window.saveAllToStorage = function() {
+            localStorage.setItem('loreCraft_projects', JSON.stringify(window.projects));
+            localStorage.setItem('loreCraft_lore', JSON.stringify(window.loreData));
+            localStorage.setItem('loreCraft_media', JSON.stringify(window.mediaData));
+
+            if (window.syncToCloud) {
+                window.syncToCloud();
+            }
+        };
+
+        // Export JSON Backup
+        function exportBackupJSON() {
+            const backup = {
+                projects: window.projects,
+                lore: window.loreData,
+                media: window.mediaData,
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `LoreCraft_Backup_${new Date().toISOString().slice(0, 10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('Backup exported to file!');
+        }
+
+        // Import JSON Backup
+        function importBackupJSON(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported.projects && imported.lore) {
+                        window.projects = imported.projects;
+                        window.loreData = imported.lore;
+                        if (imported.media) window.mediaData = imported.media;
+
+                        activeProjectId = window.projects[0]?.id || 'p1';
+                        activeChapterId = window.projects[0]?.chapters[0]?.id || 'c1';
+
+                        window.saveAllToStorage();
+                        window.syncDataToUI();
+                        showToast('Backup imported successfully!');
+                    } else {
+                        alert('Invalid backup file format.');
+                    }
+                } catch (err) {
+                    alert('Error parsing backup JSON file.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function handleEmailAuth(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            if (window.handleEmailAuthModule) {
+                window.handleEmailAuthModule(email, password, authMode === 'signup');
+            }
+        }
+
+        function handleSignOut() {
+            if (window.handleSignOutModule) window.handleSignOutModule();
+        }
+
+        function handleAnonymousAuth() {
+            if (window.handleAnonymousAuthModule) window.handleAnonymousAuthModule();
+        }
+
+        function handleModalFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                document.getElementById('edit-lore-image').value = base64Data;
+                previewModalImage();
+                showToast('Uploaded image file from device!');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleNewLoreFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Data = e.target.result;
+                document.getElementById('new-lore-image').value = base64Data;
+                previewNewLoreImage();
+                showToast('Uploaded image file from device!');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function previewNewLoreImage() {
+            const url = document.getElementById('new-lore-image').value.trim();
+            const box = document.getElementById('new-lore-preview-box');
+            const img = document.getElementById('new-lore-preview-img');
+
+            if (url) {
+                img.src = url;
+                box.classList.remove('hidden');
+            } else {
+                img.src = '';
+                box.classList.add('hidden');
+            }
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            const target = document.getElementById(`section-${tabId}`);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold text-gray-400 hover:text-white hover:bg-gray-800 transition-all flex items-center space-x-2";
+            });
+
+            const activeNav = document.getElementById(`nav-${tabId}`);
+            if (activeNav) {
+                activeNav.className = "tab-btn px-3.5 py-2 rounded-lg text-xs font-semibold transition-all flex items-center space-x-2 bg-brand-600/20 text-brand-accent border border-brand-500/30";
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('notification-toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function openModal(id) {
+            document.getElementById(id)?.classList.remove('hidden');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id)?.classList.add('hidden');
+        }
+
+        function renderProjectSelect() {
+            const select = document.getElementById('project-select');
+            select.innerHTML = '';
+            window.projects.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = `[${p.type}] ${p.title}`;
+                if (p.id === activeProjectId) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+
+        function switchProject() {
+            saveActiveChapter();
+            activeProjectId = document.getElementById('project-select').value;
+            const currentProj = window.projects.find(p => p.id === activeProjectId);
+            activeChapterId = currentProj?.chapters[0]?.id || null;
+            
+            renderChapterList();
+            loadActiveChapterIntoEditor();
+        }
+
+        function createNewProject(e) {
+            e.preventDefault();
+            const title = document.getElementById('new-project-title').value;
+            const type = document.getElementById('new-project-type').value;
+            const genre = document.getElementById('new-project-genre').value || 'Fantasy';
+
+            const newProj = {
+                id: `p_${Date.now()}`,
+                title,
+                type,
+                genre,
+                published: false,
+                chapters: [
+                    { id: `c_${Date.now()}`, title: 'Chapter 1: Beginnings', content: '', audioId: '' }
+                ]
+            };
+
+            window.projects.push(newProj);
+            activeProjectId = newProj.id;
+            activeChapterId = newProj.chapters[0].id;
+
+            window.saveAllToStorage();
+            closeModal('add-project-modal');
+            renderProjectSelect();
+            renderChapterList();
+            loadActiveChapterIntoEditor();
+            showToast('Created new project!');
+        }
+
+        function renderChapterList() {
+            const container = document.getElementById('chapter-list-container');
+            container.innerHTML = '';
+
+            const currentProj = window.projects.find(p => p.id === activeProjectId);
+            if (!currentProj || !currentProj.chapters.length) {
+                container.innerHTML = '<div class="text-xs text-gray-500 p-2">No chapters found.</div>';
+                return;
+            }
+
+            currentProj.chapters.forEach((ch, idx) => {
+                const item = document.createElement('div');
+                const isActive = ch.id === activeChapterId;
+                item.className = `p-3 rounded-xl border transition-all flex items-center justify-between cursor-pointer ${isActive ? 'bg-brand-600/30 border-brand-500 text-white' : 'bg-darkbg border-gray-800 text-gray-400 hover:text-white hover:border-gray-700'}`;
+                item.onclick = () => selectChapter(ch.id);
+
+                const hasAudio = ch.audioId ? '<i class="fa-solid fa-music text-pink-400 text-[10px] ml-1.5" title="Has Soundtrack"></i>' : '';
+
+                item.innerHTML = `
+                    <div class="flex items-center space-x-2 truncate">
+                        <span class="text-[10px] font-mono text-gray-500">#${idx + 1}</span>
+                        <span class="text-xs font-semibold truncate">${ch.title}</span>
+                        ${hasAudio}
+                    </div>
+                    <button onclick="event.stopPropagation(); deleteChapter('${ch.id}')" class="text-gray-500 hover:text-red-400 text-xs p-1">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function selectChapter(chId) {
+            saveActiveChapter();
+            activeChapterId = chId;
+            renderChapterList();
+            loadActiveChapterIntoEditor();
+        }
+
+        function createNewChapter() {
+            saveActiveChapter();
+            const currentProj = window.projects.find(p => p.id === activeProjectId);
+            if (!currentProj) return;
+
+            const newNum = currentProj.chapters.length + 1;
+            const newCh = {
+                id: `c_${Date.now()}`,
+                title: `Chapter ${newNum}: New Chapter`,
+                content: '',
+                audioId: ''
+            };
+
+            currentProj.chapters.push(newCh);
+            activeChapterId = newCh.id;
+            window.saveAllToStorage();
+            renderChapterList();
+            loadActiveChapterIntoEditor();
+            showToast('Added new chapter!');
+        }
+
+        function loadActiveChapterIntoEditor() {
+            const currentProj = window.projects.find(p => p.id === activeProjectId);
+            const currentCh = currentProj?.chapters.find(c => c.id === activeChapterId);
+
+            if (currentCh) {
+                document.getElementById('chapter-title-input').value = currentCh.title;
+                document.getElementById('chapter-editor-textarea').value = currentCh.content;
+                document.getElementById('chapter-audio-select').value = currentCh.audioId || '';
+                updateWordCount();
+            }
+        }
+
+        function updateChapterTitle() {
+            const currentProj = window.projects.find(p => p.id === activeProjectId);
+            const currentCh = currentProj?.chapters.find(c => c.id === activeChapterId);
+            if (currentCh) {
+                currentCh.title = document.getElementById('chapter-title-input').value;
+                renderChapterList();
+            }
+        }
+
+        function updateWordCount() {
+            const text = document.getElementById('chapter-editor-textarea').value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            document.getElementById('word-count').innerText = `${words} Words`;
+        }
+
+        function saveActiveChapter() {
+            const currentProj = window.projects.find(p => p.id === activeProjectId);
+            const currentCh = currentProj?.chapters.find(c => c.id === activeChapterId);
+            if (currentCh) {
+                currentCh.title = document.getElementById('chapter-title-input').value;
+                currentCh.content = document.getElementById('chapter-editor-textarea').value;
+                currentCh.audioId = document.getElementById('chapter-audio-select').value;
+                window.saveAllToStorage();
+                showToast('Chapter saved!');
+            }
+        }
+
+        function deleteChapter(chId) {
+            const currentProj = window.projects.find(p => p.id === activeProjectId);
+            if (!currentProj || currentProj.chapters.length <= 1) {
+                alert('A project must contain at least one chapter.');
+                return;
+            }
+
+            if (confirm('Delete this chapter?')) {
+                currentProj.chapters = currentProj.chapters.filter(c => c.id !== chId);
+                activeChapterId = currentProj.chapters[0].id;
+                window.saveAllToStorage();
+                renderChapterList();
+                loadActiveChapterIntoEditor();
+                showToast('Chapter deleted.');
+            }
+        }
+
+        function assignAudioToActiveChapter() {
+            const currentProj = window.projects.find(p => p.id === activeProjectId);
+            const currentCh = currentProj?.chapters.find(c => c.id === activeChapterId);
+            if (currentCh) {
+                currentCh.audioId = document.getElementById('chapter-audio-select').value;
+                window.saveAllToStorage();
+                renderChapterList();
+                showToast('Updated attached soundtrack!');
+            }
+        }
+
+        function populateChapterAudioDropdown() {
+            const select = document.getElementById('chapter-audio-select');
+            select.innerHTML = '<option value="">-- No Soundtrack Attached --</option>';
+            window.mediaData.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.id;
+                opt.textContent = `[${m.type.toUpperCase()}] ${m.title}`;
+                select.appendChild(opt);
+            });
+        }
+
+        function filterLibrary(category) {
+            activeLibraryFilter = category;
+            document.querySelectorAll('.lib-filter-btn').forEach(btn => {
+                btn.className = "lib-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-800 text-gray-400 hover:text-white";
+            });
+            event.target.className = "lib-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-brand-600 text-white";
+            renderLibrary();
+        }
+
+        function renderLibrary() {
+            const grid = document.getElementById('library-grid');
+            const query = document.getElementById('library-search-input').value.toLowerCase();
+            grid.innerHTML = '';
+
+            const filtered = window.loreData.filter(item => {
+                const matchesCat = activeLibraryFilter === 'ALL' || item.category === activeLibraryFilter;
+                const matchesSearch = item.title.toLowerCase().includes(query) || (item.summary || '').toLowerCase().includes(query) || item.content.toLowerCase().includes(query);
+                return matchesCat && matchesSearch;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-10 text-gray-500 text-xs">No lore entries found.</div>';
+                return;
+            }
+
+            filtered.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass rounded-xl border border-gray-800 hover:border-brand-500/50 cursor-pointer transition-all flex flex-col justify-between overflow-hidden group shadow-md";
+                card.onclick = () => openLoreDetailsModal(item.id);
+
+                const hasImg = item.image && item.image.trim() !== '';
+                const imgHeader = hasImg 
+                    ? `<div class="w-full h-36 bg-gray-900 overflow-hidden relative"><img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"></div>`
+                    : '';
+
+                card.innerHTML = `
+                    ${imgHeader}
+                    <div class="p-5 space-y-2 flex-1">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded bg-brand-500/20 text-brand-accent border border-brand-500/30">
+                                ${item.category}
+                            </span>
+                            <i class="fa-solid fa-pen-to-square text-xs text-gray-600 group-hover:text-brand-accent transition-colors"></i>
+                        </div>
+                        <h3 class="font-bold text-white text-base font-serif-title group-hover:text-brand-accent transition-colors">${item.title}</h3>
+                        <p class="text-xs text-indigo-300 font-medium">${item.summary || ''}</p>
+                        <p class="text-xs text-gray-400 line-clamp-3 leading-relaxed">${item.content}</p>
+                    </div>
+                    <div class="px-5 pb-4 pt-2 border-t border-gray-800/80 flex justify-end">
+                        <span class="text-[11px] text-brand-accent font-semibold flex items-center gap-1">
+                            View & Edit Entry <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                        </span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openLoreDetailsModal(id) {
+            const item = window.loreData.find(l => l.id === id);
+            if (!item) return;
+
+            document.getElementById('edit-lore-id').value = item.id;
+            document.getElementById('edit-lore-title').value = item.title;
+            document.getElementById('edit-lore-category').value = item.category;
+            document.getElementById('edit-lore-summary').value = item.summary || '';
+            document.getElementById('edit-lore-image').value = item.image || '';
+            document.getElementById('edit-lore-content').value = item.content;
+
+            previewModalImage();
+            openModal('lore-modal');
+        }
+
+        function previewModalImage() {
+            const url = document.getElementById('edit-lore-image').value.trim();
+            const imgEl = document.getElementById('modal-image-preview');
+            const placeholder = document.getElementById('modal-image-placeholder');
+
+            if (url) {
+                imgEl.src = url;
+                imgEl.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            } else {
+                imgEl.src = '';
+                imgEl.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+            }
+        }
+
+        function onModalImageError() {
+            const imgEl = document.getElementById('modal-image-preview');
+            const placeholder = document.getElementById('modal-image-placeholder');
+            imgEl.classList.add('hidden');
+            placeholder.classList.remove('hidden');
+            placeholder.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Unable to load image';
+        }
+
+        function saveLoreModalChanges() {
+            const id = document.getElementById('edit-lore-id').value;
+            const item = window.loreData.find(l => l.id === id);
+            if (item) {
+                item.title = document.getElementById('edit-lore-title').value;
+                item.category = document.getElementById('edit-lore-category').value;
+                item.summary = document.getElementById('edit-lore-summary').value;
+                item.image = document.getElementById('edit-lore-image').value;
+                item.content = document.getElementById('edit-lore-content').value;
+
+                window.saveAllToStorage();
+                closeModal('lore-modal');
+                renderLibrary();
+                showToast('Saved lore updates!');
+            }
+        }
+
+        function createNewLoreEntry(e) {
+            e.preventDefault();
+            const newItem = {
+                id: `l_${Date.now()}`,
+                title: document.getElementById('new-lore-title').value,
+                category: document.getElementById('new-lore-category').value,
+                summary: document.getElementById('new-lore-summary').value,
+                image: document.getElementById('new-lore-image').value || '',
+                content: document.getElementById('new-lore-content').value
+            };
+
+            window.loreData.unshift(newItem);
+            window.saveAllToStorage();
+            closeModal('add-lore-modal');
+            renderLibrary();
+            showToast('Created new lore entry!');
+        }
+
+        function deleteCurrentLore() {
+            const id = document.getElementById('edit-lore-id').value;
+            if (confirm('Delete this lore entry?')) {
+                window.loreData = window.loreData.filter(l => l.id !== id);
+                window.saveAllToStorage();
+                closeModal('lore-modal');
+                renderLibrary();
+                showToast('Deleted lore entry.');
+            }
+        }
+
+        function renderMediaHub() {
+            const grid = document.getElementById('media-grid');
+            grid.innerHTML = '';
+
+            window.mediaData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "glass p-5 rounded-xl border border-gray-800 space-y-3 flex flex-col justify-between";
+                const isSuno = item.type === 'suno';
+
+                card.innerHTML = `
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2.5 py-0.5 rounded ${isSuno ? 'bg-pink-500/20 text-pink-300 border border-pink-500/30' : 'bg-red-500/20 text-red-300 border border-red-500/30'}">
+                                ${item.type.toUpperCase()} TRACK
+                            </span>
+                            <span class="text-xs text-gray-400 font-medium">${item.genre || 'Soundtrack'}</span>
+                        </div>
+                        <h3 class="font-bold text-white text-base">${item.title}</h3>
+                        <a href="${item.url}" target="_blank" class="inline-flex items-center gap-1.5 text-xs text-brand-accent hover:underline break-all">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> ${item.url}
+                        </a>
+                    </div>
+
+                    <div class="pt-3 border-t border-gray-800 flex items-center justify-between">
+                        <button onclick="openMediaModal('${item.id}')" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-lg border border-gray-700">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
+                        </button>
+                        <a href="${item.url}" target="_blank" class="text-xs bg-pink-600 hover:bg-pink-500 text-white font-bold px-3 py-1.5 rounded-lg shadow">
+                            <i class="fa-solid fa-play mr-1"></i> Play
+                        </a>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            populateChapterAudioDropdown();
+        }
+
+        function openMediaModal(id) {
+            const item = window.mediaData.find(m => m.id === id);
+            if (!item) return;
+
+            document.getElementById('edit-media-id').value = item.id;
+            document.getElementById('edit-media-title').value = item.title;
+            document.getElementById('edit-media-type').value = item.type;
+            document.getElementById('edit-media-genre').value = item.genre || '';
+            document.getElementById('edit-media-url').value = item.url;
+
+            openModal('media-modal');
+        }
+
+        function saveMediaModalChanges() {
+            const id = document.getElementById('edit-media-id').value;
+            const item = window.mediaData.find(m => m.id === id);
+            if (item) {
+                item.title = document.getElementById('edit-media-title').value;
+                item.type = document.getElementById('edit-media-type').value;
+                item.genre = document.getElementById('edit-media-genre').value;
+                item.url = document.getElementById('edit-media-url').value;
+
+                window.saveAllToStorage();
+                closeModal('media-modal');
+                renderMediaHub();
+                showToast('Updated media track!');
+            }
+        }
+
+        function createNewMediaTrack(e) {
+            e.preventDefault();
+            const newItem = {
+                id: `m_${Date.now()}`,
+                title: document.getElementById('new-media-title').value,
+                type: document.getElementById('new-media-type').value,
+                genre: document.getElementById('new-media-genre').value || 'Soundtrack',
+                url: document.getElementById('new-media-url').value
+            };
+
+            window.mediaData.unshift(newItem);
+            window.saveAllToStorage();
+            closeModal('add-media-modal');
+            renderMediaHub();
+            showToast('Added media link!');
+        }
+
+        function deleteCurrentMedia() {
+            const id = document.getElementById('edit-media-id').value;
+            if (confirm('Delete this media entry?')) {
+                window.mediaData = window.mediaData.filter(m => m.id !== id);
+                window.saveAllToStorage();
+                closeModal('media-modal');
+                renderMediaHub();
+                showToast('Deleted media entry.');
+            }
+        }
+
+        function renderPublishedShowcase() {
+            const grid = document.getElementById('published-grid');
+            grid.innerHTML = '';
+
+            window.projects.forEach(p => {
+                const card = document.createElement('div');
+                card.className = "glass p-5 rounded-xl border border-gray-800 space-y-3";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <span class="text-[10px] font-bold px-2.5 py-0.5 rounded bg-brand-500/20 text-brand-accent border border-brand-500/30">${p.type}</span>
+                        <span class="text-xs text-emerald-400 font-semibold"><i class="fa-solid fa-check-circle"></i> Published</span>
+                    </div>
+                    <h3 class="font-bold text-white text-base font-serif-title">${p.title}</h3>
+                    <p class="text-xs text-gray-400 font-medium">${p.genre} • ${p.chapters.length} Chapters</p>
+                    <div class="pt-2 flex justify-end">
+                        <button onclick="activeProjectId='${p.id}'; openReaderMode();" class="text-xs bg-brand-600 hover:bg-brand-500 text-white font-bold px-3.5 py-2 rounded-lg flex items-center gap-1.5 shadow">
+                            <i class="fa-solid fa-book-open"></i> Read Book
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function publishCurrentProject() {
+            const proj = window.projects.find(p => p.id === activeProjectId);
+            if (proj) {
+                proj.published = true;
+                window.saveAllToStorage();
+                renderPublishedShowcase();
+                showToast(`Published "${proj.title}"!`);
+            }
+        }
+
+        let currentReaderChapterIndex = 0;
+
+        function openReaderMode() {
+            const proj = window.projects.find(p => p.id === activeProjectId);
+            if (!proj || !proj.chapters.length) {
+                alert('No chapters available to read in this project.');
+                return;
+            }
+
+            document.getElementById('reader-project-title').innerText = proj.title;
+            document.getElementById('reader-project-type').innerText = `${proj.type} • Reader Perspective`;
+
+            const select = document.getElementById('reader-chapter-select');
+            select.innerHTML = '';
+            proj.chapters.forEach((ch, idx) => {
+                const opt = document.createElement('option');
+                opt.value = ch.id;
+                opt.textContent = `Ch ${idx + 1}: ${ch.title}`;
+                select.appendChild(opt);
+            });
+
+            currentReaderChapterIndex = proj.chapters.findIndex(c => c.id === activeChapterId);
+            if (currentReaderChapterIndex < 0) currentReaderChapterIndex = 0;
+
+            document.getElementById('reader-modal').classList.remove('hidden');
+            renderReaderChapterByIndex(currentReaderChapterIndex);
+            populateReaderLoreDrawer();
+        }
+
+        function closeReaderMode() {
+            document.getElementById('reader-modal').classList.add('hidden');
+        }
+
+        function readerSwitchChapter() {
+            const chId = document.getElementById('reader-chapter-select').value;
+            const proj = window.projects.find(p => p.id === activeProjectId);
+            currentReaderChapterIndex = proj.chapters.findIndex(c => c.id === chId);
+            renderReaderChapterByIndex(currentReaderChapterIndex);
+        }
+
+        function readerNavNext() {
+            const proj = window.projects.find(p => p.id === activeProjectId);
+            if (currentReaderChapterIndex < proj.chapters.length - 1) {
+                currentReaderChapterIndex++;
+                renderReaderChapterByIndex(currentReaderChapterIndex);
+            }
+        }
+
+        function readerNavPrev() {
+            if (currentReaderChapterIndex > 0) {
+                currentReaderChapterIndex--;
+                renderReaderChapterByIndex(currentReaderChapterIndex);
+            }
+        }
+
+        function renderReaderChapterByIndex(index) {
+            const proj = window.projects.find(p => p.id === activeProjectId);
+            const ch = proj.chapters[index];
+            if (!ch) return;
+
+            const scrollContainer = document.getElementById('reader-scroll-container');
+            if (scrollContainer) scrollContainer.scrollTop = 0;
+
+            document.getElementById('reader-chapter-select').value = ch.id;
+            document.getElementById('reader-chapter-title').innerText = ch.title;
+            document.getElementById('reader-chapter-body').innerText = ch.content || 'This chapter is empty.';
+
+            const words = ch.content.trim() ? ch.content.trim().split(/\s+/).length : 0;
+            document.getElementById('reader-word-count').innerText = `${words} Words`;
+
+            const isFirst = index === 0;
+            const isLast = index === proj.chapters.length - 1;
+
+            document.getElementById('reader-top-prev-btn').disabled = isFirst;
+            document.getElementById('reader-bottom-prev-btn').disabled = isFirst;
+
+            document.getElementById('reader-top-next-btn').disabled = isLast;
+            document.getElementById('reader-bottom-next-btn').disabled = isLast;
+
+            const audioHeader = document.getElementById('reader-audio-header');
+            if (ch.audioId) {
+                const mediaTrack = window.mediaData.find(m => m.id === ch.audioId);
+                if (mediaTrack) {
+                    document.getElementById('reader-audio-title').innerText = `${mediaTrack.title} (${mediaTrack.genre || 'Audio'})`;
+                    document.getElementById('reader-audio-link').href = mediaTrack.url;
+                    audioHeader.classList.remove('hidden');
+                } else {
+                    audioHeader.classList.add('hidden');
+                }
+            } else {
+                audioHeader.classList.add('hidden');
+            }
+        }
+
+        function toggleReaderLoreDrawer() {
+            document.getElementById('reader-lore-drawer').classList.toggle('hidden');
+            document.getElementById('reader-lore-drawer').classList.toggle('flex');
+        }
+
+        function populateReaderLoreDrawer() {
+            const container = document.getElementById('reader-lore-drawer-list');
+            container.innerHTML = '';
+
+            window.loreData.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-darkbg border border-gray-800 rounded-xl p-3 space-y-1.5";
+                
+                const img = item.image ? `<img src="${item.image}" class="w-full h-24 object-cover rounded-lg mb-2">` : '';
+
+                card.innerHTML = `
+                    ${img}
+                    <div class="flex items-center justify-between">
+                        <span class="text-[9px] font-bold px-2 py-0.5 rounded bg-brand-500/20 text-brand-accent">${item.category}</span>
+                    </div>
+                    <h5 class="text-xs font-bold text-white font-serif-title">${item.title}</h5>
+                    <p class="text-[11px] text-gray-400 leading-snug line-clamp-3">${item.content}</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
