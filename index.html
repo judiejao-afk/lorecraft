@@ -1719,14 +1719,16 @@
             const modal = document.getElementById('lore-modal');
             if (loreId) {
                 const l = state.loreEntries.find(entry => entry.id === loreId);
-                document.getElementById('lore-id').value = l.id;
-                document.getElementById('lore-title').value = l.title;
-                document.getElementById('lore-category').value = l.category;
-                document.getElementById('lore-aliases').value = l.aliases || '';
-                document.getElementById('lore-description').value = l.description || '';
-                updateLoreDynamicFields(l.category, l.attributes || {});
-                previewImageURL(l.imageUrl);
-                document.getElementById('delete-lore-btn').classList.remove('hidden');
+                if (l) {
+                    document.getElementById('lore-id').value = l.id;
+                    document.getElementById('lore-title').value = l.title || '';
+                    document.getElementById('lore-category').value = l.category || 'Character';
+                    document.getElementById('lore-aliases').value = l.aliases || '';
+                    document.getElementById('lore-description').value = l.description || '';
+                    updateLoreDynamicFields(l.category, l.attributes || {});
+                    previewImageURL(l.imageUrl || '');
+                    document.getElementById('delete-lore-btn').classList.remove('hidden');
+                }
             } else {
                 document.getElementById('lore-form').reset();
                 document.getElementById('lore-id').value = '';
@@ -1759,6 +1761,7 @@
             } else previewBox.classList.add('hidden');
         }
 
+        // FIXED LORE SAVE ENTRY FUNCTION WITH SAFE OPTIONAL DOM CHECKING
         function saveLoreEntry(e) {
             e.preventDefault();
             const id = document.getElementById('lore-id').value;
@@ -1792,6 +1795,7 @@
             } else {
                 state.loreEntries.push({ id: 'lore_' + Date.now(), title, category, aliases, attributes, imageUrl, description });
             }
+
             tempBase64Image = null;
             saveState();
             closeLoreModal();
@@ -1800,9 +1804,10 @@
             renderDashboard();
         }
 
+        // FIXED LORE DELETE ENTRY FUNCTION
         function deleteLoreEntry() {
             const id = document.getElementById('lore-id').value;
-            if (id && confirm("Delete entry?")) {
+            if (id && confirm("Are you sure you want to delete this lore entry?")) {
                 state.loreEntries = state.loreEntries.filter(l => l.id !== id);
                 saveState();
                 closeLoreModal();
