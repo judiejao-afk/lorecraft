@@ -87,10 +87,12 @@
             .para-cmt-badge { right: 4px; }
         }
         .mnav-active { color: #c084fc; }
+        .listen-active { background-color: rgba(168, 85, 247, 0.18) !important; box-shadow: inset 3px 0 0 #a855f7; }
+        .stat-bar { transition: width 0.4s; }
     </style>
     <!-- Tailwind CSS (prebuilt: only the styles this page uses, v3.4). To rebuild after adding new classes:
          npx tailwindcss@3 -i in.css -o out.css --minify  with content: ['index.html'] -->
-    <style id="tailwind-prebuilt">*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.\!container{width:100%!important}.container{width:100%}@media (min-width:640px){.\!container{max-width:640px!important}.container{max-width:640px}}@media (min-width:768px){.\!container{max-width:768px!important}.container{max-width:768px}}@media (min-width:1024px){.\!container{max-width:1024px!important}.container{max-width:1024px}}@media (min-width:1280px){.\!container{max-width:1280px!important}.container{max-width:1280px}}@media (min-width:1536px){.\!container{max-width:1536px!important}.container{max-width:1536px}}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-inset-0\.5{inset:-.125rem}.inset-0{inset:0}.inset-x-0{left:0;right:0}.inset-y-0{top:0;bottom:0}.-right-1{right:-.25rem}.-top-1{top:-.25rem}.bottom-0{bottom:0}.left-3{left:.75rem}.right-0{right:0}.right-3{right:.75rem}.top-0{top:0}.top-3{top:.75rem}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.z-\[70\]{z-index:70}.col-span-2{grid-column:span 2/span 2}.col-span-3{grid-column:span 3/span 3}.col-span-full{grid-column:1/-1}.mx-1{margin-left:.25rem;margin-right:.25rem}.mx-auto{margin-left:auto;margin-right:auto}.-mt-1{margin-top:-.25rem}.-mt-12{margin-top:-3rem}.-mt-16{margin-top:-4rem}.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.ml-1{margin-left:.25rem}.ml-6{margin-left:1.5rem}.ml-auto{margin-left:auto}.mr-1{margin-right:.25rem}.mr-1\.5{margin-right:.375rem}.mr-2{margin-right:.5rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.line-clamp-1{-webkit-line-clamp:1}.line-clamp-1,.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical}.line-clamp-2{-webkit-line-clamp:2}.line-clamp-3{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3}.block{display:block}.inline-block{display:inline-block}.inline{display:inline}.flex{display:flex}.\!grid{display:grid!important}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-11{height:2.75rem}.h-12{height:3rem}.h-2{height:.5rem}.h-24{height:6rem}.h-28{height:7rem}.h-32{height:8rem}.h-4{height:1rem}.h-40{height:10rem}.h-48{height:12rem}.h-56{height:14rem}.h-6{height:1.5rem}.h-9{height:2.25rem}.h-full{height:100%}.max-h-60{max-height:15rem}.max-h-\[80vh\]{max-height:80vh}.max-h-\[85vh\]{max-height:85vh}.max-h-\[90vh\]{max-height:90vh}.min-h-\[350px\]{min-height:350px}.min-h-screen{min-height:100vh}.w-0{width:0}.w-10{width:2.5rem}.w-11{width:2.75rem}.w-12{width:3rem}.w-24{width:6rem}.w-28{width:7rem}.w-40{width:10rem}.w-9{width:2.25rem}.w-full{width:100%}.w-px{width:1px}.min-w-\[180px\]{min-width:180px}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-7xl{max-width:80rem}.max-w-lg{max-width:32rem}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(.4,0,.6,1) infinite}.cursor-not-allowed{cursor:not-allowed}.cursor-pointer{cursor:pointer}.resize-y{resize:vertical}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.space-y-0\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.125rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.125rem*var(--tw-space-y-reverse))}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-1\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.375rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.375rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-6>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem*var(--tw-space-y-reverse))}.divide-y>:not([hidden])~:not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px*(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px*var(--tw-divide-y-reverse))}.divide-slate-800>:not([hidden])~:not([hidden]){--tw-divide-opacity:1;border-color:rgb(30 41 59/var(--tw-divide-opacity,1))}.self-end{align-self:flex-end}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis}.truncate,.whitespace-nowrap{white-space:nowrap}.whitespace-pre-wrap{white-space:pre-wrap}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.border{border-width:1px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-b-2{border-bottom-width:2px}.border-l{border-left-width:1px}.border-l-2{border-left-width:2px}.border-t{border-top-width:1px}.border-amber-700\/40{border-color:rgba(180,83,9,.4)}.border-amber-700\/50{border-color:rgba(180,83,9,.5)}.border-emerald-700\/40{border-color:rgba(4,120,87,.4)}.border-indigo-700\/40{border-color:rgba(67,56,202,.4)}.border-indigo-700\/50{border-color:rgba(67,56,202,.5)}.border-pink-700\/50{border-color:rgba(190,24,93,.5)}.border-purple-500{--tw-border-opacity:1;border-color:rgb(168 85 247/var(--tw-border-opacity,1))}.border-purple-500\/30{border-color:rgba(168,85,247,.3)}.border-purple-500\/40{border-color:rgba(168,85,247,.4)}.border-purple-500\/50{border-color:rgba(168,85,247,.5)}.border-purple-700\/40{border-color:rgba(126,34,206,.4)}.border-purple-700\/50{border-color:rgba(126,34,206,.5)}.border-purple-800\/40{border-color:rgba(107,33,168,.4)}.border-purple-800\/50{border-color:rgba(107,33,168,.5)}.border-purple-800\/80{border-color:rgba(107,33,168,.8)}.border-red-800\/40{border-color:rgba(153,27,27,.4)}.border-red-800\/50{border-color:rgba(153,27,27,.5)}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85/var(--tw-border-opacity,1))}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59/var(--tw-border-opacity,1))}.border-slate-800\/80{border-color:rgba(30,41,59,.8)}.border-slate-900{--tw-border-opacity:1;border-color:rgb(15 23 42/var(--tw-border-opacity,1))}.bg-amber-900\/30{background-color:rgba(120,53,15,.3)}.bg-amber-900\/40{background-color:rgba(120,53,15,.4)}.bg-amber-950\/40{background-color:rgba(69,26,3,.4)}.bg-black\/30{background-color:rgba(0,0,0,.3)}.bg-black\/60{background-color:rgba(0,0,0,.6)}.bg-black\/80{background-color:rgba(0,0,0,.8)}.bg-black\/85{background-color:rgba(0,0,0,.85)}.bg-emerald-700{--tw-bg-opacity:1;background-color:rgb(4 120 87/var(--tw-bg-opacity,1))}.bg-emerald-900\/40{background-color:rgba(6,78,59,.4)}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229/var(--tw-bg-opacity,1))}.bg-indigo-600\/20{background-color:rgba(79,70,229,.2)}.bg-indigo-900\/40{background-color:rgba(49,46,129,.4)}.bg-indigo-950\/80{background-color:rgba(30,27,75,.8)}.bg-pink-600{--tw-bg-opacity:1;background-color:rgb(219 39 119/var(--tw-bg-opacity,1))}.bg-pink-600\/20{background-color:rgba(219,39,119,.2)}.bg-pink-900\/30{background-color:rgba(131,24,67,.3)}.bg-pink-900\/40{background-color:rgba(131,24,67,.4)}.bg-purple-600{--tw-bg-opacity:1;background-color:rgb(147 51 234/var(--tw-bg-opacity,1))}.bg-purple-600\/20{background-color:rgba(147,51,234,.2)}.bg-purple-600\/30{background-color:rgba(147,51,234,.3)}.bg-purple-700{--tw-bg-opacity:1;background-color:rgb(126 34 206/var(--tw-bg-opacity,1))}.bg-purple-900\/30{background-color:rgba(88,28,135,.3)}.bg-purple-900\/40{background-color:rgba(88,28,135,.4)}.bg-purple-900\/50{background-color:rgba(88,28,135,.5)}.bg-purple-900\/80{background-color:rgba(88,28,135,.8)}.bg-purple-950\/40{background-color:rgba(59,7,100,.4)}.bg-purple-950\/50{background-color:rgba(59,7,100,.5)}.bg-purple-950\/60{background-color:rgba(59,7,100,.6)}.bg-purple-950\/80{background-color:rgba(59,7,100,.8)}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.bg-red-700{--tw-bg-opacity:1;background-color:rgb(185 28 28/var(--tw-bg-opacity,1))}.bg-red-900\/20{background-color:rgba(127,29,29,.2)}.bg-red-900\/30{background-color:rgba(127,29,29,.3)}.bg-red-950\/40{background-color:rgba(69,10,10,.4)}.bg-red-950\/50{background-color:rgba(69,10,10,.5)}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.bg-slate-900\/60{background-color:rgba(15,23,42,.6)}.bg-slate-900\/80{background-color:rgba(15,23,42,.8)}.bg-slate-900\/90{background-color:rgba(15,23,42,.9)}.bg-slate-900\/95{background-color:rgba(15,23,42,.95)}.bg-slate-950{--tw-bg-opacity:1;background-color:rgb(2 6 23/var(--tw-bg-opacity,1))}.bg-slate-950\/50{background-color:rgba(2,6,23,.5)}.bg-slate-950\/80{background-color:rgba(2,6,23,.8)}.bg-gradient-to-br{background-image:linear-gradient(to bottom right,var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right,var(--tw-gradient-stops))}.from-indigo-600{--tw-gradient-from:#4f46e5 var(--tw-gradient-from-position);--tw-gradient-to:rgba(79,70,229,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-500{--tw-gradient-from:#a855f7 var(--tw-gradient-from-position);--tw-gradient-to:rgba(168,85,247,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-500\/20{--tw-gradient-from:rgba(168,85,247,.2) var(--tw-gradient-from-position);--tw-gradient-to:rgba(168,85,247,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-600{--tw-gradient-from:#9333ea var(--tw-gradient-from-position);--tw-gradient-to:rgba(147,51,234,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-700{--tw-gradient-from:#7e22ce var(--tw-gradient-from-position);--tw-gradient-to:rgba(126,34,206,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-900{--tw-gradient-from:#581c87 var(--tw-gradient-from-position);--tw-gradient-to:rgba(88,28,135,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-900\/50{--tw-gradient-from:rgba(88,28,135,.5) var(--tw-gradient-from-position);--tw-gradient-to:rgba(88,28,135,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.via-indigo-600{--tw-gradient-to:rgba(79,70,229,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),#4f46e5 var(--tw-gradient-via-position),var(--tw-gradient-to)}.via-indigo-900{--tw-gradient-to:rgba(49,46,129,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),#312e81 var(--tw-gradient-via-position),var(--tw-gradient-to)}.via-slate-900{--tw-gradient-to:rgba(15,23,42,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),#0f172a var(--tw-gradient-via-position),var(--tw-gradient-to)}.to-indigo-600{--tw-gradient-to:#4f46e5 var(--tw-gradient-to-position)}.to-indigo-700{--tw-gradient-to:#4338ca var(--tw-gradient-to-position)}.to-indigo-900\/40{--tw-gradient-to:rgba(49,46,129,.4) var(--tw-gradient-to-position)}.to-pink-500{--tw-gradient-to:#ec4899 var(--tw-gradient-to-position)}.to-pink-500\/20{--tw-gradient-to:rgba(236,72,153,.2) var(--tw-gradient-to-position)}.to-purple-600{--tw-gradient-to:#9333ea var(--tw-gradient-to-position)}.to-slate-900{--tw-gradient-to:#0f172a var(--tw-gradient-to-position)}.bg-cover{background-size:cover}.bg-center{background-position:50%}.object-cover{-o-object-fit:cover;object-fit:cover}.p-1{padding:.25rem}.p-1\.5{padding:.375rem}.p-2{padding:.5rem}.p-2\.5{padding:.625rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.pb-1{padding-bottom:.25rem}.pb-24{padding-bottom:6rem}.pb-3{padding-bottom:.75rem}.pb-4{padding-bottom:1rem}.pb-6{padding-bottom:1.5rem}.pb-8{padding-bottom:2rem}.pl-3{padding-left:.75rem}.pl-9{padding-left:2.25rem}.pr-1{padding-right:.25rem}.pr-4{padding-right:1rem}.pt-0\.5{padding-top:.125rem}.pt-1{padding-top:.25rem}.pt-2{padding-top:.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.pt-5{padding-top:1.25rem}.pt-6{padding-top:1.5rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}.font-sans{font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-relaxed{line-height:1.625}.tracking-tight{letter-spacing:-.025em}.tracking-wide{letter-spacing:.025em}.tracking-wider{letter-spacing:.05em}.tracking-widest{letter-spacing:.1em}.text-amber-100{--tw-text-opacity:1;color:rgb(254 243 199/var(--tw-text-opacity,1))}.text-amber-200{--tw-text-opacity:1;color:rgb(253 230 138/var(--tw-text-opacity,1))}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183/var(--tw-text-opacity,1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153/var(--tw-text-opacity,1))}.text-indigo-300{--tw-text-opacity:1;color:rgb(165 180 252/var(--tw-text-opacity,1))}.text-indigo-400{--tw-text-opacity:1;color:rgb(129 140 248/var(--tw-text-opacity,1))}.text-pink-200{--tw-text-opacity:1;color:rgb(251 207 232/var(--tw-text-opacity,1))}.text-pink-300{--tw-text-opacity:1;color:rgb(249 168 212/var(--tw-text-opacity,1))}.text-pink-400{--tw-text-opacity:1;color:rgb(244 114 182/var(--tw-text-opacity,1))}.text-purple-200{--tw-text-opacity:1;color:rgb(233 213 255/var(--tw-text-opacity,1))}.text-purple-300{--tw-text-opacity:1;color:rgb(216 180 254/var(--tw-text-opacity,1))}.text-purple-400{--tw-text-opacity:1;color:rgb(192 132 252/var(--tw-text-opacity,1))}.text-red-200{--tw-text-opacity:1;color:rgb(254 202 202/var(--tw-text-opacity,1))}.text-red-300{--tw-text-opacity:1;color:rgb(252 165 165/var(--tw-text-opacity,1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113/var(--tw-text-opacity,1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.text-white\/80{color:hsla(0,0%,100%,.8)}.underline{text-decoration-line:underline}.accent-amber-500{accent-color:#f59e0b}.opacity-50{opacity:.5}.shadow{--tw-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color),0 1px 2px -1px var(--tw-shadow-color)}.shadow,.shadow-2xl{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-lg,.shadow-xl{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color)}.blur{--tw-blur:blur(8px)}.blur,.sepia{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.sepia{--tw-sepia:sepia(100%)}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.duration-300{transition-duration:.3s}.duration-500{transition-duration:.5s}.file\:mr-2::file-selector-button{margin-right:.5rem}.file\:rounded-md::file-selector-button{border-radius:.375rem}.file\:border-0::file-selector-button{border-width:0}.file\:bg-purple-600\/20::file-selector-button{background-color:rgba(147,51,234,.2)}.file\:px-2::file-selector-button{padding-left:.5rem;padding-right:.5rem}.file\:py-1::file-selector-button{padding-top:.25rem;padding-bottom:.25rem}.file\:text-xs::file-selector-button{font-size:.75rem;line-height:1rem}.file\:text-purple-300::file-selector-button{--tw-text-opacity:1;color:rgb(216 180 254/var(--tw-text-opacity,1))}.hover\:border-indigo-500\/50:hover{border-color:rgba(99,102,241,.5)}.hover\:border-pink-500\/50:hover{border-color:rgba(236,72,153,.5)}.hover\:border-purple-500\/50:hover{border-color:rgba(168,85,247,.5)}.hover\:border-purple-500\/60:hover{border-color:rgba(168,85,247,.6)}.hover\:bg-amber-900\/50:hover{background-color:rgba(120,53,15,.5)}.hover\:bg-black\/80:hover{background-color:rgba(0,0,0,.8)}.hover\:bg-emerald-600:hover{--tw-bg-opacity:1;background-color:rgb(5 150 105/var(--tw-bg-opacity,1))}.hover\:bg-indigo-500:hover{--tw-bg-opacity:1;background-color:rgb(99 102 241/var(--tw-bg-opacity,1))}.hover\:bg-indigo-900\/60:hover{background-color:rgba(49,46,129,.6)}.hover\:bg-pink-900\/50:hover{background-color:rgba(131,24,67,.5)}.hover\:bg-purple-500:hover{--tw-bg-opacity:1;background-color:rgb(168 85 247/var(--tw-bg-opacity,1))}.hover\:bg-purple-600:hover{--tw-bg-opacity:1;background-color:rgb(147 51 234/var(--tw-bg-opacity,1))}.hover\:bg-purple-900\/50:hover{background-color:rgba(88,28,135,.5)}.hover\:bg-purple-900\/60:hover{background-color:rgba(88,28,135,.6)}.hover\:bg-purple-900\/70:hover{background-color:rgba(88,28,135,.7)}.hover\:bg-red-500:hover{--tw-bg-opacity:1;background-color:rgb(239 68 68/var(--tw-bg-opacity,1))}.hover\:bg-red-600:hover{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.hover\:bg-red-900\/40:hover{background-color:rgba(127,29,29,.4)}.hover\:bg-red-900\/50:hover{background-color:rgba(127,29,29,.5)}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85/var(--tw-bg-opacity,1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.hover\:from-indigo-500:hover{--tw-gradient-from:#6366f1 var(--tw-gradient-from-position);--tw-gradient-to:rgba(99,102,241,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.hover\:from-purple-500:hover{--tw-gradient-from:#a855f7 var(--tw-gradient-from-position);--tw-gradient-to:rgba(168,85,247,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.hover\:from-purple-600:hover{--tw-gradient-from:#9333ea var(--tw-gradient-from-position);--tw-gradient-to:rgba(147,51,234,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.hover\:to-indigo-500:hover{--tw-gradient-to:#6366f1 var(--tw-gradient-to-position)}.hover\:to-indigo-600:hover{--tw-gradient-to:#4f46e5 var(--tw-gradient-to-position)}.hover\:to-purple-500:hover{--tw-gradient-to:#a855f7 var(--tw-gradient-to-position)}.hover\:text-pink-300:hover{--tw-text-opacity:1;color:rgb(249 168 212/var(--tw-text-opacity,1))}.hover\:text-purple-300:hover{--tw-text-opacity:1;color:rgb(216 180 254/var(--tw-text-opacity,1))}.hover\:text-red-300:hover{--tw-text-opacity:1;color:rgb(252 165 165/var(--tw-text-opacity,1))}.hover\:text-slate-200:hover{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.hover\:underline:hover{text-decoration-line:underline}.hover\:opacity-80:hover{opacity:.8}.focus\:border-indigo-500:focus{--tw-border-opacity:1;border-color:rgb(99 102 241/var(--tw-border-opacity,1))}.focus\:border-purple-500:focus{--tw-border-opacity:1;border-color:rgb(168 85 247/var(--tw-border-opacity,1))}.focus\:border-purple-500\/50:focus{border-color:rgba(168,85,247,.5)}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.group:hover .group-hover\:scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:text-indigo-300{--tw-text-opacity:1;color:rgb(165 180 252/var(--tw-text-opacity,1))}.group:hover .group-hover\:text-pink-300{--tw-text-opacity:1;color:rgb(249 168 212/var(--tw-text-opacity,1))}.group:hover .group-hover\:text-purple-300{--tw-text-opacity:1;color:rgb(216 180 254/var(--tw-text-opacity,1))}.group:hover .group-hover\:opacity-100{opacity:1}@media (min-width:640px){.sm\:col-span-2{grid-column:span 2/span 2}.sm\:inline{display:inline}.sm\:w-44{width:11rem}.sm\:w-96{width:24rem}.sm\:w-auto{width:auto}.sm\:flex-1{flex:1 1 0%}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sm\:flex-row{flex-direction:row}.sm\:items-end{align-items:flex-end}}@media (min-width:768px){.md\:col-span-2{grid-column:span 2/span 2}.md\:flex{display:flex}.md\:hidden{display:none}.md\:h-40{height:10rem}.md\:h-52{height:13rem}.md\:h-72{height:18rem}.md\:w-80{width:20rem}.md\:w-auto{width:auto}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.md\:flex-row{flex-direction:row}.md\:items-end{align-items:flex-end}.md\:p-12{padding:3rem}.md\:p-6{padding:1.5rem}.md\:p-8{padding:2rem}.md\:px-8{padding-left:2rem;padding-right:2rem}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}}@media (min-width:1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}</style>
+    <style id="tailwind-prebuilt">*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/*! tailwindcss v3.4.19 | MIT License | https://tailwindcss.com*/*,:after,:before{box-sizing:border-box;border:0 solid #e5e7eb}:after,:before{--tw-content:""}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;-o-tab-size:4;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder,textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.\!container{width:100%!important}.container{width:100%}@media (min-width:640px){.\!container{max-width:640px!important}.container{max-width:640px}}@media (min-width:768px){.\!container{max-width:768px!important}.container{max-width:768px}}@media (min-width:1024px){.\!container{max-width:1024px!important}.container{max-width:1024px}}@media (min-width:1280px){.\!container{max-width:1280px!important}.container{max-width:1280px}}@media (min-width:1536px){.\!container{max-width:1536px!important}.container{max-width:1536px}}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.-inset-0\.5{inset:-.125rem}.inset-0{inset:0}.inset-x-0{left:0;right:0}.inset-y-0{top:0;bottom:0}.-right-1{right:-.25rem}.-top-1{top:-.25rem}.bottom-0{bottom:0}.left-0{left:0}.left-3{left:.75rem}.right-0{right:0}.right-3{right:.75rem}.top-0{top:0}.top-2{top:.5rem}.top-3{top:.75rem}.z-10{z-index:10}.z-40{z-index:40}.z-50{z-index:50}.z-\[70\]{z-index:70}.col-span-2{grid-column:span 2/span 2}.col-span-3{grid-column:span 3/span 3}.col-span-full{grid-column:1/-1}.mx-1{margin-left:.25rem;margin-right:.25rem}.mx-auto{margin-left:auto;margin-right:auto}.-mt-1{margin-top:-.25rem}.-mt-12{margin-top:-3rem}.-mt-16{margin-top:-4rem}.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.ml-1{margin-left:.25rem}.ml-2{margin-left:.5rem}.ml-6{margin-left:1.5rem}.ml-auto{margin-left:auto}.mr-0\.5{margin-right:.125rem}.mr-1{margin-right:.25rem}.mr-1\.5{margin-right:.375rem}.mr-2{margin-right:.5rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.line-clamp-1{-webkit-line-clamp:1}.line-clamp-1,.line-clamp-2{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical}.line-clamp-2{-webkit-line-clamp:2}.line-clamp-3{overflow:hidden;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3}.block{display:block}.inline-block{display:inline-block}.inline{display:inline}.flex{display:flex}.\!grid{display:grid!important}.grid{display:grid}.hidden{display:none}.h-10{height:2.5rem}.h-11{height:2.75rem}.h-12{height:3rem}.h-2{height:.5rem}.h-24{height:6rem}.h-28{height:7rem}.h-32{height:8rem}.h-4{height:1rem}.h-40{height:10rem}.h-48{height:12rem}.h-56{height:14rem}.h-6{height:1.5rem}.h-9{height:2.25rem}.h-full{height:100%}.max-h-60{max-height:15rem}.max-h-\[80vh\]{max-height:80vh}.max-h-\[85vh\]{max-height:85vh}.max-h-\[90vh\]{max-height:90vh}.min-h-\[350px\]{min-height:350px}.min-h-screen{min-height:100vh}.w-0{width:0}.w-10{width:2.5rem}.w-11{width:2.75rem}.w-12{width:3rem}.w-24{width:6rem}.w-28{width:7rem}.w-40{width:10rem}.w-9{width:2.25rem}.w-full{width:100%}.w-px{width:1px}.min-w-0{min-width:0}.min-w-\[140px\]{min-width:140px}.min-w-\[180px\]{min-width:180px}.min-w-\[200px\]{min-width:200px}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-7xl{max-width:80rem}.max-w-\[180px\]{max-width:180px}.max-w-\[24px\]{max-width:24px}.max-w-lg{max-width:32rem}.max-w-md{max-width:28rem}.max-w-xl{max-width:36rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:pulse 2s cubic-bezier(.4,0,.6,1) infinite}.cursor-not-allowed{cursor:not-allowed}.cursor-pointer{cursor:pointer}.resize-y{resize:vertical}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.grid-cols-\[minmax\(0\2c 10rem\)_1fr\]{grid-template-columns:minmax(0,10rem) 1fr}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.justify-around{justify-content:space-around}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-5{gap:1.25rem}.gap-6{gap:1.5rem}.space-y-0\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.125rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.125rem*var(--tw-space-y-reverse))}.space-y-1>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.25rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.25rem*var(--tw-space-y-reverse))}.space-y-1\.5>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.375rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.375rem*var(--tw-space-y-reverse))}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem*var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem*var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem*var(--tw-space-y-reverse))}.space-y-6>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem*(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem*var(--tw-space-y-reverse))}.divide-y>:not([hidden])~:not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px*(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px*var(--tw-divide-y-reverse))}.divide-slate-800>:not([hidden])~:not([hidden]){--tw-divide-opacity:1;border-color:rgb(30 41 59/var(--tw-divide-opacity,1))}.self-end{align-self:flex-end}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis}.truncate,.whitespace-nowrap{white-space:nowrap}.whitespace-pre-wrap{white-space:pre-wrap}.rounded{border-radius:.25rem}.rounded-2xl{border-radius:1rem}.rounded-3xl{border-radius:1.5rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-xl{border-radius:.75rem}.rounded-r{border-bottom-right-radius:.25rem}.rounded-r,.rounded-t{border-top-right-radius:.25rem}.rounded-t{border-top-left-radius:.25rem}.border{border-width:1px}.border-4{border-width:4px}.border-b{border-bottom-width:1px}.border-b-2{border-bottom-width:2px}.border-l{border-left-width:1px}.border-l-2{border-left-width:2px}.border-t{border-top-width:1px}.border-amber-700\/40{border-color:rgba(180,83,9,.4)}.border-amber-700\/50{border-color:rgba(180,83,9,.5)}.border-emerald-700\/40{border-color:rgba(4,120,87,.4)}.border-indigo-700\/40{border-color:rgba(67,56,202,.4)}.border-indigo-700\/50{border-color:rgba(67,56,202,.5)}.border-pink-700\/50{border-color:rgba(190,24,93,.5)}.border-purple-500{--tw-border-opacity:1;border-color:rgb(168 85 247/var(--tw-border-opacity,1))}.border-purple-500\/30{border-color:rgba(168,85,247,.3)}.border-purple-500\/40{border-color:rgba(168,85,247,.4)}.border-purple-500\/50{border-color:rgba(168,85,247,.5)}.border-purple-700\/40{border-color:rgba(126,34,206,.4)}.border-purple-700\/50{border-color:rgba(126,34,206,.5)}.border-purple-800\/40{border-color:rgba(107,33,168,.4)}.border-purple-800\/50{border-color:rgba(107,33,168,.5)}.border-purple-800\/80{border-color:rgba(107,33,168,.8)}.border-red-800\/40{border-color:rgba(153,27,27,.4)}.border-red-800\/50{border-color:rgba(153,27,27,.5)}.border-slate-700{--tw-border-opacity:1;border-color:rgb(51 65 85/var(--tw-border-opacity,1))}.border-slate-800{--tw-border-opacity:1;border-color:rgb(30 41 59/var(--tw-border-opacity,1))}.border-slate-800\/70{border-color:rgba(30,41,59,.7)}.border-slate-800\/80{border-color:rgba(30,41,59,.8)}.border-slate-900{--tw-border-opacity:1;border-color:rgb(15 23 42/var(--tw-border-opacity,1))}.bg-amber-900\/30{background-color:rgba(120,53,15,.3)}.bg-amber-900\/40{background-color:rgba(120,53,15,.4)}.bg-amber-950\/40{background-color:rgba(69,26,3,.4)}.bg-black\/30{background-color:rgba(0,0,0,.3)}.bg-black\/60{background-color:rgba(0,0,0,.6)}.bg-black\/80{background-color:rgba(0,0,0,.8)}.bg-black\/85{background-color:rgba(0,0,0,.85)}.bg-emerald-600\/20{background-color:rgba(5,150,105,.2)}.bg-emerald-700{--tw-bg-opacity:1;background-color:rgb(4 120 87/var(--tw-bg-opacity,1))}.bg-emerald-900\/40{background-color:rgba(6,78,59,.4)}.bg-indigo-600{--tw-bg-opacity:1;background-color:rgb(79 70 229/var(--tw-bg-opacity,1))}.bg-indigo-600\/20{background-color:rgba(79,70,229,.2)}.bg-indigo-900\/40{background-color:rgba(49,46,129,.4)}.bg-indigo-950\/80{background-color:rgba(30,27,75,.8)}.bg-pink-600{--tw-bg-opacity:1;background-color:rgb(219 39 119/var(--tw-bg-opacity,1))}.bg-pink-600\/20{background-color:rgba(219,39,119,.2)}.bg-pink-900\/30{background-color:rgba(131,24,67,.3)}.bg-pink-900\/40{background-color:rgba(131,24,67,.4)}.bg-purple-500{--tw-bg-opacity:1;background-color:rgb(168 85 247/var(--tw-bg-opacity,1))}.bg-purple-600{--tw-bg-opacity:1;background-color:rgb(147 51 234/var(--tw-bg-opacity,1))}.bg-purple-600\/20{background-color:rgba(147,51,234,.2)}.bg-purple-600\/30{background-color:rgba(147,51,234,.3)}.bg-purple-700{--tw-bg-opacity:1;background-color:rgb(126 34 206/var(--tw-bg-opacity,1))}.bg-purple-900\/30{background-color:rgba(88,28,135,.3)}.bg-purple-900\/40{background-color:rgba(88,28,135,.4)}.bg-purple-900\/50{background-color:rgba(88,28,135,.5)}.bg-purple-900\/80{background-color:rgba(88,28,135,.8)}.bg-purple-950\/40{background-color:rgba(59,7,100,.4)}.bg-purple-950\/50{background-color:rgba(59,7,100,.5)}.bg-purple-950\/60{background-color:rgba(59,7,100,.6)}.bg-purple-950\/80{background-color:rgba(59,7,100,.8)}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.bg-red-700{--tw-bg-opacity:1;background-color:rgb(185 28 28/var(--tw-bg-opacity,1))}.bg-red-900\/20{background-color:rgba(127,29,29,.2)}.bg-red-900\/30{background-color:rgba(127,29,29,.3)}.bg-red-950\/40{background-color:rgba(69,10,10,.4)}.bg-red-950\/50{background-color:rgba(69,10,10,.5)}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.bg-slate-900\/60{background-color:rgba(15,23,42,.6)}.bg-slate-900\/80{background-color:rgba(15,23,42,.8)}.bg-slate-900\/90{background-color:rgba(15,23,42,.9)}.bg-slate-900\/95{background-color:rgba(15,23,42,.95)}.bg-slate-950{--tw-bg-opacity:1;background-color:rgb(2 6 23/var(--tw-bg-opacity,1))}.bg-slate-950\/50{background-color:rgba(2,6,23,.5)}.bg-slate-950\/80{background-color:rgba(2,6,23,.8)}.bg-gradient-to-br{background-image:linear-gradient(to bottom right,var(--tw-gradient-stops))}.bg-gradient-to-r{background-image:linear-gradient(to right,var(--tw-gradient-stops))}.from-indigo-600{--tw-gradient-from:#4f46e5 var(--tw-gradient-from-position);--tw-gradient-to:rgba(79,70,229,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-500{--tw-gradient-from:#a855f7 var(--tw-gradient-from-position);--tw-gradient-to:rgba(168,85,247,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-500\/20{--tw-gradient-from:rgba(168,85,247,.2) var(--tw-gradient-from-position);--tw-gradient-to:rgba(168,85,247,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-600{--tw-gradient-from:#9333ea var(--tw-gradient-from-position);--tw-gradient-to:rgba(147,51,234,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-700{--tw-gradient-from:#7e22ce var(--tw-gradient-from-position);--tw-gradient-to:rgba(126,34,206,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-900{--tw-gradient-from:#581c87 var(--tw-gradient-from-position);--tw-gradient-to:rgba(88,28,135,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.from-purple-900\/50{--tw-gradient-from:rgba(88,28,135,.5) var(--tw-gradient-from-position);--tw-gradient-to:rgba(88,28,135,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.via-indigo-600{--tw-gradient-to:rgba(79,70,229,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),#4f46e5 var(--tw-gradient-via-position),var(--tw-gradient-to)}.via-indigo-900{--tw-gradient-to:rgba(49,46,129,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),#312e81 var(--tw-gradient-via-position),var(--tw-gradient-to)}.via-slate-900{--tw-gradient-to:rgba(15,23,42,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),#0f172a var(--tw-gradient-via-position),var(--tw-gradient-to)}.to-indigo-600{--tw-gradient-to:#4f46e5 var(--tw-gradient-to-position)}.to-indigo-700{--tw-gradient-to:#4338ca var(--tw-gradient-to-position)}.to-indigo-900\/40{--tw-gradient-to:rgba(49,46,129,.4) var(--tw-gradient-to-position)}.to-pink-500{--tw-gradient-to:#ec4899 var(--tw-gradient-to-position)}.to-pink-500\/20{--tw-gradient-to:rgba(236,72,153,.2) var(--tw-gradient-to-position)}.to-purple-600{--tw-gradient-to:#9333ea var(--tw-gradient-to-position)}.to-slate-900{--tw-gradient-to:#0f172a var(--tw-gradient-to-position)}.bg-cover{background-size:cover}.bg-center{background-position:50%}.object-cover{-o-object-fit:cover;object-fit:cover}.p-1{padding:.25rem}.p-1\.5{padding:.375rem}.p-2{padding:.5rem}.p-2\.5{padding:.625rem}.p-3{padding:.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-5{padding-left:1.25rem;padding-right:1.25rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.pb-1{padding-bottom:.25rem}.pb-24{padding-bottom:6rem}.pb-3{padding-bottom:.75rem}.pb-4{padding-bottom:1rem}.pb-6{padding-bottom:1.5rem}.pb-8{padding-bottom:2rem}.pl-3{padding-left:.75rem}.pl-9{padding-left:2.25rem}.pr-1{padding-right:.25rem}.pr-4{padding-right:1rem}.pt-0\.5{padding-top:.125rem}.pt-1{padding-top:.25rem}.pt-2{padding-top:.5rem}.pt-3{padding-top:.75rem}.pt-4{padding-top:1rem}.pt-5{padding-top:1.25rem}.pt-6{padding-top:1.5rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}.font-sans{font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.italic{font-style:italic}.leading-relaxed{line-height:1.625}.tracking-tight{letter-spacing:-.025em}.tracking-wide{letter-spacing:.025em}.tracking-wider{letter-spacing:.05em}.tracking-widest{letter-spacing:.1em}.text-amber-100{--tw-text-opacity:1;color:rgb(254 243 199/var(--tw-text-opacity,1))}.text-amber-200{--tw-text-opacity:1;color:rgb(253 230 138/var(--tw-text-opacity,1))}.text-amber-300{--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.text-amber-400{--tw-text-opacity:1;color:rgb(251 191 36/var(--tw-text-opacity,1))}.text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183/var(--tw-text-opacity,1))}.text-emerald-400{--tw-text-opacity:1;color:rgb(52 211 153/var(--tw-text-opacity,1))}.text-indigo-300{--tw-text-opacity:1;color:rgb(165 180 252/var(--tw-text-opacity,1))}.text-indigo-400{--tw-text-opacity:1;color:rgb(129 140 248/var(--tw-text-opacity,1))}.text-pink-200{--tw-text-opacity:1;color:rgb(251 207 232/var(--tw-text-opacity,1))}.text-pink-300{--tw-text-opacity:1;color:rgb(249 168 212/var(--tw-text-opacity,1))}.text-pink-400{--tw-text-opacity:1;color:rgb(244 114 182/var(--tw-text-opacity,1))}.text-purple-100{--tw-text-opacity:1;color:rgb(243 232 255/var(--tw-text-opacity,1))}.text-purple-200{--tw-text-opacity:1;color:rgb(233 213 255/var(--tw-text-opacity,1))}.text-purple-300{--tw-text-opacity:1;color:rgb(216 180 254/var(--tw-text-opacity,1))}.text-purple-400{--tw-text-opacity:1;color:rgb(192 132 252/var(--tw-text-opacity,1))}.text-red-200{--tw-text-opacity:1;color:rgb(254 202 202/var(--tw-text-opacity,1))}.text-red-300{--tw-text-opacity:1;color:rgb(252 165 165/var(--tw-text-opacity,1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113/var(--tw-text-opacity,1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.text-slate-300{--tw-text-opacity:1;color:rgb(203 213 225/var(--tw-text-opacity,1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184/var(--tw-text-opacity,1))}.text-slate-500{--tw-text-opacity:1;color:rgb(100 116 139/var(--tw-text-opacity,1))}.text-slate-600{--tw-text-opacity:1;color:rgb(71 85 105/var(--tw-text-opacity,1))}.text-slate-700{--tw-text-opacity:1;color:rgb(51 65 85/var(--tw-text-opacity,1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.text-white\/80{color:hsla(0,0%,100%,.8)}.underline{text-decoration-line:underline}.accent-amber-500{accent-color:#f59e0b}.accent-purple-500{accent-color:#a855f7}.opacity-50{opacity:.5}.opacity-70{opacity:.7}.shadow{--tw-shadow:0 1px 3px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);--tw-shadow-colored:0 1px 3px 0 var(--tw-shadow-color),0 1px 2px -1px var(--tw-shadow-color)}.shadow,.shadow-2xl{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgba(0,0,0,.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color),0 4px 6px -4px var(--tw-shadow-color)}.shadow-lg,.shadow-xl{box-shadow:var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow)}.shadow-xl{--tw-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1);--tw-shadow-colored:0 20px 25px -5px var(--tw-shadow-color),0 8px 10px -6px var(--tw-shadow-color)}.blur{--tw-blur:blur(8px)}.blur,.sepia{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.sepia{--tw-sepia:sepia(100%)}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur{--tw-backdrop-blur:blur(8px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter;transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,backdrop-filter,-webkit-backdrop-filter;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.duration-300{transition-duration:.3s}.duration-500{transition-duration:.5s}.file\:mr-2::file-selector-button{margin-right:.5rem}.file\:rounded-md::file-selector-button{border-radius:.375rem}.file\:border-0::file-selector-button{border-width:0}.file\:bg-purple-600\/20::file-selector-button{background-color:rgba(147,51,234,.2)}.file\:px-2::file-selector-button{padding-left:.5rem;padding-right:.5rem}.file\:py-1::file-selector-button{padding-top:.25rem;padding-bottom:.25rem}.file\:text-xs::file-selector-button{font-size:.75rem;line-height:1rem}.file\:text-purple-300::file-selector-button{--tw-text-opacity:1;color:rgb(216 180 254/var(--tw-text-opacity,1))}.hover\:border-emerald-500\/50:hover{border-color:rgba(16,185,129,.5)}.hover\:border-indigo-500\/50:hover{border-color:rgba(99,102,241,.5)}.hover\:border-pink-500\/50:hover{border-color:rgba(236,72,153,.5)}.hover\:border-purple-500\/50:hover{border-color:rgba(168,85,247,.5)}.hover\:border-purple-500\/60:hover{border-color:rgba(168,85,247,.6)}.hover\:bg-amber-900\/50:hover{background-color:rgba(120,53,15,.5)}.hover\:bg-black\/80:hover{background-color:rgba(0,0,0,.8)}.hover\:bg-emerald-600:hover{--tw-bg-opacity:1;background-color:rgb(5 150 105/var(--tw-bg-opacity,1))}.hover\:bg-indigo-500:hover{--tw-bg-opacity:1;background-color:rgb(99 102 241/var(--tw-bg-opacity,1))}.hover\:bg-indigo-900\/60:hover{background-color:rgba(49,46,129,.6)}.hover\:bg-pink-900\/50:hover{background-color:rgba(131,24,67,.5)}.hover\:bg-purple-500:hover{--tw-bg-opacity:1;background-color:rgb(168 85 247/var(--tw-bg-opacity,1))}.hover\:bg-purple-600:hover{--tw-bg-opacity:1;background-color:rgb(147 51 234/var(--tw-bg-opacity,1))}.hover\:bg-purple-900\/50:hover{background-color:rgba(88,28,135,.5)}.hover\:bg-purple-900\/60:hover{background-color:rgba(88,28,135,.6)}.hover\:bg-purple-900\/70:hover{background-color:rgba(88,28,135,.7)}.hover\:bg-red-500:hover{--tw-bg-opacity:1;background-color:rgb(239 68 68/var(--tw-bg-opacity,1))}.hover\:bg-red-600:hover{--tw-bg-opacity:1;background-color:rgb(220 38 38/var(--tw-bg-opacity,1))}.hover\:bg-red-900\/40:hover{background-color:rgba(127,29,29,.4)}.hover\:bg-red-900\/50:hover{background-color:rgba(127,29,29,.5)}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85/var(--tw-bg-opacity,1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59/var(--tw-bg-opacity,1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42/var(--tw-bg-opacity,1))}.hover\:from-indigo-500:hover{--tw-gradient-from:#6366f1 var(--tw-gradient-from-position);--tw-gradient-to:rgba(99,102,241,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.hover\:from-purple-500:hover{--tw-gradient-from:#a855f7 var(--tw-gradient-from-position);--tw-gradient-to:rgba(168,85,247,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.hover\:from-purple-600:hover{--tw-gradient-from:#9333ea var(--tw-gradient-from-position);--tw-gradient-to:rgba(147,51,234,0) var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to)}.hover\:to-indigo-500:hover{--tw-gradient-to:#6366f1 var(--tw-gradient-to-position)}.hover\:to-indigo-600:hover{--tw-gradient-to:#4f46e5 var(--tw-gradient-to-position)}.hover\:to-purple-500:hover{--tw-gradient-to:#a855f7 var(--tw-gradient-to-position)}.hover\:text-amber-300:hover{--tw-text-opacity:1;color:rgb(252 211 77/var(--tw-text-opacity,1))}.hover\:text-pink-300:hover{--tw-text-opacity:1;color:rgb(249 168 212/var(--tw-text-opacity,1))}.hover\:text-purple-300:hover{--tw-text-opacity:1;color:rgb(216 180 254/var(--tw-text-opacity,1))}.hover\:text-red-300:hover{--tw-text-opacity:1;color:rgb(252 165 165/var(--tw-text-opacity,1))}.hover\:text-slate-200:hover{--tw-text-opacity:1;color:rgb(226 232 240/var(--tw-text-opacity,1))}.hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255/var(--tw-text-opacity,1))}.hover\:underline:hover{text-decoration-line:underline}.hover\:opacity-80:hover{opacity:.8}.focus\:border-indigo-500:focus{--tw-border-opacity:1;border-color:rgb(99 102 241/var(--tw-border-opacity,1))}.focus\:border-purple-500:focus{--tw-border-opacity:1;border-color:rgb(168 85 247/var(--tw-border-opacity,1))}.focus\:border-purple-500\/50:focus{border-color:rgba(168,85,247,.5)}.focus\:outline-none:focus{outline:2px solid transparent;outline-offset:2px}.group:hover .group-hover\:scale-110{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.group:hover .group-hover\:bg-purple-400{--tw-bg-opacity:1;background-color:rgb(192 132 252/var(--tw-bg-opacity,1))}.group:hover .group-hover\:text-emerald-300{--tw-text-opacity:1;color:rgb(110 231 183/var(--tw-text-opacity,1))}.group:hover .group-hover\:text-indigo-300{--tw-text-opacity:1;color:rgb(165 180 252/var(--tw-text-opacity,1))}.group:hover .group-hover\:text-pink-300{--tw-text-opacity:1;color:rgb(249 168 212/var(--tw-text-opacity,1))}.group:hover .group-hover\:text-purple-300{--tw-text-opacity:1;color:rgb(216 180 254/var(--tw-text-opacity,1))}.group:hover .group-hover\:opacity-100{opacity:1}@media (min-width:640px){.sm\:col-span-2{grid-column:span 2/span 2}.sm\:col-span-3{grid-column:span 3/span 3}.sm\:inline{display:inline}.sm\:w-44{width:11rem}.sm\:w-96{width:24rem}.sm\:w-auto{width:auto}.sm\:flex-1{flex:1 1 0%}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sm\:grid-cols-\[minmax\(0\2c 14rem\)_1fr\]{grid-template-columns:minmax(0,14rem) 1fr}.sm\:flex-row{flex-direction:row}.sm\:items-end{align-items:flex-end}}@media (min-width:768px){.md\:col-span-2{grid-column:span 2/span 2}.md\:col-span-3{grid-column:span 3/span 3}.md\:flex{display:flex}.md\:hidden{display:none}.md\:h-40{height:10rem}.md\:h-52{height:13rem}.md\:h-72{height:18rem}.md\:w-80{width:20rem}.md\:w-auto{width:auto}.md\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.md\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.md\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.md\:grid-cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}.md\:flex-row{flex-direction:row}.md\:items-end{align-items:flex-end}.md\:p-12{padding:3rem}.md\:p-6{padding:1.5rem}.md\:p-8{padding:2rem}.md\:px-8{padding-left:2rem;padding-right:2rem}.md\:text-3xl{font-size:1.875rem;line-height:2.25rem}.md\:text-4xl{font-size:2.25rem;line-height:2.5rem}}@media (min-width:1024px){.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}}</style>
 </head>
 <body class="min-h-screen flex flex-col pb-24">
 
@@ -136,6 +138,9 @@
                 </button>
                 <button onclick="switchMainPage('series')" id="nav-series" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
                     <i class="fas fa-layer-group"></i> Series Manager
+                </button>
+                <button onclick="switchMainPage('stats')" id="nav-stats" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+                    <i class="fas fa-chart-column"></i> Author Stats
                 </button>
                 <button onclick="switchMainPage('moderation')" id="nav-moderation" class="hidden px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
                     <i class="fas fa-shield-halved"></i> Moderation <span id="mod-badge" class="hidden bg-pink-600 text-white text-[9px] font-bold px-1.5 rounded-full">0</span>
@@ -236,6 +241,16 @@
                     </div>
                     <h3 class="font-cinzel text-xl font-bold text-white group-hover:text-pink-300">Public Library</h3>
                     <p class="text-xs text-slate-400">Filter stories, leave paragraph comments, and cast votes.</p>
+                </div>
+
+                <div onclick="switchMainPage('stats')" class="bg-slate-900 border border-slate-800 hover:border-emerald-500/50 p-6 rounded-2xl space-y-3 cursor-pointer transition shadow-xl group md:col-span-3 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-xl group-hover:scale-110 transition shrink-0">
+                        <i class="fas fa-chart-column"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-cinzel text-xl font-bold text-white group-hover:text-emerald-300">Author Stats</h3>
+                        <p class="text-xs text-slate-400">See reads per chapter, where readers stop, follower growth, votes and reviews.</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -340,6 +355,18 @@
         </section>
 
         <!-- PAGE 3: BOOK SERIES MANAGER -->
+        <!-- AUTHOR STATS -->
+        <section id="page-stats" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-3 shadow-xl">
+                <div>
+                    <h2 class="font-cinzel text-2xl font-bold text-white flex items-center gap-2"><i class="fas fa-chart-column text-purple-400"></i> Author Stats</h2>
+                    <p class="text-xs text-slate-400">How readers find and read your published stories. Reads count each reader once per chapter.</p>
+                </div>
+                <button onclick="loadAuthorStats(true)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-semibold"><i class="fas fa-rotate mr-1"></i> Refresh</button>
+            </div>
+            <div id="stats-content" class="space-y-6"></div>
+        </section>
+
         <!-- MODERATION (admins only) -->
         <section id="page-moderation" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-2 shadow-xl">
@@ -408,12 +435,6 @@
                         <label class="text-[10px] text-slate-400 block mb-1 uppercase font-bold">Genre Category</label>
                         <select id="filter-genre" onchange="filterLibrary()" class="w-full bg-slate-950 border border-slate-800 text-xs text-purple-300 rounded-lg px-2.5 py-1.5 focus:outline-none">
                             <option value="All">All Genres</option>
-                            <option value="Fantasy">Fantasy</option>
-                            <option value="Romance">Romance</option>
-                            <option value="Sci-Fi">Sci-Fi</option>
-                            <option value="Mystery">Mystery</option>
-                            <option value="Thriller">Thriller</option>
-                            <option value="Horror">Horror</option>
                         </select>
                     </div>
 
@@ -522,11 +543,13 @@
                                 <label class="text-xs text-slate-400 block mb-1">Primary Genre *</label>
                                 <select id="meta-genre" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
                                     <option value="Fantasy">Fantasy</option>
-                                    <option value="Romance">Romance</option>
-                                    <option value="Sci-Fi">Sci-Fi</option>
-                                    <option value="Mystery">Mystery</option>
-                                    <option value="Thriller">Thriller</option>
-                                    <option value="Horror">Horror</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Second Genre (optional)</label>
+                                <select id="meta-genre2" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                                    <option value="">None</option>
                                 </select>
                             </div>
 
@@ -587,6 +610,17 @@
                         <select id="chapter-soundtrack-select" onchange="handleSoundtrackChange(this.value)" class="w-full bg-slate-950 border border-slate-800 text-xs text-indigo-300 px-3 py-2.5 rounded-xl focus:outline-none focus:border-indigo-500">
                             <option value="">🎵 No Soundtrack Attached</option>
                         </select>
+                    </div>
+                    <div class="sm:col-span-3 flex flex-wrap items-end gap-3 bg-slate-950 border border-slate-800 rounded-xl p-3">
+                        <div>
+                            <label class="text-xs text-slate-400 block mb-1"><i class="fas fa-clock text-purple-400 mr-1"></i>Chapter Release</label>
+                            <select id="chapter-release-mode" onchange="handleReleaseChange()" class="bg-slate-900 border border-slate-800 text-xs text-slate-200 px-3 py-2 rounded-lg">
+                                <option value="now">Release when I publish</option>
+                                <option value="schedule">Schedule for a date &amp; time</option>
+                            </select>
+                        </div>
+                        <input type="datetime-local" id="chapter-release-at" onchange="handleReleaseChange()" class="hidden bg-slate-900 border border-slate-800 text-xs text-slate-200 px-3 py-2 rounded-lg">
+                        <p id="chapter-release-note" class="text-[11px] text-slate-500 flex-1 min-w-[200px]"></p>
                     </div>
                 </div>
 
@@ -700,6 +734,10 @@
                             <i class="fas fa-copy"></i> Copy Link
                         </button>
 
+                        <button onclick="toggleListenBar()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold flex items-center gap-1.5 transition" title="Listen to this chapter">
+                            <i class="fas fa-headphones text-purple-300"></i> Listen
+                        </button>
+
                         <button onclick="toggleReaderSettings()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold flex items-center gap-1.5 transition" title="Reading display settings">
                             <span class="font-lora">Aa</span> Display
                         </button>
@@ -708,6 +746,22 @@
                     <div class="flex items-center gap-2">
                         <select id="reader-chapter-select" onchange="loadReaderChapter(this.value)" class="bg-slate-950 border border-slate-700 text-purple-300 rounded-lg px-2.5 py-1 text-xs font-semibold focus:outline-none"></select>
                     </div>
+                </div>
+
+                <!-- LISTEN MODE -->
+                <div id="listen-bar" class="hidden bg-slate-900 border border-purple-700/40 rounded-2xl p-3 flex flex-wrap items-center gap-3 text-xs">
+                    <button id="listen-play-btn" onclick="listenPlayPause()" class="w-10 h-10 rounded-full bg-purple-600 hover:bg-purple-500 text-white" title="Play / Pause"><i class="fas fa-play"></i></button>
+                    <button onclick="listenStop()" class="w-9 h-9 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-200" title="Stop"><i class="fas fa-stop"></i></button>
+                    <span id="listen-status" class="text-slate-300 flex-1 min-w-[140px]">Press play to listen to this chapter.</span>
+                    <label class="flex items-center gap-1.5 text-slate-400">Speed
+                        <select id="listen-rate" onchange="listenSettingsChanged()" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-200">
+                            <option value="0.75">0.75×</option><option value="0.9">0.9×</option><option value="1" selected>1×</option><option value="1.15">1.15×</option><option value="1.3">1.3×</option><option value="1.5">1.5×</option>
+                        </select>
+                    </label>
+                    <label class="flex items-center gap-1.5 text-slate-400">Voice
+                        <select id="listen-voice" onchange="listenSettingsChanged()" class="bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-200 max-w-[180px]"></select>
+                    </label>
+                    <label class="flex items-center gap-1.5 text-slate-400"><input type="checkbox" id="listen-autonext" class="accent-purple-500" checked> Auto-play next chapter</label>
                 </div>
 
                 <!-- READER DISPLAY SETTINGS -->
@@ -1306,15 +1360,53 @@
             reader.readAsDataURL(file);
         }
 
+
+        /* ================= GENRES ================= */
+        const GENRE_GROUPS = [
+            ['Fantasy', ['Fantasy', 'Epic / High Fantasy', 'Urban Fantasy', 'Dark Fantasy', 'Romantasy', 'Fairy Tale Retelling', 'Mythology & Folklore']],
+            ['Romance', ['Romance', 'Contemporary Romance', 'Historical Romance', 'Paranormal Romance', 'Romantic Comedy', 'BL (Boys\' Love)', 'GL (Girls\' Love)', 'LGBTQ+']],
+            ['Science Fiction', ['Sci-Fi', 'Space Opera', 'Cyberpunk', 'Steampunk', 'Dystopian', 'Post-Apocalyptic', 'Time Travel']],
+            ['Mystery & Thriller', ['Mystery', 'Crime', 'Detective', 'Thriller', 'Psychological Thriller', 'Suspense']],
+            ['Horror & Supernatural', ['Horror', 'Paranormal', 'Supernatural', 'Vampires & Werewolves', 'Gothic']],
+            ['Adventure & Action', ['Adventure', 'Action', 'War & Military', 'Western', 'Superhero']],
+            ['Web Novel Favorites', ['Isekai', 'LitRPG / GameLit', 'Wuxia / Martial Arts', 'Xianxia / Cultivation', 'System / Leveling', 'Reincarnation', 'Villainess', 'Harem / Reverse Harem']],
+            ['Literary & Real Life', ['Literary Fiction', 'Contemporary', 'Drama', 'Slice of Life', 'Coming of Age', 'Teen Fiction', 'Historical Fiction', 'Family Saga']],
+            ['More', ['Humor / Comedy', 'Satire', 'Fan Fiction', 'Spiritual / Inspirational', 'Poetry', 'Short Stories', 'Non-Fiction', 'Memoir', 'Other']]
+        ];
+        const ALL_GENRES = GENRE_GROUPS.flatMap(g => g[1]);
+
+        function genreOptionsHTML() {
+            return GENRE_GROUPS.map(([group, list]) =>
+                `<optgroup label="${esc(group)}">${list.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join('')}</optgroup>`).join('');
+        }
+
+        function populateGenreSelects() {
+            const opts = genreOptionsHTML();
+            const meta = document.getElementById('meta-genre');
+            const meta2 = document.getElementById('meta-genre2');
+            const filter = document.getElementById('filter-genre');
+            if (meta) meta.innerHTML = opts;
+            if (meta2) meta2.innerHTML = `<option value="">None</option>` + opts;
+            if (filter) filter.innerHTML = `<option value="All">All Genres</option>` + opts;
+        }
+
+        function genreLabel(w) { return [w.genre, w.genre2].filter(Boolean).join(' · '); }
+
         /* ================= STARTUP ================= */
 
         window.addEventListener('DOMContentLoaded', () => {
             // Make Enter create <p> paragraphs in the editor (needed for paragraph comments)
             try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch (e) { }
 
+            populateGenreSelects();
             loadLocalData();
             initAuthListener();
             startLibrarySync();
+            // Scheduled chapters unlock over time: re-check every minute
+            setInterval(() => {
+                checkFollowedAuthorUpdates();
+                if (state.overviewWorkId) renderStoryOverview();
+            }, 60000);
             switchMainPage('dashboard');
             openStoryFromLink();
 
@@ -1503,10 +1595,10 @@
             state.currentPage = page;
             if (page === 'moderation' && !cloud.isAdmin) page = 'dashboard';
             state.currentPage = page;
-            ['dashboard', 'profile', 'series', 'published', 'writer', 'moderation'].forEach(p => {
+            ['dashboard', 'profile', 'series', 'published', 'writer', 'moderation', 'stats'].forEach(p => {
                 document.getElementById(`page-${p}`)?.classList.toggle('hidden', p !== page);
                 const navBtn = document.getElementById(`nav-${p}`);
-                if (navBtn) navBtn.className = (p === page ? NAV_ACTIVE : NAV_IDLE) + (p === 'moderation' && !cloud.isAdmin ? ' hidden' : '');
+                if (navBtn) navBtn.className = (p === page ? NAV_ACTIVE : NAV_IDLE) + (p === 'moderation' && !cloud.isAdmin ? ' hidden' : '') + (p === 'stats' && !(cloudOn() && currentUser) ? ' hidden' : '');
                 document.getElementById(`mnav-${p}`)?.classList.toggle('mnav-active', p === page);
             });
             renderUI();
@@ -1650,6 +1742,7 @@
             renderAuthButton();
             filterLibrary();
             if (state.currentPage === 'moderation') renderModeration();
+            if (state.currentPage === 'stats') loadAuthorStats(false);
         }
 
         /* ================= DASHBOARD ================= */
@@ -2314,7 +2407,18 @@
             const id = cloudIdFor(proj);
             const ref = worksRef().doc(id);
             const data = clone(proj);
-            ['id', 'votes', 'isPublished', 'cloudId', 'cloudOwnerUid', 'publishedAt', 'updatedAt', 'isCloud'].forEach(k => delete data[k]);
+            ['id', 'votes', 'isPublished', 'cloudId', 'cloudOwnerUid', 'publishedAt', 'updatedAt', 'isCloud', 'ratingSum', 'ratingCount'].forEach(k => delete data[k]);
+            const scheduledDocs = [];
+            const releasedScheduled = [];
+            data.chapters = (data.chapters || []).map(c => {
+                if (c.releaseAt && !isReleased(c)) {
+                    scheduledDocs.push({ id: c.id, title: c.title, content: c.content || '', choices: c.choices || [], soundtrackId: c.soundtrackId || '',
+                        releaseAt: firebase.firestore.Timestamp.fromDate(new Date(c.releaseAt)) });
+                    return { id: c.id, title: c.title, releaseAt: c.releaseAt, scheduled: true, content: '', choices: [] };
+                }
+                if (c.releaseAt) releasedScheduled.push(c.id);
+                return c;
+            });
             data.ownerUid = currentUser.uid;
             data.author = proj.author || state.userProfile.name || 'Author';
             data.localId = proj.id;
@@ -2327,11 +2431,21 @@
 
             const existing = await ref.get();
             if (existing.exists) {
-                await ref.update(data);          // keeps votes and the original publish date
+                await ref.update(data);          // keeps votes, ratings and the original publish date
             } else {
                 data.votes = 0;
                 data.publishedAt = firebase.firestore.FieldValue.serverTimestamp();
                 await ref.set(data);
+            }
+            // Locked text for future chapters; tidy up ones that have since been released
+            for (const sd of scheduledDocs) {
+                const { id: chapId, ...rest } = sd;
+                const sbytes = new Blob([JSON.stringify(rest)]).size;
+                if (sbytes > MAX_WORK_BYTES) throw new Error(`Scheduled chapter "${sd.title}" is too large (over ~900 KB).`);
+                await ref.collection('scheduled').doc(chapId).set(rest);
+            }
+            for (const chapId of releasedScheduled) {
+                ref.collection('scheduled').doc(chapId).delete().catch(() => { });
             }
             proj.cloudId = id;
             proj.cloudOwnerUid = currentUser.uid;
@@ -2413,6 +2527,8 @@
             document.getElementById('story-overview').scrollTo(0, 0);
             document.body.style.overflow = 'hidden';
             if (work.ownerUid && cloudOn()) loadFollowerCount(work.ownerUid);
+            state.reviewDraft = null;
+            if (work.isCloud && cloudOn()) { delete cloud.reviews[work.id]; loadReviews(work.id); }
         }
 
         function closeStoryOverview() {
@@ -2428,7 +2544,10 @@
             if (!card || !work) return;
 
             const chapters = work.chapters || [];
+            const ownView = isOwnWork(work);
             const words = chapters.reduce((sum, c) => sum + countWords(c.content), 0);
+            const releasedCount = chapters.filter(c => isReleased(c)).length;
+            const nextUp = chapters.filter(c => !isReleased(c)).sort((a, b) => Date.parse(a.releaseAt) - Date.parse(b.releaseAt))[0];
             const cover = safeImg(work.coverUrl);
             const tags = Array.isArray(work.tags) ? work.tags : [];
             const progress = state.readingProgress[work.id] || 0;
@@ -2464,7 +2583,7 @@
                     <div class="space-y-3">
                         <div class="flex flex-wrap items-center gap-2">
                             <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/40 uppercase">${esc(work.type || 'Novel')}</span>
-                            ${work.genre ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-900/40 text-purple-300 border border-purple-700/40 uppercase">${esc(work.genre)}</span>` : ''}
+                            ${[work.genre, work.genre2].filter(Boolean).map(g => `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-900/40 text-purple-300 border border-purple-700/40 uppercase">${esc(g)}</span>`).join('')}
                             <span class="text-[10px] px-2 py-0.5 rounded ${work.status === 'Completed' ? 'bg-emerald-900/40 text-emerald-300' : 'bg-amber-900/40 text-amber-300'}">${esc(work.status || 'Ongoing')}</span>
                             ${work.rating ? `<span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300">${esc(work.rating)}</span>` : ''}
                         </div>
@@ -2495,7 +2614,7 @@
 
                     <!-- Stats -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-white">${chapters.length}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Chapters</p></div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-white">${releasedCount}${releasedCount < chapters.length ? `<span class="text-xs text-slate-500"> +${chapters.length - releasedCount} soon</span>` : ''}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Chapters</p></div>
                         <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-white">${words.toLocaleString()}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Words</p></div>
                         <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-amber-300">${work.votes || 0}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Votes</p></div>
                         <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-purple-300">${progress}%</p><p class="text-[10px] text-slate-500 uppercase font-bold">You've Read</p></div>
@@ -2523,15 +2642,25 @@
                         </button>
                     </div>
 
+                    ${nextUp ? `<div class="bg-purple-950/40 border border-purple-800/50 rounded-2xl p-4 text-xs text-purple-100"><i class="fas fa-clock text-purple-300 mr-1"></i> Next chapter, <strong>${esc(nextUp.title)}</strong>, unlocks <strong>${esc(fmtRelease(nextUp.releaseAt))}</strong>.${!ownView ? ' Follow the author to get notified.' : ''}</div>` : ''}
+
+                    <!-- Reviews -->
+                    <div id="overview-reviews" class="space-y-3"></div>
+
                     <!-- Chapters -->
                     <div class="space-y-2">
                         <h3 class="font-cinzel text-lg font-bold text-white">Chapters</h3>
                         <div class="divide-y divide-slate-800 border border-slate-800 rounded-xl overflow-hidden">
-                            ${chapters.map((c, i) => `
-                                <button onclick="startReadingFromOverview(${jsArg(work.id)}, ${i})" class="w-full text-left px-4 py-3 bg-slate-950 hover:bg-slate-900 flex items-center justify-between gap-3 text-sm">
+                            ${chapters.map((c, i) => {
+                                const locked = !isReleased(c);
+                                return `
+                                <button ${locked && !ownView ? 'disabled' : `onclick="startReadingFromOverview(${jsArg(work.id)}, ${i})"`} class="w-full text-left px-4 py-3 bg-slate-950 ${locked && !ownView ? 'cursor-not-allowed opacity-70' : 'hover:bg-slate-900'} flex items-center justify-between gap-3 text-sm">
                                     <span class="text-slate-200"><span class="text-purple-400 font-bold mr-2">${i + 1}.</span>${esc(c.title)}</span>
-                                    <span class="text-[11px] text-slate-500 whitespace-nowrap">${countWords(c.content).toLocaleString()} words${position === i ? ' · <span class="text-purple-300">last read</span>' : ''}</span>
-                                </button>`).join('')}
+                                    <span class="text-[11px] text-slate-500 whitespace-nowrap">${locked
+                                        ? `<span class="text-amber-300"><i class="fas fa-lock mr-1"></i>Unlocks ${esc(fmtRelease(c.releaseAt))}</span>`
+                                        : `${c.scheduled && !c.scheduledLoaded ? 'New' : countWords(c.content).toLocaleString() + ' words'}${position === i ? ' · <span class="text-purple-300">last read</span>' : ''}`}</span>
+                                </button>`;
+                            }).join('')}
                         </div>
                     </div>
 
@@ -2551,6 +2680,14 @@
                 </div>
             `;
         }
+
+        const _renderStoryOverview = renderStoryOverview;
+        renderStoryOverview = function () {
+            const t = document.getElementById('review-text');
+            if (t && state.reviewDraft) state.reviewDraft.text = t.value;
+            _renderStoryOverview();
+            renderOverviewReviews();
+        };
 
         function startReadingFromOverview(id, chapterIndex) {
             const work = findWork(id);
@@ -2653,6 +2790,21 @@
                 }
                 state.seenWorkVersions[w.id] = version;
                 changed = true;
+            });
+            // Scheduled chapters that have just unlocked
+            state.publicProjects.forEach(w => {
+                const follow = cloud.following.get(w.ownerUid);
+                if (!follow || w.ownerUid === currentUser.uid) return;
+                (w.chapters || []).forEach(c => {
+                    if (!c.releaseAt || !isReleased(c)) return;
+                    const key = `${w.id}#${c.id}`;
+                    if (state.seenWorkVersions[key]) return;
+                    if (!follow.at || Date.parse(c.releaseAt) > Date.parse(follow.at)) {
+                        addNotification(`New chapter from ${w.author || 'an author you follow'}`, `"${c.title}" in "${w.title}" is out now.`, "follow");
+                    }
+                    state.seenWorkVersions[key] = 'released';
+                    changed = true;
+                });
             });
             if (changed) saveState();
         }
@@ -3035,7 +3187,7 @@
             if (!cloudOn()) return alert("Reporting needs the online library, which isn't available right now.");
             if (!currentUser) { alert("Please sign in to send a report."); return openAuthModal(); }
             pendingReport = target;
-            document.getElementById('report-modal-title').innerText = target.type === 'work' ? 'Report Story' : 'Report Comment';
+            document.getElementById('report-modal-title').innerText = target.type === 'work' ? 'Report Story' : target.type === 'review' ? 'Report Review' : 'Report Comment';
             document.getElementById('report-preview').innerText = `"${String(target.preview || '').slice(0, 300)}"`;
             document.getElementById('report-reason').selectedIndex = 0;
             document.getElementById('report-details').value = '';
@@ -3102,6 +3254,7 @@
 
         function updateModerationNav() {
             document.getElementById('nav-moderation')?.classList.toggle('hidden', !cloud.isAdmin);
+            document.getElementById('nav-stats')?.classList.toggle('hidden', !(cloudOn() && currentUser));
             const badge = document.getElementById('mod-badge');
             if (badge) {
                 badge.innerText = cloud.reports.length;
@@ -3120,7 +3273,7 @@
                     return `
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
                         <div class="flex flex-wrap items-center justify-between gap-2">
-                            <span class="text-xs font-bold ${r.type === 'work' ? 'text-indigo-300' : 'text-purple-300'} uppercase">${r.type === 'work' ? 'Story' : 'Comment'} · ${esc(r.reason)}</span>
+                            <span class="text-xs font-bold ${r.type === 'work' ? 'text-indigo-300' : 'text-purple-300'} uppercase">${r.type === 'work' ? 'Story' : r.type === 'review' ? 'Review' : 'Comment'} · ${esc(r.reason)}</span>
                             <span class="text-[10px] text-slate-500">Reported by ${esc(r.reporterName)} · ${esc(fmtDate(r.createdAt))}</span>
                         </div>
                         <p class="text-xs text-slate-300 bg-slate-950 border border-slate-800 rounded-lg p-2 whitespace-pre-wrap">${esc(r.preview)}</p>
@@ -3130,6 +3283,7 @@
                             ${work ? `<button onclick="openStoryOverview(${jsArg(work.id)})" class="px-3 py-1 bg-slate-800 text-slate-200 rounded-lg text-xs">View Story</button>` : ''}
                             ${work && !work.hidden ? `<button onclick="setWorkHidden(${jsArg(work.id)}, true, ${jsArg(r.reason)})" class="px-3 py-1 bg-red-700 hover:bg-red-600 text-white rounded-lg text-xs font-semibold">Hide Story</button>` : ''}
                             ${r.type === 'comment' && r.commentId ? `<button onclick="modDeleteComment(${jsArg(r.workId)}, ${jsArg(r.commentId)}, ${jsArg(r.id)})" class="px-3 py-1 bg-red-700 hover:bg-red-600 text-white rounded-lg text-xs font-semibold">Delete Comment</button>` : ''}
+                            ${r.type === 'review' && r.commentId ? `<button onclick="modDeleteReview(${jsArg(r.workId)}, ${jsArg(r.commentId)}, ${jsArg(r.id)})" class="px-3 py-1 bg-red-700 hover:bg-red-600 text-white rounded-lg text-xs font-semibold">Delete Review</button>` : ''}
                             <button onclick="resolveReport(${jsArg(r.id)}, 'dismissed')" class="px-3 py-1 bg-slate-800 text-slate-300 rounded-lg text-xs">Dismiss</button>
                             <button onclick="resolveReport(${jsArg(r.id)}, 'resolved')" class="px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-semibold">Mark Resolved</button>
                         </div>
@@ -3295,6 +3449,424 @@
                             </div>`).join('')}
                     </div>` : ''}
                 </div>`;
+        }
+
+
+        /* ================= LISTEN MODE (browser text-to-speech) ================= */
+        const listen = { queue: [], index: 0, playing: false, paused: false, voices: [] };
+
+        function loadVoices() {
+            if (!('speechSynthesis' in window)) return;
+            listen.voices = speechSynthesis.getVoices();
+            const sel = document.getElementById('listen-voice');
+            if (!sel) return;
+            const saved = readJSON('lorecraft_listen_prefs', {}).voice;
+            const voices = [...listen.voices].sort((a, b) => (b.lang.startsWith('en') - a.lang.startsWith('en')) || a.name.localeCompare(b.name));
+            sel.innerHTML = `<option value="">Default voice</option>` + voices.map(v => `<option value="${esc(v.name)}" ${v.name === saved ? 'selected' : ''}>${esc(v.name)} (${esc(v.lang)})</option>`).join('');
+        }
+        if ('speechSynthesis' in window) speechSynthesis.onvoiceschanged = loadVoices;
+
+        function toggleListenBar() {
+            if (!('speechSynthesis' in window)) return alert("Sorry, listening isn't supported in this browser. Try Chrome, Edge or Safari.");
+            const bar = document.getElementById('listen-bar');
+            bar.classList.toggle('hidden');
+            const prefs = readJSON('lorecraft_listen_prefs', {});
+            if (prefs.rate) document.getElementById('listen-rate').value = prefs.rate;
+            if (prefs.autonext === false) document.getElementById('listen-autonext').checked = false;
+            loadVoices();
+            if (bar.classList.contains('hidden')) listenStop();
+        }
+
+        function listenSettingsChanged() {
+            const prefs = { rate: document.getElementById('listen-rate').value, voice: document.getElementById('listen-voice').value,
+                autonext: document.getElementById('listen-autonext').checked };
+            try { localStorage.setItem('lorecraft_listen_prefs', JSON.stringify(prefs)); } catch (e) { }
+            if (listen.playing && !listen.paused) { speechSynthesis.cancel(); speakCurrent(); } // apply immediately
+        }
+
+        function buildListenQueue() {
+            const body = document.getElementById('reader-chapter-body');
+            const items = [{ el: document.getElementById('reader-chapter-title'), text: document.getElementById('reader-chapter-title').innerText }];
+            body.querySelectorAll('p, h1, h2, h3, li, blockquote').forEach(el => {
+                const clone = el.cloneNode(true);
+                clone.querySelectorAll('.para-cmt-badge').forEach(b => b.remove());
+                const text = clone.textContent.replace(/\s+/g, ' ').trim();
+                if (text) items.push({ el, text });
+            });
+            return items;
+        }
+
+        function setListenUI() {
+            const btn = document.getElementById('listen-play-btn');
+            if (btn) btn.innerHTML = `<i class="fas ${listen.playing && !listen.paused ? 'fa-pause' : 'fa-play'}"></i>`;
+            const status = document.getElementById('listen-status');
+            if (status) status.innerText = !listen.playing ? 'Press play to listen to this chapter.'
+                : listen.paused ? `Paused · part ${listen.index + 1} of ${listen.queue.length}`
+                : `Reading part ${listen.index + 1} of ${listen.queue.length}`;
+        }
+
+        function clearListenHighlight() { document.querySelectorAll('.listen-active').forEach(el => el.classList.remove('listen-active')); }
+
+        function speakCurrent() {
+            clearListenHighlight();
+            const item = listen.queue[listen.index];
+            if (!item) return listenFinished();
+            item.el.classList.add('listen-active');
+            item.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            const u = new SpeechSynthesisUtterance(item.text);
+            u.rate = parseFloat(document.getElementById('listen-rate').value) || 1;
+            const voiceName = document.getElementById('listen-voice').value;
+            const voice = listen.voices.find(v => v.name === voiceName);
+            if (voice) u.voice = voice;
+            u.onend = () => {
+                if (!listen.playing || listen.paused || listen.queue[listen.index] !== item) return;
+                listen.index++;
+                speakCurrent();
+            };
+            u.onerror = (e) => { if (e.error !== 'interrupted' && e.error !== 'canceled') console.warn('Speech error:', e.error); };
+            speechSynthesis.speak(u);
+            setListenUI();
+        }
+
+        function listenPlayPause() {
+            if (!('speechSynthesis' in window)) return;
+            if (!listen.playing) {
+                listen.queue = buildListenQueue();
+                listen.index = 0;
+                listen.playing = true;
+                listen.paused = false;
+                speechSynthesis.cancel();
+                speakCurrent();
+            } else if (listen.paused) {
+                listen.paused = false;
+                speechSynthesis.cancel();
+                speakCurrent(); // restart the current part (more reliable than resume() across browsers)
+            } else {
+                listen.paused = true;
+                speechSynthesis.cancel();
+            }
+            setListenUI();
+        }
+
+        function listenStop() {
+            if (!('speechSynthesis' in window)) return;
+            listen.playing = false;
+            listen.paused = false;
+            speechSynthesis.cancel();
+            clearListenHighlight();
+            setListenUI();
+        }
+
+        function listenFinished() {
+            listen.playing = false;
+            clearListenHighlight();
+            setListenUI();
+            const proj = state.activeReaderProject;
+            const next = state.activeReaderChapterIndex + 1;
+            const nextChap = proj?.chapters?.[next];
+            if (document.getElementById('listen-autonext')?.checked && nextChap && (isReleased(nextChap) || isOwnWork(proj))) {
+                state.listenAutoAdvancing = true;
+                loadReaderChapter(next);
+                state.listenAutoAdvancing = false;
+                setTimeout(() => { if (!listen.playing && state.activeReaderChapterIndex === next) listenPlayPause(); }, 600);
+            } else {
+                const status = document.getElementById('listen-status');
+                if (status) status.innerText = 'Finished this chapter.';
+            }
+        }
+
+        /* ================= STORY REVIEWS ================= */
+        // publicWorks/{id}/reviews/{uid}: one review per reader. The work keeps ratingSum and ratingCount for averages.
+
+        cloud.reviews = {};       // workId -> [reviews]
+        state.reviewDraft = null; // { workId, rating, text }
+
+        function starsHTML(rating, size = 'text-xs') {
+            const r = Math.round(rating * 2) / 2;
+            return `<span class="${size} text-amber-400 whitespace-nowrap" aria-label="${rating.toFixed ? rating.toFixed(1) : rating} out of 5">${[1, 2, 3, 4, 5].map(i =>
+                `<i class="${r >= i ? 'fas fa-star' : r >= i - 0.5 ? 'fas fa-star-half-stroke' : 'far fa-star'}"></i>`).join('')}</span>`;
+        }
+
+        async function loadReviews(workId) {
+            if (!cloudOn()) return;
+            try {
+                const snap = await worksRef().doc(workId).collection('reviews').get();
+                cloud.reviews[workId] = snap.docs.map(d => ({ ...d.data(), uid: d.id, date: tsToIso(d.data().updatedAt) }))
+                    .sort((a, b) => (Date.parse(b.date) || 0) - (Date.parse(a.date) || 0));
+            } catch (e) { cloud.reviews[workId] = []; }
+            if (state.overviewWorkId === workId) renderOverviewReviews();
+        }
+
+        function renderOverviewReviews() {
+            const box = document.getElementById('overview-reviews');
+            const work = state.overviewWorkId ? findWork(state.overviewWorkId) : null;
+            if (!box || !work) return;
+            if (!work.isCloud) { box.innerHTML = ''; return; }
+            const reviews = cloud.reviews[work.id];
+            const count = work.ratingCount || 0;
+            const avg = count ? work.ratingSum / count : 0;
+            const mine = currentUser ? (reviews || []).find(r => r.uid === currentUser.uid) : null;
+            const own = isOwnWork(work);
+            if (!state.reviewDraft || state.reviewDraft.workId !== work.id) {
+                state.reviewDraft = { workId: work.id, rating: mine?.rating || 0, text: mine?.text || '' };
+            }
+            const d = state.reviewDraft;
+
+            const form = own ? '' : !currentUser
+                ? `<p class="text-xs text-slate-400"><button onclick="openAuthModal()" class="text-purple-300 underline font-semibold">Sign in</button> to rate and review this story.</p>`
+                : `<div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">
+                        <p class="text-xs font-bold text-slate-300">${mine ? 'Your review' : 'Rate this story'}</p>
+                        <div class="flex items-center gap-1 text-xl">
+                            ${[1, 2, 3, 4, 5].map(i => `<button onclick="setReviewRating(${i})" class="${d.rating >= i ? 'text-amber-400' : 'text-slate-600 hover:text-amber-300'}" title="${i} star${i > 1 ? 's' : ''}"><i class="${d.rating >= i ? 'fas' : 'far'} fa-star"></i></button>`).join('')}
+                            <span class="text-xs text-slate-400 ml-2">${d.rating ? ['', 'Not for me', 'It was okay', 'Liked it', 'Really liked it', 'Loved it!'][d.rating] : 'Tap a star'}</span>
+                        </div>
+                        <textarea id="review-text" rows="3" maxlength="2000" oninput="state.reviewDraft.text = this.value" class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="What did you think? (optional, no spoilers please)">${esc(d.text)}</textarea>
+                        <div class="flex justify-end gap-2">
+                            ${mine ? `<button onclick="deleteMyReview()" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg text-xs">Delete</button>` : ''}
+                            <button onclick="saveReview()" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">${mine ? 'Update Review' : 'Post Review'}</button>
+                        </div>
+                   </div>`;
+
+            const others = (reviews || []).filter(r => !currentUser || r.uid !== currentUser.uid);
+            box.innerHTML = `
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h3 class="font-cinzel text-lg font-bold text-white">Reviews</h3>
+                    ${count ? `<span class="flex items-center gap-2 text-sm">${starsHTML(avg, 'text-sm')}<strong class="text-white">${avg.toFixed(1)}</strong><span class="text-xs text-slate-400">from ${count} review${count === 1 ? '' : 's'}</span></span>` : `<span class="text-xs text-slate-500">No reviews yet</span>`}
+                </div>
+                ${form}
+                ${reviews === undefined ? `<p class="text-xs text-slate-500"><i class="fas fa-spinner fa-spin mr-1"></i>Loading reviews…</p>` : ''}
+                <div class="space-y-2">
+                    ${others.slice(0, 30).map(r => `
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="flex items-center gap-2"><span class="text-xs font-bold text-purple-300">${esc(r.author)}</span>${starsHTML(r.rating)}</span>
+                                <span class="flex items-center gap-3 text-[10px] text-slate-500">${esc(fmtDate(r.date))}
+                                    ${currentUser ? `<button onclick="openReportModal({ type: 'review', workId: ${jsArg(work.id)}, commentId: ${jsArg(r.uid)}, preview: ${jsArg(r.text || (r.rating + ' stars'))} })" class="hover:text-red-300" title="Report review"><i class="fas fa-flag"></i></button>` : ''}</span>
+                            </div>
+                            ${r.text ? `<p class="text-xs text-slate-300 whitespace-pre-wrap">${esc(r.text)}</p>` : ''}
+                        </div>`).join('')}
+                </div>`;
+        }
+
+        function setReviewRating(n) {
+            if (!state.reviewDraft) return;
+            const t = document.getElementById('review-text');
+            if (t) state.reviewDraft.text = t.value;
+            state.reviewDraft.rating = n;
+            renderOverviewReviews();
+        }
+
+        async function saveReview() {
+            const work = findWork(state.overviewWorkId);
+            const d = state.reviewDraft;
+            if (!work?.isCloud || !d) return;
+            if (!currentUser) return openAuthModal();
+            if (!d.rating) return alert("Please choose a star rating first.");
+            const text = (document.getElementById('review-text')?.value || '').trim().slice(0, 2000);
+            const mine = (cloud.reviews[work.id] || []).find(r => r.uid === currentUser.uid);
+            const workRef = worksRef().doc(work.id);
+            const FV = firebase.firestore.FieldValue;
+            const batch = db.batch();
+            batch.set(workRef.collection('reviews').doc(currentUser.uid), {
+                rating: d.rating, text, uid: currentUser.uid,
+                author: (state.userProfile.name || (currentUser.email || 'Reader').split('@')[0]).slice(0, 100),
+                updatedAt: FV.serverTimestamp()
+            });
+            if (!mine) batch.update(workRef, { ratingSum: FV.increment(d.rating), ratingCount: FV.increment(1) });
+            else if (mine.rating !== d.rating) batch.update(workRef, { ratingSum: FV.increment(d.rating - mine.rating) });
+            try {
+                await batch.commit();
+                state.reviewDraft = null;
+                await loadReviews(work.id);
+            } catch (err) { alert(`Couldn't save your review: ${err.message}`); }
+        }
+
+        async function deleteMyReview() {
+            const work = findWork(state.overviewWorkId);
+            if (!work || !currentUser || !confirm('Delete your review?')) return;
+            const mine = (cloud.reviews[work.id] || []).find(r => r.uid === currentUser.uid);
+            if (!mine) return;
+            const FV = firebase.firestore.FieldValue;
+            const workRef = worksRef().doc(work.id);
+            const batch = db.batch();
+            batch.delete(workRef.collection('reviews').doc(currentUser.uid));
+            batch.update(workRef, { ratingSum: FV.increment(-mine.rating), ratingCount: FV.increment(-1) });
+            try { await batch.commit(); state.reviewDraft = null; await loadReviews(work.id); }
+            catch (err) { alert(`Couldn't delete your review: ${err.message}`); }
+        }
+
+        async function modDeleteReview(workId, reviewerUid, reportId) {
+            if (!cloud.isAdmin || !confirm('Delete this review for everyone?')) return;
+            try {
+                const workRef = worksRef().doc(workId);
+                const rd = await workRef.collection('reviews').doc(reviewerUid).get();
+                if (rd.exists) {
+                    const FV = firebase.firestore.FieldValue;
+                    const batch = db.batch();
+                    batch.delete(workRef.collection('reviews').doc(reviewerUid));
+                    batch.update(workRef, { ratingSum: FV.increment(-rd.data().rating), ratingCount: FV.increment(-1) });
+                    await batch.commit();
+                }
+                await resolveReport(reportId, 'resolved');
+            } catch (err) { alert(`Couldn't delete: ${err.message}`); }
+        }
+
+        /* ================= AUTHOR STATS ================= */
+        // Each reader adds 1 read per chapter (once per device) to publicWorks/{id}/stats/{chapterId}.
+
+        function recordChapterView(work, chap) {
+            if (!work?.isCloud || !cloudOn() || isOwnWork(work)) return;
+            const key = `${work.id}:${chap.id}`;
+            const seen = readJSON('lorecraft_counted_reads', {});
+            if (seen[key]) return;
+            seen[key] = 1;
+            try { localStorage.setItem('lorecraft_counted_reads', JSON.stringify(seen)); } catch (e) { }
+            worksRef().doc(work.id).collection('stats').doc(chap.id)
+                .set({ views: firebase.firestore.FieldValue.increment(1) }, { merge: true })
+                .catch(err => console.warn('Read count failed:', err));
+        }
+
+        cloud.authorStats = null; // { loadedAt, works: [{work, views:{chapId:n}, votesByWeek}], ... }
+
+        async function loadAuthorStats(force) {
+            const box = document.getElementById('stats-content');
+            if (!box) return;
+            if (!cloudOn() || !currentUser) {
+                box.innerHTML = `<div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-sm text-slate-300">${!cloudOn() ? "Stats need the online library, which isn't available right now." : `<button onclick="openAuthModal()" class="text-purple-300 underline font-semibold">Sign in</button> to see stats for your published stories.`}</div>`;
+                return;
+            }
+            const mine = state.publicProjects.filter(w => w.ownerUid === currentUser.uid);
+            if (!force && cloud.authorStats && Date.now() - cloud.authorStats.loadedAt < 120000 && cloud.authorStats.count === mine.length) return renderAuthorStats();
+            box.innerHTML = `<p class="text-xs text-slate-400"><i class="fas fa-spinner fa-spin mr-1"></i> Loading your stats…</p>`;
+            const works = [];
+            for (const w of mine) {
+                const views = {};
+                try {
+                    const snap = await worksRef().doc(w.id).collection('stats').get();
+                    snap.docs.forEach(d => views[d.id] = d.data().views || 0);
+                } catch (e) { }
+                works.push({ work: w, views });
+            }
+            cloud.authorStats = { loadedAt: Date.now(), count: mine.length, works };
+            renderAuthorStats();
+        }
+
+        // Weekly buckets (Monday start) for the last n weeks
+        function weekBuckets(dates, n = 8) {
+            const start = new Date(); start.setHours(0, 0, 0, 0);
+            start.setDate(start.getDate() - ((start.getDay() + 6) % 7)); // this Monday
+            const buckets = [];
+            for (let i = n - 1; i >= 0; i--) {
+                const from = new Date(start); from.setDate(from.getDate() - i * 7);
+                const to = new Date(from); to.setDate(to.getDate() + 7);
+                buckets.push({ from, count: dates.filter(d => d >= from && d < to).length });
+            }
+            return buckets;
+        }
+
+        function columnChartHTML(buckets, label) {
+            const max = Math.max(1, ...buckets.map(b => b.count));
+            const nice = max <= 4 ? max : Math.ceil(max / 5) * 5;
+            const total = buckets.reduce((n, b) => n + b.count, 0);
+            return `
+                <figure class="space-y-2" aria-label="${esc(label)}: ${buckets.map(b => `${b.from.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} ${b.count}`).join(', ')}">
+                    <div class="relative h-40 border-b border-slate-800 flex items-end justify-around gap-1 pt-4">
+                        <span class="absolute left-0 top-0 text-[10px] text-slate-500">${nice}</span>
+                        <div class="absolute inset-x-0 top-2 border-t border-slate-800/70"></div>
+                        ${buckets.map((b, i) => `
+                            <div class="flex-1 h-full flex flex-col items-center justify-end group relative" title="Week of ${b.from.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}: ${b.count} new follower${b.count === 1 ? '' : 's'}">
+                                ${(i === buckets.length - 1 || (b.count === max && b.count > 0)) ? `<span class="text-[10px] text-slate-300 mb-1">${b.count}</span>` : ''}
+                                <div class="w-full max-w-[24px] rounded-t bg-purple-500 group-hover:bg-purple-400 transition" style="height:${b.count ? Math.max(4, (b.count / nice) * 85) : 0}%"></div>
+                            </div>`).join('')}
+                    </div>
+                    <div class="flex justify-around gap-1 text-[10px] text-slate-500">
+                        ${buckets.map(b => `<span class="flex-1 text-center">${b.from.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>`).join('')}
+                    </div>
+                    <figcaption class="text-[11px] text-slate-400">${total} new follower${total === 1 ? '' : 's'} in the last 8 weeks</figcaption>
+                </figure>`;
+        }
+
+        function renderAuthorStats() {
+            const box = document.getElementById('stats-content');
+            const st = cloud.authorStats;
+            if (!box || !st) return;
+            if (st.works.length === 0) {
+                box.innerHTML = `<div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-sm text-slate-300">You haven't published any stories online yet. Publish one from the Writer Studio and its stats will appear here.</div>`;
+                return;
+            }
+            const totalReads = st.works.reduce((n, x) => n + Object.values(x.views).reduce((a, b) => a + b, 0), 0);
+            const totalVotes = st.works.reduce((n, x) => n + (x.work.votes || 0), 0);
+            const rc = st.works.reduce((n, x) => n + (x.work.ratingCount || 0), 0);
+            const rs = st.works.reduce((n, x) => n + (x.work.ratingSum || 0), 0);
+            const followerDates = cloud.followers.map(f => new Date(f.at)).filter(d => !isNaN(d));
+
+            const tile = (value, label, sub = '') => `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold">${label}</p>
+                    <p class="font-cinzel text-2xl font-bold text-white mt-1">${value}</p>
+                    ${sub ? `<p class="text-[11px] text-slate-500">${sub}</p>` : ''}
+                </div>`;
+
+            const storyCards = st.works.map(({ work, views }) => {
+                const chapters = (work.chapters || []).filter(c => isReleased(c));
+                const rows = chapters.map(c => ({ title: c.title, v: views[c.id] || 0 }));
+                const max = Math.max(1, ...rows.map(r => r.v));
+                const first = rows[0]?.v || 0;
+                const last = rows[rows.length - 1]?.v || 0;
+                let worstDrop = null;
+                for (let i = 1; i < rows.length; i++) {
+                    const prev = rows[i - 1].v;
+                    if (prev >= 3) {
+                        const drop = (prev - rows[i].v) / prev;
+                        if (!worstDrop || drop > worstDrop.drop) worstDrop = { drop, after: rows[i - 1].title, at: i };
+                    }
+                }
+                const completion = first ? Math.round((last / first) * 100) : 0;
+                const avg = work.ratingCount ? (work.ratingSum / work.ratingCount).toFixed(1) : '–';
+                return `
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+                        <div class="flex flex-wrap items-start justify-between gap-2">
+                            <div>
+                                <h3 class="font-cinzel text-lg font-bold text-white">${esc(work.title)}</h3>
+                                <p class="text-[11px] text-slate-400">${chapters.length} released chapter${chapters.length === 1 ? '' : 's'}${work.hidden ? ' · <span class="text-red-300">hidden by a moderator</span>' : ''}</p>
+                            </div>
+                            <button onclick="openStoryOverview(${jsArg(work.id)})" class="px-3 py-1 bg-slate-800 text-slate-200 rounded-lg text-xs">View Story</button>
+                        </div>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2"><p class="text-base font-bold text-white">${first}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Readers</p></div>
+                            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2"><p class="text-base font-bold text-white">${rows.length > 1 ? completion + '%' : '–'}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Reach Latest Chapter</p></div>
+                            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2"><p class="text-base font-bold text-white">${work.votes || 0}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Votes</p></div>
+                            <div class="bg-slate-950 border border-slate-800 rounded-xl p-2"><p class="text-base font-bold text-white">${avg}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Rating (${work.ratingCount || 0})</p></div>
+                        </div>
+                        <figure class="space-y-1.5" aria-label="Reads per chapter: ${rows.map(r => `${r.title} ${r.v}`).join(', ')}">
+                            <figcaption class="text-xs font-bold text-slate-300">Reads per chapter</figcaption>
+                            ${rows.length === 0 ? '<p class="text-xs text-slate-500 italic">No released chapters yet.</p>' : rows.map((r, i) => `
+                                <div class="grid grid-cols-[minmax(0,10rem)_1fr] sm:grid-cols-[minmax(0,14rem)_1fr] items-center gap-3 group" title="${esc(r.title)}: ${r.v} read${r.v === 1 ? '' : 's'}">
+                                    <span class="text-[11px] text-slate-400 truncate">${i + 1}. ${esc(r.title)}</span>
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <div class="stat-bar h-4 rounded-r bg-purple-500 group-hover:bg-purple-400" style="width:${r.v ? Math.max(2, (r.v / max) * 85) : 0}%"></div>
+                                        <span class="text-[11px] text-slate-300">${r.v}</span>
+                                    </div>
+                                </div>`).join('')}
+                            ${worstDrop && worstDrop.drop >= 0.2 ? `<p class="text-[11px] text-amber-200 pt-1"><i class="fas fa-triangle-exclamation text-amber-400 mr-1"></i>Biggest drop: ${Math.round(worstDrop.drop * 100)}% of readers didn't continue after "${esc(worstDrop.after)}". That chapter's ending may be worth a look.</p>` : ''}
+                        </figure>
+                    </div>`;
+            }).join('');
+
+            box.innerHTML = `
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                    ${tile(st.works.length, 'Published Stories')}
+                    ${tile(totalReads.toLocaleString(), 'Chapter Reads')}
+                    ${tile(cloud.followers.length, 'Followers')}
+                    ${tile(totalVotes, 'Votes')}
+                    ${tile(rc ? (rs / rc).toFixed(1) + ' ★' : '–', 'Average Rating', `${rc} review${rc === 1 ? '' : 's'}`)}
+                </div>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+                    <h3 class="font-cinzel text-lg font-bold text-white">New followers per week</h3>
+                    ${columnChartHTML(weekBuckets(followerDates), 'New followers per week')}
+                </div>
+                ${storyCards}
+                <p class="text-[11px] text-slate-500">Reads are counted once per reader device per chapter, and your own reads aren't counted. Stats from before this update weren't recorded.</p>`;
         }
 
         /* ================= FIREBASE ACCOUNT SIGN-IN ================= */
@@ -3765,7 +4337,7 @@
                     (p.author || '').toLowerCase().includes(query) ||
                     tags.toLowerCase().includes(query);
                 const matchesFmt = (fmt === 'All') || (p.type === fmt);
-                const matchesGnr = (gnr === 'All') || (p.genre === gnr);
+                const matchesGnr = (gnr === 'All') || (p.genre === gnr) || (p.genre2 === gnr);
                 const matchesSts = (sts === 'All') || (p.status === sts);
                 const matchesRtg = (rtg === 'All') || (p.rating === rtg);
                 return matchesQuery && matchesFmt && matchesGnr && matchesSts && matchesRtg;
@@ -3854,14 +4426,14 @@
                             <h3 onclick="openStoryOverview(${jsArg(p.id)})" class="font-cinzel text-xl font-bold text-white line-clamp-1 cursor-pointer hover:text-purple-300">${esc(p.title)}</h3>
                             ${p.hidden ? `<p class="text-[10px] font-bold text-red-300 bg-red-950/50 border border-red-800/50 rounded px-2 py-0.5 inline-block"><i class="fas fa-eye-slash mr-1"></i>Hidden by a moderator</p>` : ''}
                             ${(p.warnings || []).length ? `<p class="text-[10px] font-semibold text-amber-300"><i class="fas fa-triangle-exclamation mr-1"></i>Content warnings: ${esc(p.warnings.join(', '))}</p>` : ''}
-                            <p class="text-xs text-slate-400">By ${esc(p.author || 'Author')}${p.genre ? ' · ' + esc(p.genre) : ''}${p.rating ? ' · ' + esc(p.rating) : ''}</p>
+                            <p class="text-xs text-slate-400">By ${esc(p.author || 'Author')}${genreLabel(p) ? ' · ' + esc(genreLabel(p)) : ''}${p.rating ? ' · ' + esc(p.rating) : ''}</p>
                             ${p.synopsis ? `<p class="text-xs text-slate-300 line-clamp-2">${esc(p.synopsis)}</p>` : ''}
                             ${tags.length ? `<div class="flex flex-wrap gap-1">${tags.map(t => `<span class="text-[10px] text-purple-300 bg-purple-950/60 border border-purple-800/40 px-1.5 py-0.5 rounded">#${esc(t)}</span>`).join('')}</div>` : ''}
                         </div>
 
                         <div class="space-y-2 pt-4 border-t border-slate-800">
                             <div class="flex items-center justify-between text-[11px] text-slate-400">
-                                <span><i class="fas fa-star text-amber-400 mr-1"></i> ${p.votes || 0} Votes</span>
+                                <span><i class="fas fa-thumbs-up text-amber-400 mr-1"></i> ${p.votes || 0} Votes${p.ratingCount ? ` · <i class="fas fa-star text-amber-400 ml-1 mr-0.5"></i>${(p.ratingSum / p.ratingCount).toFixed(1)} (${p.ratingCount})` : ''}</span>
                                 <span class="text-purple-400 font-bold">${prog}% Read</span>
                             </div>
                             <button onclick="openStoryOverview(${jsArg(p.id)})" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center gap-1.5">
@@ -3885,7 +4457,7 @@
 
             const currentProj = getCurrentProject();
             if (currentProj && currentProj.chapters?.length) {
-                cSelect.innerHTML = currentProj.chapters.map(c => `<option value="${esc(c.id)}" ${c.id === state.currentChapterId ? 'selected' : ''}>${esc(c.title)}</option>`).join('');
+                cSelect.innerHTML = currentProj.chapters.map(c => `<option value="${esc(c.id)}" ${c.id === state.currentChapterId ? 'selected' : ''}>${c.releaseAt && !isReleased(c) ? '⏰ ' : ''}${esc(c.title)}</option>`).join('');
             } else {
                 cSelect.innerHTML = `<option value="">No Chapters Available</option>`;
             }
@@ -3907,12 +4479,21 @@
             renderChapterEditor();
         }
 
+        function ensureGenreOption(selectId, value) {
+            const sel = document.getElementById(selectId);
+            if (!sel || !value || [...sel.options].some(o => o.value === value)) return;
+            sel.insertAdjacentHTML('beforeend', `<option value="${esc(value)}">${esc(value)}</option>`);
+        }
+
         // Load the work's details into the Work Metadata panel
         function renderProjectMetadata() {
             const proj = getCurrentProject();
             const setVal = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
             setVal('meta-format', proj?.type || 'Novel');
+            ensureGenreOption('meta-genre', proj?.genre);
+            ensureGenreOption('meta-genre2', proj?.genre2);
             setVal('meta-genre', proj?.genre || 'Fantasy');
+            setVal('meta-genre2', proj?.genre2 || '');
             setVal('meta-status', proj?.status || 'Ongoing');
             setVal('meta-rating', proj?.rating || 'Everyone');
             setVal('meta-tags', Array.isArray(proj?.tags) ? proj.tags.join(', ') : (proj?.tags || ''));
@@ -3932,6 +4513,8 @@
             if (!proj) return;
             proj.type = document.getElementById('meta-format').value;
             proj.genre = document.getElementById('meta-genre').value;
+            proj.genre2 = document.getElementById('meta-genre2').value;
+            if (proj.genre2 === proj.genre) proj.genre2 = '';
             proj.status = document.getElementById('meta-status').value;
             proj.rating = document.getElementById('meta-rating').value;
             proj.tags = document.getElementById('meta-tags').value.split(',').map(t => t.trim()).filter(Boolean);
@@ -3961,6 +4544,7 @@
                 (chap?.choices || []).forEach(c => addBranchChoiceRow(c.text, c.targetChapterId, c.requiredItem));
             }
 
+            renderReleaseControls();
             lastEditorWordCount = countWords(editor ? editor.innerHTML : '');
             const wcElem = document.getElementById('word-count-display');
             if (wcElem) wcElem.innerText = `${lastEditorWordCount.toLocaleString()} Word${lastEditorWordCount === 1 ? '' : 's'}`;
@@ -4185,6 +4769,71 @@
             renderUI();
         }
 
+
+        /* ================= SCHEDULED CHAPTERS ================= */
+        // A chapter with a future releaseAt is published as a locked placeholder. Its text is stored in
+        // publicWorks/{id}/scheduled/{chapterId}, which Firebase rules only let readers open after the release time.
+
+        function isReleased(chap) { return !chap?.releaseAt || Date.parse(chap.releaseAt) <= Date.now(); }
+        function fmtRelease(iso) {
+            const d = new Date(iso);
+            return d.toLocaleString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+        }
+        function isOwnWork(work) {
+            return !!work && (work.ownerUid ? currentUser?.uid === work.ownerUid : state.projects.some(p => p.id === work.id));
+        }
+        function toLocalInput(iso) {
+            const d = new Date(iso); const pad = n => String(n).padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+
+        function renderReleaseControls() {
+            const chap = getCurrentChapter();
+            const mode = document.getElementById('chapter-release-mode');
+            const input = document.getElementById('chapter-release-at');
+            const note = document.getElementById('chapter-release-note');
+            if (!mode || !input || !note) return;
+            const scheduled = !!chap?.releaseAt;
+            mode.value = scheduled ? 'schedule' : 'now';
+            input.classList.toggle('hidden', !scheduled);
+            input.value = scheduled ? toLocalInput(chap.releaseAt) : '';
+            note.innerHTML = !scheduled ? 'Readers see this chapter as soon as you publish or update the work.'
+                : isReleased(chap) ? `<span class="text-emerald-300">Released ${esc(fmtRelease(chap.releaseAt))}.</span> Publish / Update to show it to everyone.`
+                : `<span class="text-amber-300">Unlocks for readers ${esc(fmtRelease(chap.releaseAt))}.</span> Click <strong>Publish / Update</strong> to lock it in. Followers are notified when it unlocks.`;
+        }
+
+        function handleReleaseChange() {
+            const chap = getCurrentChapter();
+            if (!chap) return;
+            const mode = document.getElementById('chapter-release-mode').value;
+            const input = document.getElementById('chapter-release-at');
+            if (mode === 'schedule') {
+                if (!input.value) {
+                    const d = new Date(Date.now() + 86400000); d.setMinutes(0, 0, 0);
+                    input.value = toLocalInput(d.toISOString());
+                }
+                const when = new Date(input.value);
+                chap.releaseAt = isNaN(when) ? '' : when.toISOString();
+            } else {
+                chap.releaseAt = '';
+            }
+            renderReleaseControls();
+            renderProjectPicker();
+            scheduleAutosave();
+        }
+
+        // Load a released scheduled chapter's text from its locked document
+        async function loadScheduledContent(work, chap) {
+            const d = await worksRef().doc(work.id).collection('scheduled').doc(chap.id).get();
+            if (!d.exists) return false;
+            const data = d.data();
+            chap.content = data.content || '';
+            chap.choices = data.choices || [];
+            chap.soundtrackId = data.soundtrackId || '';
+            chap.scheduledLoaded = true;
+            return true;
+        }
+
         /* ================= READER ================= */
 
         function openReaderView(projId) {
@@ -4198,7 +4847,7 @@
 
             const cSelect = document.getElementById('reader-chapter-select');
             if (cSelect) {
-                cSelect.innerHTML = proj.chapters.map((c, i) => `<option value="${i}">${esc(c.title)}</option>`).join('');
+                cSelect.innerHTML = proj.chapters.map((c, i) => `<option value="${i}">${!isReleased(c) ? '🔒 ' : ''}${esc(c.title)}</option>`).join('');
             }
 
             stopCommentSync();
@@ -4216,6 +4865,7 @@
         }
 
         function closeReaderView() {
+            listenStop();
             document.getElementById('reader-view').classList.add('hidden');
             document.body.style.overflow = '';
             closeParaCommentsPanel();
@@ -4231,9 +4881,33 @@
             if (!proj || !proj.chapters) return;
             const chap = proj.chapters[index];
             if (!chap) return;
+            if (!state.listenAutoAdvancing) listenStop();
             state.activeReaderChapterIndex = index;
+            const bodyEl = document.getElementById('reader-chapter-body');
+            const lockedView = (html) => {
+                document.getElementById('reader-chapter-title').innerText = chap.title;
+                const sel = document.getElementById('reader-chapter-select'); if (sel) sel.value = String(index);
+                bodyEl.innerHTML = html;
+                document.getElementById('reader-branch-choices')?.classList.add('hidden');
+                document.getElementById('reader-chapter-discussion')?.classList.add('hidden');
+                document.getElementById('reader-soundtrack-player')?.classList.add('hidden');
+            };
+            if (!isReleased(chap) && !isOwnWork(proj)) {
+                return lockedView(`<div class="text-center py-12 space-y-2 font-sans"><i class="fas fa-lock text-4xl text-amber-300"></i><p class="text-base">This chapter unlocks <strong>${esc(fmtRelease(chap.releaseAt))}</strong>.</p><p class="text-xs opacity-70">Follow the author to be notified when it's out.</p></div>`);
+            }
+            if (chap.scheduled && !chap.scheduledLoaded && proj.isCloud && cloudOn()) {
+                lockedView(`<p class="text-center py-12 font-sans text-sm opacity-70"><i class="fas fa-spinner fa-spin mr-1"></i> Loading chapter…</p>`);
+                loadScheduledContent(proj, chap).then(ok => {
+                    if (state.activeReaderProject !== proj || state.activeReaderChapterIndex !== index) return;
+                    if (ok) loadReaderChapter(index);
+                    else lockedView(`<p class="text-center py-12 font-sans text-sm">This chapter isn't available yet. Please check back soon.</p>`);
+                }).catch(() => lockedView(`<p class="text-center py-12 font-sans text-sm">This chapter isn't available yet. Please check back soon.</p>`));
+                return;
+            }
+            document.getElementById('reader-chapter-discussion')?.classList.remove('hidden');
 
             updateReadingProgress(proj.id, index, proj.chapters.length);
+            recordChapterView(proj, chap);
 
             const selectElem = document.getElementById('reader-chapter-select');
             if (selectElem) selectElem.value = String(index);
