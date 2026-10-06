@@ -14,10 +14,8 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Fira+Code:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
     
-    <!-- Firebase SDKs -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <!-- Firebase SDKs removed: they were loaded but never used. Add them back when a real
+         backend (Firebase Auth + Firestore) is wired up for a truly shared Public Library. -->
 
     <style>
         body {
@@ -67,6 +65,12 @@
             cursor: pointer;
             z-index: 10;
         }
+        @media (max-width: 767px) {
+            .reader-para { padding-right: 44px; }
+            .para-cmt-badge { right: 4px; }
+        }
+        .nav-active { background-color: #9333ea; color: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+        .mnav-active { color: #c084fc; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-24">
@@ -102,7 +106,7 @@
 
             <!-- Navigation Links -->
             <nav class="hidden md:flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80">
-                <button onclick="switchMainPage('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow">
+                <button onclick="switchMainPage('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
                     <i class="fas fa-chart-line"></i> Dashboard
                 </button>
                 <button onclick="switchMainPage('published')" id="nav-published" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
@@ -288,7 +292,7 @@
 
                     <div class="w-full md:w-80 relative">
                         <i class="fas fa-search absolute left-3 top-3 text-slate-500 text-xs"></i>
-                        <input type="text" id="library-search-input" oninput="filterLibrary()" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Search by title, author...">
+                        <input type="text" id="library-search-input" oninput="filterLibrary()" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Search by title or author...">
                     </div>
                 </div>
             </div>
@@ -319,6 +323,13 @@
                 </div>
 
                 <div class="flex items-center gap-2">
+                    <span id="autosave-status" class="text-[11px] text-slate-500"></span>
+                    <button onclick="deleteCurrentChapter()" class="px-3 py-1.5 bg-slate-800 hover:bg-red-900/50 text-red-300 rounded-lg text-xs border border-slate-700 flex items-center gap-1.5 transition" title="Delete this chapter">
+                        <i class="fas fa-trash"></i> <span class="hidden sm:inline">Chapter</span>
+                    </button>
+                    <button onclick="deleteCurrentProject()" class="px-3 py-1.5 bg-slate-800 hover:bg-red-900/50 text-red-300 rounded-lg text-xs border border-slate-700 flex items-center gap-1.5 transition" title="Delete this work">
+                        <i class="fas fa-trash"></i> <span class="hidden sm:inline">Work</span>
+                    </button>
                     <button onclick="saveCurrentChapter()" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold shadow flex items-center gap-1.5 transition">
                         <i class="fas fa-save"></i> Save Draft
                     </button>
@@ -329,7 +340,7 @@
             <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
                 <div>
                     <label class="text-xs text-slate-400 block mb-1">Chapter Title</label>
-                    <input type="text" id="chapter-title-input" class="bg-slate-950 border border-slate-800 text-lg font-cinzel font-bold text-white px-4 py-2 rounded-xl w-full focus:outline-none focus:border-purple-500" placeholder="Chapter Title">
+                    <input type="text" id="chapter-title-input" oninput="handleTitleInput()" class="bg-slate-950 border border-slate-800 text-lg font-cinzel font-bold text-white px-4 py-2 rounded-xl w-full focus:outline-none focus:border-purple-500" placeholder="Chapter Title">
                 </div>
 
                 <div id="chapter-content-editor" contenteditable="true" oninput="handleEditorInput()" class="editor-content w-full min-h-[350px] bg-slate-950 border border-slate-800/80 rounded-xl p-6 text-slate-200 text-base leading-relaxed focus:outline-none focus:border-purple-500/50 resize-y overflow-y-auto" placeholder="Write your chapter content here..."></div>
@@ -455,47 +466,198 @@
         <div id="para-comments-list" class="space-y-3 pt-2"></div>
     </div>
 
+
+    <!-- MOBILE BOTTOM NAVIGATION (the top nav is hidden on small screens) -->
+    <nav class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-slate-900/95 backdrop-blur border-t border-slate-800 grid grid-cols-5 text-[10px] font-semibold text-slate-400">
+        <button onclick="switchMainPage('dashboard')" id="mnav-dashboard" class="py-2.5 flex flex-col items-center gap-1"><i class="fas fa-chart-line text-base"></i>Home</button>
+        <button onclick="switchMainPage('published')" id="mnav-published" class="py-2.5 flex flex-col items-center gap-1"><i class="fas fa-book-open text-base"></i>Library</button>
+        <button onclick="switchMainPage('writer')" id="mnav-writer" class="py-2.5 flex flex-col items-center gap-1"><i class="fas fa-pen-nib text-base"></i>Write</button>
+        <button onclick="switchMainPage('series')" id="mnav-series" class="py-2.5 flex flex-col items-center gap-1"><i class="fas fa-layer-group text-base"></i>Series</button>
+        <button onclick="switchMainPage('profile')" id="mnav-profile" class="py-2.5 flex flex-col items-center gap-1"><i class="fas fa-user-circle text-base"></i>Profile</button>
+    </nav>
+
+    <!-- NOTIFICATIONS MODAL -->
+    <div id="notif-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur flex items-center justify-center p-4" onclick="if(event.target===this) closeModal('notif-modal')">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-bell text-purple-400 mr-2"></i> Notifications</h3>
+                <button onclick="closeModal('notif-modal')" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <div id="notif-list" class="space-y-2"></div>
+            <div class="flex justify-end">
+                <button onclick="clearNotifications()" class="px-3 py-1.5 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold">Clear All</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BACKUP & RESTORE MODAL -->
+    <div id="backup-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur flex items-center justify-center p-4" onclick="if(event.target===this) closeModal('backup-modal')">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-database text-purple-400 mr-2"></i> Backup & Restore</h3>
+                <button onclick="closeModal('backup-modal')" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="text-xs text-slate-400">Your work is saved in this browser only. Download a backup regularly so you don't lose it if browser data is cleared.</p>
+            <p id="storage-usage" class="text-[11px] text-slate-500"></p>
+            <button onclick="exportBackup()" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold"><i class="fas fa-download mr-1"></i> Download Backup (.json)</button>
+            <div class="border-t border-slate-800 pt-4 space-y-2">
+                <span class="text-xs text-slate-400 block">Restore from a backup file (replaces current data):</span>
+                <input type="file" id="backup-file-input" accept="application/json,.json" onchange="importBackup(event)" class="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:bg-purple-600/20 file:text-purple-300">
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTHOR PROFILE MODAL (local profile only, no password / real sign-in yet) -->
+    <div id="auth-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur flex items-center justify-center p-4" onclick="if(event.target===this) closeModal('auth-modal')">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-user-circle text-purple-400 mr-2"></i> Author Profile</h3>
+                <button onclick="closeModal('auth-modal')" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <p class="text-[11px] text-slate-500">Accounts aren't connected yet, so this profile is stored in this browser only.</p>
+            <form onsubmit="saveProfile(event)" class="space-y-3">
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Pen Name *</label>
+                    <input type="text" id="profile-name-input" required maxlength="60" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Handle</label>
+                    <input type="text" id="profile-handle-input" maxlength="30" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="guest_writer">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Short Bio</label>
+                    <input type="text" id="profile-bio-input" maxlength="160" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Daily Word Goal</label>
+                    <input type="number" id="profile-goal-input" min="50" step="50" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeModal('auth-modal')" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">Save Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        /* ================= STATE ================= */
+        const todayStr = () => new Date().toISOString().slice(0, 10);
+
         let state = {
             currentPage: 'dashboard',
-            userProfile: { name: 'Storyteller Author' },
+            userProfile: { name: 'Guest Storyteller', handle: 'guest_writer', bio: 'Fantasy Writer & Reader', isSet: false },
             projects: [],
             publicProjects: [],
             loreEntries: [],
             paraComments: {},
+            series: [],
+            bookmarks: [],
+            notifications: [],
             activeParaId: null,
-            dailyLog: { date: new Date().toISOString().slice(0, 10), wordsWritten: 0, target: 1000, streak: 1 },
+            dailyLog: { date: todayStr(), wordsWritten: 0, target: 1000, streak: 0, lastGoalDate: null },
             currentProjectId: null,
             currentChapterId: null,
             activeReaderProject: null,
-            activeReaderChapterIndex: 0
+            activeReaderChapterIndex: 0,
+            profileSubTab: 'bookmarks'
         };
 
         let tempBase64Image = null;
+        let autosaveTimer = null;
+        let lastEditorWordCount = 0;
 
+        /* ================= HELPERS ================= */
+        // Escape user text before inserting it into HTML (prevents script injection).
+        function esc(str) {
+            return String(str ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        // Only allow http(s) and data:image URLs for images.
+        function safeImg(url) {
+            if (!url) return '';
+            return /^(https?:\/\/|data:image\/)/i.test(url) ? url : '';
+        }
+
+        // Remove scripts, event handlers and javascript: links from chapter HTML.
+        function sanitizeHTML(html) {
+            const tpl = document.createElement('template');
+            tpl.innerHTML = html || '';
+            tpl.content.querySelectorAll('script, iframe, object, embed, style, link, meta, form').forEach(n => n.remove());
+            tpl.content.querySelectorAll('*').forEach(el => {
+                [...el.attributes].forEach(a => {
+                    const n = a.name.toLowerCase();
+                    if (n.startsWith('on')) el.removeAttribute(a.name);
+                    if ((n === 'href' || n === 'src') && /^\s*javascript:/i.test(a.value)) el.removeAttribute(a.name);
+                });
+            });
+            return tpl.innerHTML;
+        }
+
+        function countWords(html) {
+            const div = document.createElement('div');
+            div.innerHTML = (html || '').replace(/</g, ' <'); // keep words in separate paragraphs apart
+            const text = (div.textContent || '').trim();
+            return text ? text.split(/\s+/).length : 0;
+        }
+
+        function uid(prefix) { return prefix + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7); }
+
+        function readJSON(key, fallback) {
+            try {
+                const v = localStorage.getItem(key);
+                return v ? JSON.parse(v) : fallback;
+            } catch (e) { return fallback; }
+        }
+
+        function getCurrentProject() { return state.projects.find(p => p.id === state.currentProjectId); }
+        function getCurrentChapter() { return getCurrentProject()?.chapters?.find(c => c.id === state.currentChapterId); }
+
+        function addNotification(text) {
+            state.notifications.unshift({ id: uid('n'), text, date: new Date().toISOString(), read: false });
+            state.notifications = state.notifications.slice(0, 50);
+            renderNotifBadge();
+        }
+
+        function closeModal(id) { document.getElementById(id)?.classList.add('hidden'); }
+
+        /* ================= INIT / PERSISTENCE ================= */
         window.addEventListener('DOMContentLoaded', () => {
+            // Make Enter create <p> paragraphs in the editor (needed for line comments)
+            try { document.execCommand('defaultParagraphSeparator', false, 'p'); } catch (e) { }
             loadLocalData();
-            renderUI();
-            
-            // Sync public library across browser tabs and sessions
+            switchMainPage('dashboard');
+
+            // Sync the library between tabs of the same browser
             window.addEventListener('storage', (e) => {
                 if (e.key === 'lorecraft_public_projects') {
-                    state.publicProjects = JSON.parse(e.newValue || '[]');
+                    state.publicProjects = readJSON('lorecraft_public_projects', []);
                     filterLibrary();
+                }
+            });
+
+            // Save before the tab is closed, and warn if saving failed
+            window.addEventListener('beforeunload', () => { flushAutosave(); });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    ['lore-modal', 'notif-modal', 'backup-modal', 'auth-modal'].forEach(closeModal);
+                    closeParaCommentsPanel();
                 }
             });
         });
 
         function loadLocalData() {
-            const savedProjects = localStorage.getItem('lorecraft_projects');
-            const savedPublic = localStorage.getItem('lorecraft_public_projects');
-            const savedLore = localStorage.getItem('lorecraft_lore');
-            const savedParaCmts = localStorage.getItem('lorecraft_para_comments');
-
-            if (savedProjects) state.projects = JSON.parse(savedProjects);
-            if (savedPublic) state.publicProjects = JSON.parse(savedPublic);
-            if (savedLore) state.loreEntries = JSON.parse(savedLore);
-            if (savedParaCmts) state.paraComments = JSON.parse(savedParaCmts);
+            state.projects = readJSON('lorecraft_projects', []);
+            state.publicProjects = readJSON('lorecraft_public_projects', []);
+            state.loreEntries = readJSON('lorecraft_lore', []);
+            state.paraComments = readJSON('lorecraft_para_comments', {});
+            state.series = readJSON('lorecraft_series', []);
+            state.bookmarks = readJSON('lorecraft_bookmarks', []);
+            state.notifications = readJSON('lorecraft_notifications', []);
+            state.userProfile = Object.assign(state.userProfile, readJSON('lorecraft_profile', {}));
+            state.dailyLog = Object.assign(state.dailyLog, readJSON('lorecraft_daily_log', {}));
+            rollDailyLog();
 
             if (state.projects.length === 0) {
                 const sampleProj = {
@@ -511,64 +673,366 @@
                 };
                 state.projects = [sampleProj];
                 if (!state.publicProjects.some(p => p.id === sampleProj.id)) {
-                    state.publicProjects.push(sampleProj);
+                    state.publicProjects.push(JSON.parse(JSON.stringify(sampleProj)));
                 }
+                saveState();
             }
 
-            if (state.projects.length > 0) {
-                state.currentProjectId = state.projects[0].id;
-                state.currentChapterId = state.projects[0].chapters[0]?.id || null;
+            state.currentProjectId = state.projects[0]?.id || null;
+            state.currentChapterId = state.projects[0]?.chapters?.[0]?.id || null;
+        }
+
+        // Start a new day's word count; keep the streak only if yesterday hit the goal.
+        function rollDailyLog() {
+            const log = state.dailyLog;
+            const today = todayStr();
+            if (log.date !== today) {
+                const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+                if (log.lastGoalDate !== yesterday && log.lastGoalDate !== today) log.streak = 0;
+                log.date = today;
+                log.wordsWritten = 0;
             }
         }
 
         function saveState() {
-            localStorage.setItem('lorecraft_projects', JSON.stringify(state.projects));
-            localStorage.setItem('lorecraft_public_projects', JSON.stringify(state.publicProjects));
-            localStorage.setItem('lorecraft_lore', JSON.stringify(state.loreEntries));
-            localStorage.setItem('lorecraft_para_comments', JSON.stringify(state.paraComments));
+            const data = {
+                lorecraft_projects: state.projects,
+                lorecraft_public_projects: state.publicProjects,
+                lorecraft_lore: state.loreEntries,
+                lorecraft_para_comments: state.paraComments,
+                lorecraft_series: state.series,
+                lorecraft_bookmarks: state.bookmarks,
+                lorecraft_notifications: state.notifications,
+                lorecraft_profile: state.userProfile,
+                lorecraft_daily_log: state.dailyLog
+            };
+            try {
+                Object.entries(data).forEach(([k, v]) => localStorage.setItem(k, JSON.stringify(v)));
+                return true;
+            } catch (e) {
+                alert("Couldn't save: your browser's storage is full (usually caused by large images). Remove some lore images or download a backup, then try again.");
+                return false;
+            }
+        }
+
+        /* ================= NAVIGATION ================= */
+        const PAGES = ['dashboard', 'profile', 'series', 'published', 'writer'];
+
+        function switchMainPage(page) {
+            flushAutosave();
+            state.currentPage = page;
+            PAGES.forEach(p => {
+                document.getElementById(`page-${p}`)?.classList.toggle('hidden', p !== page);
+                const nav = document.getElementById(`nav-${p}`);
+                if (nav) {
+                    nav.classList.toggle('nav-active', p === page);
+                    nav.classList.toggle('text-slate-400', p !== page);
+                }
+                document.getElementById(`mnav-${p}`)?.classList.toggle('mnav-active', p === page);
+            });
+            renderUI();
+            window.scrollTo(0, 0);
         }
 
         function renderUI() {
             renderDashboard();
-            renderProjectPicker();
-            renderChapterEditor();
-            renderLoreGrid();
-            filterLibrary();
+            renderNotifBadge();
+            renderAuthButton();
+            if (state.currentPage === 'writer') {
+                renderProjectPicker();
+                renderChapterEditor();
+                renderLoreGrid();
+            }
+            if (state.currentPage === 'published') filterLibrary();
+            if (state.currentPage === 'series') renderSeries();
+            if (state.currentPage === 'profile') renderProfile();
         }
 
-        function switchMainPage(page) {
-            state.currentPage = page;
-            ['dashboard', 'profile', 'series', 'published', 'writer'].forEach(p => {
-                const pageElem = document.getElementById(`page-${p}`);
-                if (pageElem) pageElem.classList.add('hidden');
-            });
-            const targetPage = document.getElementById(`page-${page}`);
-            if (targetPage) targetPage.classList.remove('hidden');
+        /* ================= DASHBOARD ================= */
+        function renderDashboard() {
+            rollDailyLog();
+            const log = state.dailyLog;
+            const totalWords = state.projects.reduce((sum, p) => sum + (p.chapters || []).reduce((s, c) => s + countWords(c.content), 0), 0);
+            const pct = Math.min(100, Math.round((log.wordsWritten / (log.target || 1)) * 100));
+
+            const set = (id, val) => { const el = document.getElementById(id); if (el) el.innerText = val; };
+            set('dash-welcome-text', `Welcome back, ${state.userProfile.name || 'Author'}!`);
+            set('stat-lore-count', state.loreEntries.length);
+            set('stat-works-count', state.projects.length);
+            set('stat-bookmarks-count', state.bookmarks.length);
+            set('stat-words-count', totalWords.toLocaleString());
+            set('analytics-words-today', log.wordsWritten.toLocaleString());
+            set('analytics-target-display', (log.target || 1000).toLocaleString());
+            set('analytics-streak-badge', `🔥 ${log.streak} Day Streak`);
+            const bar = document.getElementById('analytics-progress-bar');
+            if (bar) bar.style.width = pct + '%';
+        }
+
+        /* ================= HEADER: NOTIFICATIONS / BACKUP / PROFILE ================= */
+        function renderNotifBadge() {
+            const badge = document.getElementById('notif-badge');
+            if (!badge) return;
+            const unread = state.notifications.filter(n => !n.read).length;
+            badge.innerText = unread > 9 ? '9+' : unread;
+            badge.classList.toggle('hidden', unread === 0);
+        }
+
+        function openNotificationsModal() {
+            const list = document.getElementById('notif-list');
+            list.innerHTML = state.notifications.length === 0
+                ? `<p class="text-xs text-slate-500 italic">No notifications yet.</p>`
+                : state.notifications.map(n => `
+                    <div class="bg-slate-950 border ${n.read ? 'border-slate-800' : 'border-purple-500/40'} rounded-xl p-3">
+                        <p class="text-xs text-slate-200">${esc(n.text)}</p>
+                        <span class="text-[10px] text-slate-500">${esc(new Date(n.date).toLocaleString())}</span>
+                    </div>`).join('');
+            state.notifications.forEach(n => n.read = true);
+            saveState();
+            renderNotifBadge();
+            document.getElementById('notif-modal').classList.remove('hidden');
+        }
+
+        function clearNotifications() {
+            state.notifications = [];
+            saveState();
+            openNotificationsModal();
+        }
+
+        function openBackupModal() {
+            let bytes = 0;
+            try {
+                for (let i = 0; i < localStorage.length; i++) {
+                    const k = localStorage.key(i);
+                    if (k.startsWith('lorecraft_')) bytes += (localStorage.getItem(k) || '').length * 2;
+                }
+            } catch (e) { }
+            document.getElementById('storage-usage').innerText = `Storage used: about ${(bytes / 1024 / 1024).toFixed(2)} MB of ~5 MB.`;
+            document.getElementById('backup-modal').classList.remove('hidden');
+        }
+
+        function exportBackup() {
+            flushAutosave();
+            const backup = {
+                app: 'LoreCraft Studio', version: 2, exportedAt: new Date().toISOString(),
+                projects: state.projects, publicProjects: state.publicProjects, loreEntries: state.loreEntries,
+                paraComments: state.paraComments, series: state.series, bookmarks: state.bookmarks,
+                userProfile: state.userProfile, dailyLog: state.dailyLog
+            };
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `lorecraft-backup-${todayStr()}.json`;
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        }
+
+        function importBackup(e) {
+            const file = e.target.files[0];
+            e.target.value = '';
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                try {
+                    const data = JSON.parse(evt.target.result);
+                    if (!Array.isArray(data.projects)) throw new Error('Not a LoreCraft backup');
+                    if (!confirm('Restore this backup? Your current data in this browser will be replaced.')) return;
+                    state.projects = data.projects;
+                    state.publicProjects = data.publicProjects || [];
+                    state.loreEntries = data.loreEntries || [];
+                    state.paraComments = data.paraComments || {};
+                    state.series = data.series || [];
+                    state.bookmarks = data.bookmarks || [];
+                    if (data.userProfile) state.userProfile = data.userProfile;
+                    if (data.dailyLog) state.dailyLog = data.dailyLog;
+                    state.currentProjectId = state.projects[0]?.id || null;
+                    state.currentChapterId = state.projects[0]?.chapters?.[0]?.id || null;
+                    saveState();
+                    closeModal('backup-modal');
+                    switchMainPage('dashboard');
+                    alert('Backup restored.');
+                } catch (err) {
+                    alert("That file couldn't be read as a LoreCraft backup.");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function renderAuthButton() {
+            const t = document.getElementById('auth-btn-text');
+            if (t) t.innerText = state.userProfile.isSet ? state.userProfile.name : 'Set Profile';
+        }
+
+        function openAuthModal() {
+            const p = state.userProfile;
+            document.getElementById('profile-name-input').value = p.isSet ? p.name : '';
+            document.getElementById('profile-handle-input').value = p.handle || '';
+            document.getElementById('profile-bio-input').value = p.bio || '';
+            document.getElementById('profile-goal-input').value = state.dailyLog.target || 1000;
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
+
+        function saveProfile(e) {
+            e.preventDefault();
+            const oldName = state.userProfile.isSet ? state.userProfile.name : null;
+            const name = document.getElementById('profile-name-input').value.trim();
+            const handle = document.getElementById('profile-handle-input').value.trim().replace(/^@/, '').replace(/\s+/g, '_');
+            state.userProfile = { name, handle: handle || 'guest_writer', bio: document.getElementById('profile-bio-input').value.trim(), isSet: true };
+            state.dailyLog.target = Math.max(50, parseInt(document.getElementById('profile-goal-input').value) || 1000);
+            // Update the author name on the user's own works
+            state.projects.forEach(p => { if (!p.author || p.author === 'Author' || p.author === oldName) p.author = name; });
+            saveState();
+            closeModal('auth-modal');
             renderUI();
         }
 
-        function renderDashboard() {
-            const statLore = document.getElementById('stat-lore-count');
-            if (statLore) statLore.innerText = state.loreEntries.length;
-            const statWorks = document.getElementById('stat-works-count');
-            if (statWorks) statWorks.innerText = state.projects.length;
+        /* ================= PROFILE PAGE ================= */
+        function switchProfileSubTab(tab) {
+            state.profileSubTab = tab;
+            ['bookmarks', 'stories'].forEach(t => {
+                const btn = document.getElementById(`prof-subtab-${t}`);
+                const active = t === tab;
+                btn.classList.toggle('text-purple-400', active);
+                btn.classList.toggle('border-b-2', active);
+                btn.classList.toggle('border-purple-500', active);
+                btn.classList.toggle('text-slate-400', !active);
+                document.getElementById(`prof-sec-${t}`).classList.toggle('hidden', !active);
+            });
+            renderProfile();
         }
 
-        /* --- LORE FIXES --- */
+        function renderProfile() {
+            const p = state.userProfile;
+            document.getElementById('profile-name-display').innerText = p.name || 'Guest Storyteller';
+            document.getElementById('profile-handle-display').innerText = '@' + (p.handle || 'guest_writer');
+            document.getElementById('profile-bio-display').innerText = p.bio || '';
+
+            const bGrid = document.getElementById('bookmarks-grid');
+            const saved = state.bookmarks.map(id => state.publicProjects.find(w => w.id === id)).filter(Boolean);
+            bGrid.innerHTML = saved.length === 0
+                ? `<p class="text-xs text-slate-500 italic">No bookmarks yet. Use the bookmark button in the Public Library.</p>`
+                : saved.map(workCard).join('');
+
+            const sList = document.getElementById('written-stories-list');
+            sList.innerHTML = state.projects.length === 0
+                ? `<p class="text-xs text-slate-500 italic">You haven't started any works yet.</p>`
+                : state.projects.map(w => {
+                    const words = (w.chapters || []).reduce((s, c) => s + countWords(c.content), 0);
+                    const pub = state.publicProjects.some(x => x.id === w.id);
+                    return `
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-3">
+                        <div>
+                            <h4 class="font-cinzel font-bold text-white">${esc(w.title)}</h4>
+                            <p class="text-[11px] text-slate-400">${(w.chapters || []).length} chapters · ${words.toLocaleString()} words · ${pub ? '<span class="text-emerald-400">Published</span>' : 'Draft'}</p>
+                        </div>
+                        <button onclick="openInWriter('${esc(w.id)}')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">Edit</button>
+                    </div>`;
+                }).join('');
+        }
+
+        function openInWriter(projId) {
+            state.currentProjectId = projId;
+            state.currentChapterId = getCurrentProject()?.chapters?.[0]?.id || null;
+            switchMainPage('writer');
+        }
+
+        /* ================= SERIES MANAGER ================= */
+        function createNewSeries() {
+            const name = prompt('Enter Series Name:');
+            if (!name || !name.trim()) return;
+            state.series.push({ id: uid('series'), name: name.trim(), bookIds: [] });
+            saveState();
+            renderSeries();
+        }
+
+        function renderSeries() {
+            const c = document.getElementById('series-list-container');
+            if (!c) return;
+            if (state.series.length === 0) {
+                c.innerHTML = `<p class="text-xs text-slate-500 italic">No series yet. Click "Create New Series" to group your books.</p>`;
+                return;
+            }
+            c.innerHTML = state.series.map(s => {
+                const books = s.bookIds.map(id => state.projects.find(p => p.id === id)).filter(Boolean);
+                const available = state.projects.filter(p => !s.bookIds.includes(p.id));
+                return `
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-3">
+                    <div class="flex items-center justify-between gap-3">
+                        <h3 class="font-cinzel text-lg font-bold text-white">${esc(s.name)} <span class="text-xs text-slate-500 font-sans">(${books.length} books)</span></h3>
+                        <div class="flex gap-2">
+                            <button onclick="renameSeries('${s.id}')" class="text-xs text-slate-400 hover:text-white"><i class="fas fa-pen"></i></button>
+                            <button onclick="deleteSeries('${s.id}')" class="text-xs text-red-400 hover:text-red-300"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <ol class="space-y-2">
+                        ${books.map((b, i) => `
+                            <li class="flex items-center justify-between bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-sm">
+                                <span><span class="text-purple-400 font-bold mr-2">Book ${i + 1}</span>${esc(b.title)}</span>
+                                <span class="flex gap-2 text-xs text-slate-400">
+                                    <button onclick="moveSeriesBook('${s.id}', ${i}, -1)" ${i === 0 ? 'disabled class="opacity-30"' : ''}><i class="fas fa-arrow-up"></i></button>
+                                    <button onclick="moveSeriesBook('${s.id}', ${i}, 1)" ${i === books.length - 1 ? 'disabled class="opacity-30"' : ''}><i class="fas fa-arrow-down"></i></button>
+                                    <button onclick="removeSeriesBook('${s.id}', '${esc(b.id)}')" class="text-red-400"><i class="fas fa-times"></i></button>
+                                </span>
+                            </li>`).join('') || '<li class="text-xs text-slate-500 italic">No books in this series yet.</li>'}
+                    </ol>
+                    ${available.length ? `
+                    <div class="flex gap-2">
+                        <select id="series-add-${s.id}" class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1.5 text-xs text-slate-200">
+                            ${available.map(p => `<option value="${esc(p.id)}">${esc(p.title)}</option>`).join('')}
+                        </select>
+                        <button onclick="addSeriesBook('${s.id}')" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">Add Book</button>
+                    </div>` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        function findSeries(id) { return state.series.find(s => s.id === id); }
+        function addSeriesBook(id) {
+            const s = findSeries(id); const sel = document.getElementById(`series-add-${id}`);
+            if (s && sel?.value) { s.bookIds.push(sel.value); saveState(); renderSeries(); }
+        }
+        function removeSeriesBook(id, bookId) {
+            const s = findSeries(id); if (!s) return;
+            s.bookIds = s.bookIds.filter(b => b !== bookId); saveState(); renderSeries();
+        }
+        function moveSeriesBook(id, idx, dir) {
+            const s = findSeries(id); if (!s) return;
+            const books = s.bookIds.filter(b => state.projects.some(p => p.id === b));
+            const j = idx + dir;
+            if (j < 0 || j >= books.length) return;
+            [books[idx], books[j]] = [books[j], books[idx]];
+            s.bookIds = books; saveState(); renderSeries();
+        }
+        function renameSeries(id) {
+            const s = findSeries(id); if (!s) return;
+            const name = prompt('Rename series:', s.name);
+            if (name && name.trim()) { s.name = name.trim(); saveState(); renderSeries(); }
+        }
+        function deleteSeries(id) {
+            if (!confirm('Delete this series? The books themselves are kept.')) return;
+            state.series = state.series.filter(s => s.id !== id); saveState(); renderSeries();
+        }
+
+        /* ================= LORE VAULT ================= */
         function renderLoreGrid() {
             const grid = document.getElementById('lore-grid');
             if (!grid) return;
-            grid.innerHTML = state.loreEntries.map(l => `
-                <div onclick="openLoreModal('${l.id}')" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-purple-500/50 transition">
+            if (state.loreEntries.length === 0) {
+                grid.innerHTML = `<p class="text-xs text-slate-500 italic">No lore entries yet.</p>`;
+                return;
+            }
+            grid.innerHTML = state.loreEntries.map(l => {
+                const img = safeImg(l.imageUrl);
+                return `
+                <div onclick="openLoreModal('${esc(l.id)}')" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-purple-500/50 transition">
                     <div class="flex items-center gap-3">
-                        ${l.imageUrl ? `<img src="${l.imageUrl}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 text-xs font-bold">${l.category ? l.category[0] : 'L'}</div>`}
+                        ${img ? `<img src="${esc(img)}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 text-xs font-bold">${esc(l.category ? l.category[0] : 'L')}</div>`}
                         <div>
-                            <h4 class="font-cinzel text-xs font-bold text-white">${l.title}</h4>
-                            <p class="text-[10px] text-slate-400">${l.category}</p>
+                            <h4 class="font-cinzel text-xs font-bold text-white">${esc(l.title)}</h4>
+                            <p class="text-[10px] text-slate-400">${esc(l.category)}${l.attributes?.role ? ' · ' + esc(l.attributes.role) : ''}</p>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
 
         function updateLoreDynamicFields(category, attrs = {}) {
@@ -577,8 +1041,8 @@
             if (category === 'Character') {
                 container.innerHTML = `
                     <div class="grid grid-cols-2 gap-3">
-                        <input type="text" id="attr-role" value="${attrs.role || ''}" placeholder="Role (Protagonist, Rival)" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
-                        <input type="text" id="attr-traits" value="${attrs.traits || ''}" placeholder="Traits" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                        <input type="text" id="attr-role" value="${esc(attrs.role)}" placeholder="Role (Protagonist, Rival)" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                        <input type="text" id="attr-traits" value="${esc(attrs.traits)}" placeholder="Traits" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
                     </div>
                 `;
             } else {
@@ -590,45 +1054,50 @@
             const modal = document.getElementById('lore-modal');
             const delBtn = document.getElementById('delete-lore-btn');
             tempBase64Image = null;
+            document.getElementById('lore-file-input').value = '';
+            const l = loreId ? state.loreEntries.find(entry => entry.id === loreId) : null;
 
-            if (loreId) {
-                const l = state.loreEntries.find(entry => entry.id === loreId);
-                if (l) {
-                    document.getElementById('lore-id').value = l.id;
-                    document.getElementById('lore-title').value = l.title || '';
-                    document.getElementById('lore-category').value = l.category || 'Character';
-                    document.getElementById('lore-aliases').value = l.aliases || '';
-                    document.getElementById('lore-description').value = l.description || '';
-                    document.getElementById('lore-image-url').value = l.imageUrl || '';
-                    updateLoreDynamicFields(l.category, l.attributes || {});
-                    previewImageURL(l.imageUrl || '');
-                    if (delBtn) delBtn.classList.remove('hidden');
-                }
-            } else {
-                document.getElementById('lore-id').value = '';
-                document.getElementById('lore-title').value = '';
-                document.getElementById('lore-category').value = 'Character';
-                document.getElementById('lore-aliases').value = '';
-                document.getElementById('lore-description').value = '';
-                document.getElementById('lore-image-url').value = '';
-                updateLoreDynamicFields('Character');
-                previewImageURL(null);
-                if (delBtn) delBtn.classList.add('hidden');
-            }
-            if (modal) modal.classList.remove('hidden');
+            document.getElementById('lore-modal-title').innerText = l ? 'Edit Lore Entry' : 'Add Lore Entry';
+            document.getElementById('lore-id').value = l?.id || '';
+            document.getElementById('lore-title').value = l?.title || '';
+            document.getElementById('lore-category').value = l?.category || 'Character';
+            document.getElementById('lore-aliases').value = l?.aliases || '';
+            document.getElementById('lore-description').value = l?.description || '';
+            // Uploaded images are kept separately so the URL box isn't filled with a huge data string
+            const isUploaded = l?.imageUrl?.startsWith('data:');
+            if (isUploaded) tempBase64Image = l.imageUrl;
+            document.getElementById('lore-image-url').value = isUploaded ? '' : (l?.imageUrl || '');
+            updateLoreDynamicFields(l?.category || 'Character', l?.attributes || {});
+            previewImageURL(l?.imageUrl || null);
+            delBtn?.classList.toggle('hidden', !l);
+            modal?.classList.remove('hidden');
         }
 
         function closeLoreModal() {
             document.getElementById('lore-modal').classList.add('hidden');
         }
 
+        // Shrink uploaded images so they don't fill browser storage
         function handleLocalImageUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
+            if (!file.type.startsWith('image/')) return alert('Please choose an image file.');
             const reader = new FileReader();
             reader.onload = (evt) => {
-                tempBase64Image = evt.target.result;
-                previewImageURL(tempBase64Image);
+                const img = new Image();
+                img.onload = () => {
+                    const max = 400;
+                    const scale = Math.min(1, max / Math.max(img.width, img.height));
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.round(img.width * scale);
+                    canvas.height = Math.round(img.height * scale);
+                    canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                    tempBase64Image = canvas.toDataURL('image/jpeg', 0.82);
+                    document.getElementById('lore-image-url').value = '';
+                    previewImageURL(tempBase64Image);
+                };
+                img.onerror = () => alert("That image couldn't be read.");
+                img.src = evt.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -636,21 +1105,25 @@
         function previewImageURL(url) {
             const previewBox = document.getElementById('image-preview-box');
             const previewImg = document.getElementById('preview-img-element');
-            if (previewBox && previewImg) {
-                if (url) {
-                    previewImg.src = url;
-                    previewBox.classList.remove('hidden');
-                } else previewBox.classList.add('hidden');
-            }
+            if (!previewBox || !previewImg) return;
+            // Typing a web URL replaces a previously uploaded file
+            const urlInput = document.getElementById('lore-image-url');
+            if (urlInput && url && url === urlInput.value) tempBase64Image = null;
+            const safe = safeImg(url || tempBase64Image);
+            if (safe) {
+                previewImg.src = safe;
+                previewBox.classList.remove('hidden');
+            } else previewBox.classList.add('hidden');
         }
 
         function saveLoreEntry(e) {
             e.preventDefault();
             const id = document.getElementById('lore-id').value;
-            const title = document.getElementById('lore-title').value;
+            const title = document.getElementById('lore-title').value.trim();
+            if (!title) return alert('Please enter a title.');
             const category = document.getElementById('lore-category').value;
             const aliases = document.getElementById('lore-aliases').value;
-            const imageUrl = tempBase64Image || document.getElementById('lore-image-url').value;
+            const imageUrl = safeImg(tempBase64Image || document.getElementById('lore-image-url').value.trim());
             const description = document.getElementById('lore-description').value;
 
             const roleInput = document.getElementById('attr-role');
@@ -660,21 +1133,22 @@
                 traits: traitsInput ? traitsInput.value : ''
             };
 
-            if (id) {
-                const l = state.loreEntries.find(entry => entry.id === id);
-                if (l) Object.assign(l, { title, category, aliases, attributes, imageUrl, description });
+            const existing = id ? state.loreEntries.find(entry => entry.id === id) : null;
+            const backup = existing ? { ...existing } : null;
+            if (existing) {
+                Object.assign(existing, { title, category, aliases, attributes, imageUrl, description });
             } else {
-                state.loreEntries.push({
-                    id: 'lore_' + Date.now(),
-                    title, category, aliases, attributes, imageUrl, description
-                });
+                state.loreEntries.push({ id: uid('lore'), title, category, aliases, attributes, imageUrl, description });
             }
 
-            saveState();
+            if (!saveState()) {
+                // Roll back so the screen matches what is actually saved
+                if (existing) Object.assign(existing, backup); else state.loreEntries.pop();
+                return;
+            }
             closeLoreModal();
             renderLoreGrid();
             renderDashboard();
-            alert("Lore saved successfully!");
         }
 
         function deleteLoreEntry() {
@@ -688,147 +1162,315 @@
             }
         }
 
-        /* --- GLOBAL PUBLIC LIBRARY FIX --- */
+        /* ================= PUBLIC LIBRARY ================= */
         function publishProject() {
-            const proj = state.projects.find(p => p.id === state.currentProjectId);
+            flushAutosave();
+            const proj = getCurrentProject();
             if (!proj) return alert("Select a work to publish.");
+            if (!proj.chapters?.length) return alert("Add at least one chapter before publishing.");
 
             proj.isPublished = true;
+            // Publish a snapshot copy so later draft edits don't change the published version until republished
+            const snapshot = JSON.parse(JSON.stringify(proj));
+            snapshot.publishedAt = new Date().toISOString();
             const pubIdx = state.publicProjects.findIndex(p => p.id === proj.id);
-            if (pubIdx > -1) {
-                state.publicProjects[pubIdx] = proj;
-            } else {
-                state.publicProjects.push(proj);
-            }
+            if (pubIdx > -1) state.publicProjects[pubIdx] = snapshot;
+            else state.publicProjects.push(snapshot);
 
-            saveState();
+            addNotification(`"${proj.title}" was ${pubIdx > -1 ? 'updated' : 'published'} in the Public Library.`);
+            if (!saveState()) return;
             filterLibrary();
-            alert(`"${proj.title}" has been published globally to the Public Library!`);
+            alert(`"${proj.title}" has been published to the Public Library.\n\nNote: the library is stored in this browser only until an online backend is connected.`);
         }
 
         function filterLibrary() {
             const query = document.getElementById('library-search-input')?.value.toLowerCase().trim() || '';
-            const allPublic = state.publicProjects;
-
-            const filtered = allPublic.filter(p => !query || p.title.toLowerCase().includes(query));
-            renderPublishedWorks(filtered);
+            const filtered = state.publicProjects.filter(p => !query ||
+                (p.title || '').toLowerCase().includes(query) ||
+                (p.author || '').toLowerCase().includes(query));
+            renderPublishedWorks(filtered, query);
         }
 
-        function renderPublishedWorks(works) {
-            const grid = document.getElementById('published-grid');
-            if (!grid) return;
-
-            grid.innerHTML = works.map(p => `
+        function workCard(p) {
+            const marked = state.bookmarks.includes(p.id);
+            return `
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-cinzel text-xl font-bold text-white">${p.title}</h3>
-                        <p class="text-xs text-slate-400">By ${p.author || 'Author'}</p>
+                    <div class="space-y-1">
+                        <div class="flex items-start justify-between gap-2">
+                            <h3 class="font-cinzel text-xl font-bold text-white">${esc(p.title)}</h3>
+                            <button onclick="toggleBookmark('${esc(p.id)}')" title="${marked ? 'Remove bookmark' : 'Bookmark'}" class="text-lg ${marked ? 'text-pink-400' : 'text-slate-500 hover:text-pink-300'}">
+                                <i class="${marked ? 'fas' : 'far'} fa-bookmark"></i>
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-400">By ${esc(p.author || 'Author')} · ${(p.chapters || []).length} chapter${(p.chapters || []).length === 1 ? '' : 's'}</p>
+                        ${p.synopsis ? `<p class="text-xs text-slate-300">${esc(p.synopsis)}</p>` : ''}
                     </div>
-                    <button onclick="openReaderView('${p.id}')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold">
+                    <button onclick="openReaderView('${esc(p.id)}')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold">
                         Read Book
                     </button>
-                </div>
-            `).join('');
+                </div>`;
         }
 
-        /* --- WRITER STUDIO & READER LINE COMMENTS FIX --- */
+        function renderPublishedWorks(works, query = '') {
+            const grid = document.getElementById('published-grid');
+            if (!grid) return;
+            grid.innerHTML = works.length === 0
+                ? `<p class="text-sm text-slate-500 italic col-span-full text-center py-10">${query ? 'No works match your search.' : 'No published works yet.'}</p>`
+                : works.map(workCard).join('');
+        }
+
+        function toggleBookmark(projId) {
+            const i = state.bookmarks.indexOf(projId);
+            if (i > -1) state.bookmarks.splice(i, 1); else state.bookmarks.push(projId);
+            saveState();
+            renderDashboard();
+            if (state.currentPage === 'profile') renderProfile(); else filterLibrary();
+        }
+
+        /* ================= WRITER STUDIO ================= */
         function renderProjectPicker() {
             const pSelect = document.getElementById('project-select');
             const cSelect = document.getElementById('chapter-select');
             if (!pSelect || !cSelect) return;
 
-            pSelect.innerHTML = state.projects.map(p => `<option value="${p.id}" ${p.id === state.currentProjectId ? 'selected' : ''}>${p.title}</option>`).join('');
-            const currentProj = state.projects.find(p => p.id === state.currentProjectId);
-            if (currentProj && currentProj.chapters) {
-                cSelect.innerHTML = currentProj.chapters.map(c => `<option value="${c.id}" ${c.id === state.currentChapterId ? 'selected' : ''}>${c.title}</option>`).join('');
-            }
+            pSelect.innerHTML = state.projects.map(p => `<option value="${esc(p.id)}" ${p.id === state.currentProjectId ? 'selected' : ''}>${esc(p.title)}</option>`).join('');
+            const currentProj = getCurrentProject();
+            cSelect.innerHTML = (currentProj?.chapters || []).map(c => `<option value="${esc(c.id)}" ${c.id === state.currentChapterId ? 'selected' : ''}>${esc(c.title)}</option>`).join('');
         }
 
         function switchProject(projId) {
+            flushAutosave();
             state.currentProjectId = projId;
-            const proj = state.projects.find(p => p.id === projId);
-            state.currentChapterId = proj?.chapters[0]?.id || null;
+            state.currentChapterId = getCurrentProject()?.chapters?.[0]?.id || null;
             renderProjectPicker();
             renderChapterEditor();
         }
 
         function switchChapter(chapId) {
+            flushAutosave();
             state.currentChapterId = chapId;
             renderChapterEditor();
         }
 
         function renderChapterEditor() {
-            const proj = state.projects.find(p => p.id === state.currentProjectId);
-            const chap = proj?.chapters?.find(c => c.id === state.currentChapterId);
-
+            const chap = getCurrentChapter();
             const titleInput = document.getElementById('chapter-title-input');
             const editor = document.getElementById('chapter-content-editor');
-
-            if (chap) {
-                if (titleInput) titleInput.value = chap.title || '';
-                if (editor) editor.innerHTML = chap.content || '';
+            if (titleInput) titleInput.value = chap?.title || '';
+            if (editor) {
+                editor.innerHTML = chap ? sanitizeHTML(chap.content) : '';
+                editor.setAttribute('contenteditable', chap ? 'true' : 'false');
             }
+            lastEditorWordCount = countWords(editor?.innerHTML);
+            updateWordCountDisplay(lastEditorWordCount);
+        }
+
+        function updateWordCountDisplay(n) {
+            const el = document.getElementById('word-count-display');
+            if (el) el.innerText = `${n.toLocaleString()} Word${n === 1 ? '' : 's'}`;
+        }
+
+        function setAutosaveStatus(text) {
+            const el = document.getElementById('autosave-status');
+            if (el) el.innerText = text;
+        }
+
+        // Called on every keystroke: keeps the draft in memory, counts words, autosaves.
+        function handleEditorInput() {
+            const chap = getCurrentChapter();
+            const editor = document.getElementById('chapter-content-editor');
+            if (!chap || !editor) return;
+            chap.content = editor.innerHTML;
+
+            const words = countWords(chap.content);
+            const delta = words - lastEditorWordCount;
+            lastEditorWordCount = words;
+            updateWordCountDisplay(words);
+
+            rollDailyLog();
+            if (delta > 0) {
+                const log = state.dailyLog;
+                const before = log.wordsWritten;
+                log.wordsWritten += delta;
+                if (before < log.target && log.wordsWritten >= log.target && log.lastGoalDate !== log.date) {
+                    log.streak += 1;
+                    log.lastGoalDate = log.date;
+                    addNotification(`Daily goal reached: ${log.target.toLocaleString()} words! Streak: ${log.streak} day(s).`);
+                }
+            }
+            scheduleAutosave();
+        }
+
+        function handleTitleInput() {
+            const chap = getCurrentChapter();
+            if (!chap) return;
+            chap.title = document.getElementById('chapter-title-input').value;
+            const opt = document.querySelector(`#chapter-select option[value="${CSS.escape(chap.id)}"]`);
+            if (opt) opt.textContent = chap.title || 'Untitled Chapter';
+            scheduleAutosave();
+        }
+
+        function scheduleAutosave() {
+            setAutosaveStatus('Unsaved changes…');
+            clearTimeout(autosaveTimer);
+            autosaveTimer = setTimeout(flushAutosave, 1500);
+        }
+
+        function flushAutosave() {
+            if (autosaveTimer === null) return;
+            clearTimeout(autosaveTimer);
+            autosaveTimer = null;
+            assignParagraphIds();
+            if (saveState()) setAutosaveStatus('All changes saved');
+        }
+
+        // Give each paragraph a stable id so reader comments stay on the right paragraph
+        // even after paragraphs are added or removed. Existing paragraphs keep their old
+        // position-based id (p0, p1...) so earlier comments still match.
+        function assignParagraphIds() {
+            const chap = getCurrentChapter();
+            const editor = document.getElementById('chapter-content-editor');
+            if (!chap || !editor || editor.getAttribute('contenteditable') !== 'true') return;
+            const paras = [...editor.querySelectorAll('p')];
+            const existing = new Set(paras.map(p => p.getAttribute('data-pid')).filter(Boolean));
+            const seen = new Set();
+            paras.forEach((p, idx) => {
+                let pid = p.getAttribute('data-pid');
+                if (!pid || seen.has(pid)) {
+                    // Pressing Enter copies the attribute to the new paragraph; the first one keeps it.
+                    pid = (!pid && !existing.has('p' + idx) && !seen.has('p' + idx)) ? 'p' + idx : 'p' + Math.random().toString(36).slice(2, 9);
+                    p.setAttribute('data-pid', pid);
+                }
+                seen.add(pid);
+            });
+            chap.content = editor.innerHTML;
         }
 
         function saveCurrentChapter() {
-            const proj = state.projects.find(p => p.id === state.currentProjectId);
-            const chap = proj?.chapters?.find(c => c.id === state.currentChapterId);
-            if (chap) {
-                chap.title = document.getElementById('chapter-title-input').value;
-                chap.content = document.getElementById('chapter-content-editor').innerHTML;
-                saveState();
-                alert("Chapter saved!");
-            }
+            const chap = getCurrentChapter();
+            if (!chap) return alert('Create a work and chapter first.');
+            chap.title = document.getElementById('chapter-title-input').value;
+            chap.content = document.getElementById('chapter-content-editor').innerHTML;
+            autosaveTimer = autosaveTimer ?? 0; // force flush
+            flushAutosave();
+            renderProjectPicker();
+            setAutosaveStatus('Saved ✓');
         }
 
+        function createNewProject() {
+            flushAutosave();
+            const title = prompt("Enter Work Title:");
+            if (!title || !title.trim()) return;
+            const newProj = {
+                id: uid('proj'),
+                author: state.userProfile.name || 'Author',
+                title: title.trim(),
+                chapters: [{ id: uid('chap'), title: 'Chapter 1', content: '<p>Start writing line by line...</p>' }]
+            };
+            state.projects.push(newProj);
+            state.currentProjectId = newProj.id;
+            state.currentChapterId = newProj.chapters[0].id;
+            saveState();
+            renderUI();
+        }
+
+        function createNewChapter() {
+            flushAutosave();
+            const proj = getCurrentProject();
+            if (!proj) return alert('Create a work first.');
+            const newChap = { id: uid('chap'), title: `Chapter ${proj.chapters.length + 1}`, content: '<p>Write content...</p>' };
+            proj.chapters.push(newChap);
+            state.currentChapterId = newChap.id;
+            saveState();
+            renderUI();
+        }
+
+        function deleteCurrentChapter() {
+            const proj = getCurrentProject();
+            const chap = getCurrentChapter();
+            if (!proj || !chap) return;
+            if (proj.chapters.length <= 1) return alert('A work needs at least one chapter. Delete the work instead.');
+            if (!confirm(`Delete "${chap.title}"? This can't be undone (the published copy, if any, is kept until you republish).`)) return;
+            clearTimeout(autosaveTimer); autosaveTimer = null;
+            proj.chapters = proj.chapters.filter(c => c.id !== chap.id);
+            state.currentChapterId = proj.chapters[0].id;
+            saveState();
+            renderUI();
+        }
+
+        function deleteCurrentProject() {
+            const proj = getCurrentProject();
+            if (!proj) return;
+            if (!confirm(`Delete the work "${proj.title}" and all its chapters? It will also be removed from the Public Library. This can't be undone.`)) return;
+            clearTimeout(autosaveTimer); autosaveTimer = null;
+            state.projects = state.projects.filter(p => p.id !== proj.id);
+            state.publicProjects = state.publicProjects.filter(p => p.id !== proj.id);
+            state.series.forEach(s => s.bookIds = s.bookIds.filter(id => id !== proj.id));
+            state.bookmarks = state.bookmarks.filter(id => id !== proj.id);
+            state.currentProjectId = state.projects[0]?.id || null;
+            state.currentChapterId = state.projects[0]?.chapters?.[0]?.id || null;
+            saveState();
+            renderUI();
+        }
+
+        /* ================= READER & LINE COMMENTS ================= */
         function openReaderView(projId) {
             const proj = state.publicProjects.find(p => p.id === projId) || state.projects.find(p => p.id === projId);
-            if (!proj || !proj.chapters) return;
+            if (!proj || !proj.chapters?.length) return alert('This work has no chapters yet.');
 
             state.activeReaderProject = proj;
             const cSelect = document.getElementById('reader-chapter-select');
             if (cSelect) {
-                cSelect.innerHTML = proj.chapters.map((c, i) => `<option value="${i}">${c.title}</option>`).join('');
+                cSelect.innerHTML = proj.chapters.map((c, i) => `<option value="${i}">${esc(c.title)}</option>`).join('');
             }
             loadReaderChapter(0);
             document.getElementById('reader-view').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
 
-        function closeReaderView() { document.getElementById('reader-view').classList.add('hidden'); }
+        function closeReaderView() {
+            document.getElementById('reader-view').classList.add('hidden');
+            document.body.style.overflow = '';
+            closeParaCommentsPanel();
+        }
 
         function loadReaderChapter(index) {
-            index = parseInt(index);
-            state.activeReaderChapterIndex = index;
+            index = parseInt(index) || 0;
             const proj = state.activeReaderProject;
-            const chap = proj.chapters[index];
+            const chap = proj?.chapters?.[index];
+            if (!chap) return;
+            state.activeReaderChapterIndex = index;
+            const cSelect = document.getElementById('reader-chapter-select');
+            if (cSelect) cSelect.value = String(index);
 
             document.getElementById('reader-chapter-title').innerText = chap.title;
 
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = chap.content || '';
-            const paragraphs = tempDiv.querySelectorAll('p');
+            const body = document.getElementById('reader-chapter-body');
+            body.innerHTML = sanitizeHTML(chap.content);
 
-            paragraphs.forEach((p, pIdx) => {
-                const paraId = `${chap.id}_p${pIdx}`;
+            // Add a comment badge to each paragraph. Clicks are handled by one listener
+            // on the container (below), so they keep working after re-rendering.
+            body.querySelectorAll('p').forEach((p, pIdx) => {
+                const paraId = `${chap.id}_${p.getAttribute('data-pid') || 'p' + pIdx}`;
                 p.classList.add('reader-para');
-                const cmts = state.paraComments[paraId] || [];
-
+                const count = (state.paraComments[paraId] || []).length;
                 const badge = document.createElement('button');
+                badge.type = 'button';
+                badge.dataset.paraId = paraId;
+                badge.title = 'Comments on this paragraph';
                 badge.className = "para-cmt-badge text-[10px] bg-purple-900/90 hover:bg-purple-600 text-purple-200 px-1.5 py-0.5 rounded-full border border-purple-500/50";
-                badge.innerHTML = `<i class="fas fa-comment"></i> ${cmts.length}`;
-                
-                // Explicit inline click listener attachment
-                badge.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    openParaCommentsPanel(paraId);
-                });
-
+                badge.innerHTML = `<i class="fas fa-comment"></i> ${count}`;
                 p.appendChild(badge);
             });
-
-            document.getElementById('reader-chapter-body').innerHTML = tempDiv.innerHTML;
+            document.getElementById('reader-view').scrollTo(0, 0);
         }
+
+        document.addEventListener('click', (e) => {
+            const badge = e.target.closest('#reader-chapter-body .para-cmt-badge');
+            if (!badge) return;
+            e.preventDefault();
+            openParaCommentsPanel(badge.dataset.paraId);
+        });
 
         function openParaCommentsPanel(paraId) {
             state.activeParaId = paraId;
@@ -839,13 +1481,17 @@
                 list.innerHTML = cmts.length === 0 ? `<p class="text-xs text-slate-500 italic">No comments on this paragraph yet.</p>` :
                     cmts.map(c => `
                         <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1">
-                            <span class="text-xs font-bold text-purple-300 block">${c.author}</span>
-                            <p class="text-xs text-slate-300">${c.text}</p>
+                            <div class="flex items-center justify-between">
+                                <span class="text-xs font-bold text-purple-300">${esc(c.author)}</span>
+                                ${c.date ? `<span class="text-[10px] text-slate-500">${esc(new Date(c.date).toLocaleDateString())}</span>` : ''}
+                            </div>
+                            <p class="text-xs text-slate-300 whitespace-pre-wrap">${esc(c.text)}</p>
                         </div>
                     `).join('');
             }
 
             document.getElementById('para-comments-panel').classList.remove('hidden');
+            document.getElementById('para-comment-input')?.focus();
         }
 
         function closeParaCommentsPanel() { document.getElementById('para-comments-panel').classList.add('hidden'); }
@@ -854,43 +1500,24 @@
             const input = document.getElementById('para-comment-input');
             const text = input ? input.value.trim() : '';
             if (!text || !state.activeParaId) return;
+            if (text.length > 1000) return alert('Comments can be up to 1,000 characters.');
 
             if (!state.paraComments[state.activeParaId]) state.paraComments[state.activeParaId] = [];
             state.paraComments[state.activeParaId].push({
-                author: 'Reader',
-                text: text
+                author: state.userProfile.isSet ? state.userProfile.name : 'Reader',
+                text: text,
+                date: new Date().toISOString()
             });
+
+            const proj = state.activeReaderProject;
+            if (proj && state.projects.some(p => p.id === proj.id)) {
+                addNotification(`New comment on "${proj.title}": "${text.slice(0, 60)}${text.length > 60 ? '…' : ''}"`);
+            }
 
             input.value = '';
             saveState();
             openParaCommentsPanel(state.activeParaId);
             loadReaderChapter(state.activeReaderChapterIndex);
-        }
-
-        function createNewProject() {
-            const title = prompt("Enter Work Title:");
-            if (!title) return;
-            const newProj = {
-                id: 'proj_' + Date.now(),
-                author: 'Author',
-                title: title,
-                chapters: [{ id: 'chap_' + Date.now(), title: 'Chapter 1', content: '<p>Start writing line by line...</p>' }]
-            };
-            state.projects.push(newProj);
-            state.currentProjectId = newProj.id;
-            state.currentChapterId = newProj.chapters[0].id;
-            saveState();
-            renderUI();
-        }
-
-        function createNewChapter() {
-            const proj = state.projects.find(p => p.id === state.currentProjectId);
-            if (!proj) return;
-            const newChap = { id: 'chap_' + Date.now(), title: `Chapter ${proj.chapters.length + 1}`, content: '<p>Write content...</p>' };
-            proj.chapters.push(newChap);
-            state.currentChapterId = newChap.id;
-            saveState();
-            renderUI();
         }
     </script>
 </body>
