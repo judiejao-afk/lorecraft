@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoreCraft Studio - Wattpad & Interactive Storyteller Studio</title>
+    <title>LoreCraft Studio - Interactive Storyteller & Lore Engine</title>
     <!-- Favicon Logo -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='f' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%239333ea'/><stop offset='50%' stop-color='%234f46e5'/><stop offset='100%' stop-color='%23ec4899'/></linearGradient></defs><rect width='100' height='100' rx='24' fill='%230f172a'/><rect width='92' height='92' x='4' y='4' rx='20' fill='none' stroke='url(%23f)' stroke-width='3'/><path d='M30 75 C 35 45, 55 25, 75 20 C 70 40, 55 55, 30 75 Z' fill='url(%23f)'/><path d='M30 75 L 42 62 M 45 52 L 57 40' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/></svg>">
     
@@ -100,7 +100,7 @@
                     <h1 class="font-cinzel font-bold text-lg text-white tracking-wide flex items-center gap-1.5">
                         LoreCraft <span class="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 font-sans border border-purple-500/30 uppercase tracking-widest font-semibold">Studio</span>
                     </h1>
-                    <p class="text-[11px] text-slate-400 font-medium tracking-tight">Interactive Storyteller Ecosystem</p>
+                    <p class="text-[11px] text-slate-400 font-medium tracking-tight">Interactive Storyteller & Lore Engine</p>
                 </div>
             </div>
 
@@ -152,7 +152,7 @@
                 <div class="max-w-2xl space-y-2 relative z-10">
                     <span class="text-xs font-bold text-purple-400 uppercase tracking-widest bg-purple-950/80 border border-purple-800/80 px-3 py-1 rounded-full">Storyteller Workspace</span>
                     <h2 id="dash-welcome-text" class="font-cinzel text-3xl md:text-4xl font-bold text-white">Welcome back, Author!</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed">Draft your works, track daily writing goals, organize book series, and build interactive choose-your-path stories.</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">Draft your works, track daily writing goals, organize book series, and monitor character/lore mentions in real-time.</p>
                 </div>
 
                 <!-- WRITER ANALYTICS & DAILY STREAK CARD -->
@@ -261,7 +261,7 @@
                         </div>
 
                         <button onclick="shareUserProfile()" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-purple-400 border border-slate-700 rounded-xl text-xs font-semibold shadow flex items-center gap-1.5 transition" title="Share Profile">
-                            <i class="fas fa-share-alt"></i> <span class="hidden sm:inline">Share</span>
+                            <i class="fas fa-copy"></i> <span class="hidden sm:inline">Copy Link</span>
                         </button>
 
                         <button id="profile-edit-btn" onclick="openProfileEditModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold shadow flex items-center gap-2 transition">
@@ -277,6 +277,9 @@
                     </button>
                     <button onclick="switchProfileSubTab('stories')" id="prof-subtab-stories" class="text-sm font-bold text-slate-400 hover:text-slate-200 pb-3 flex items-center gap-2">
                         <i class="fas fa-scroll"></i> Written Stories
+                    </button>
+                    <button onclick="switchProfileSubTab('lore-monitor')" id="prof-subtab-lore-monitor" class="text-sm font-bold text-slate-400 hover:text-slate-200 pb-3 flex items-center gap-2">
+                        <i class="fas fa-eye"></i> Lore Mentions Tracker
                     </button>
                     <button onclick="switchProfileSubTab('updates')" id="prof-subtab-updates" class="text-sm font-bold text-slate-400 hover:text-slate-200 pb-3 flex items-center gap-2">
                         <i class="fas fa-bullhorn"></i> Author Broadcasts
@@ -297,6 +300,15 @@
                             </button>
                         </div>
                         <div id="written-stories-list" class="space-y-3"></div>
+                    </div>
+
+                    <!-- LORE MENTIONS MONITORING TAB -->
+                    <div id="prof-sec-lore-monitor" class="hidden space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-eye text-purple-400 mr-2"></i> Story Lore & Character Mentions</h3>
+                            <span class="text-xs text-slate-400 font-mono">Live In-Text Keyword Tracking</span>
+                        </div>
+                        <div id="lore-mentions-tracker-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     </div>
 
                     <div id="prof-sec-updates" class="hidden space-y-4">
@@ -427,6 +439,9 @@
                 </div>
 
                 <div class="flex items-center gap-2">
+                    <button onclick="copyChapterContentText()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition" title="Copy Chapter Text">
+                        <i class="fas fa-copy text-purple-400"></i> Copy Text
+                    </button>
                     <button onclick="deleteCurrentProject()" class="px-3 py-1.5 bg-red-900/20 hover:bg-red-900/40 text-red-400 border border-red-800/40 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
                         <i class="fas fa-trash-alt"></i> Delete
                     </button>
@@ -520,39 +535,45 @@
                     </div>
                 </div>
 
-                <!-- RICH TEXT TOOLBAR -->
-                <div class="bg-slate-950 border border-slate-800 rounded-xl p-2 flex flex-wrap items-center gap-1.5 text-xs text-slate-300">
-                    <select onchange="execEditorCommand('fontName', this.value)" class="bg-slate-900 border border-slate-800 text-xs text-slate-200 px-2 py-1 rounded">
-                        <option value="Inter">Sans-Serif (Inter)</option>
-                        <option value="Cinzel">Cinzel (Serif)</option>
-                        <option value="Lora">Lora (Literary Serif)</option>
-                        <option value="Fira Code">Fira Code (Monospace)</option>
-                    </select>
+                <!-- RICH TEXT TOOLBAR WITH COPY BUTTON -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-2 flex flex-wrap items-center justify-between gap-1.5 text-xs text-slate-300">
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <select onchange="execEditorCommand('fontName', this.value)" class="bg-slate-900 border border-slate-800 text-xs text-slate-200 px-2 py-1 rounded">
+                            <option value="Inter">Sans-Serif (Inter)</option>
+                            <option value="Cinzel">Cinzel (Serif)</option>
+                            <option value="Lora">Lora (Literary Serif)</option>
+                            <option value="Fira Code">Fira Code (Monospace)</option>
+                        </select>
 
-                    <select onchange="execEditorCommand('fontSize', this.value)" class="bg-slate-900 border border-slate-800 text-xs text-slate-200 px-2 py-1 rounded">
-                        <option value="3">Size: Normal</option>
-                        <option value="1">Size: Small</option>
-                        <option value="4">Size: Medium</option>
-                        <option value="5">Size: Large</option>
-                    </select>
+                        <select onchange="execEditorCommand('fontSize', this.value)" class="bg-slate-900 border border-slate-800 text-xs text-slate-200 px-2 py-1 rounded">
+                            <option value="3">Size: Normal</option>
+                            <option value="1">Size: Small</option>
+                            <option value="4">Size: Medium</option>
+                            <option value="5">Size: Large</option>
+                        </select>
 
-                    <div class="h-4 w-px bg-slate-800 mx-1"></div>
+                        <div class="h-4 w-px bg-slate-800 mx-1"></div>
 
-                    <button type="button" onclick="execEditorCommand('bold')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-bold"></i></button>
-                    <button type="button" onclick="execEditorCommand('italic')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-italic"></i></button>
-                    <button type="button" onclick="execEditorCommand('underline')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-underline"></i></button>
+                        <button type="button" onclick="execEditorCommand('bold')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-bold"></i></button>
+                        <button type="button" onclick="execEditorCommand('italic')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-italic"></i></button>
+                        <button type="button" onclick="execEditorCommand('underline')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-underline"></i></button>
 
-                    <div class="h-4 w-px bg-slate-800 mx-1"></div>
+                        <div class="h-4 w-px bg-slate-800 mx-1"></div>
 
-                    <button type="button" onclick="execEditorCommand('justifyLeft')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-align-left"></i></button>
-                    <button type="button" onclick="execEditorCommand('justifyCenter')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-align-center"></i></button>
-                    <button type="button" onclick="execEditorCommand('justifyRight')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-align-right"></i></button>
+                        <button type="button" onclick="execEditorCommand('justifyLeft')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-align-left"></i></button>
+                        <button type="button" onclick="execEditorCommand('justifyCenter')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-align-center"></i></button>
+                        <button type="button" onclick="execEditorCommand('justifyRight')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200"><i class="fas fa-align-right"></i></button>
+                    </div>
+
+                    <button type="button" onclick="copyChapterContentText()" class="px-2.5 py-1 bg-purple-900/40 hover:bg-purple-900/70 text-purple-300 border border-purple-700/50 rounded flex items-center gap-1 font-semibold transition" title="Copy Raw Text">
+                        <i class="fas fa-copy"></i> Copy Editor Text
+                    </button>
                 </div>
 
                 <!-- WYSIWYG CANVAS -->
                 <div id="chapter-content-editor" contenteditable="true" oninput="handleEditorInput()" class="editor-content w-full min-h-[350px] bg-slate-950 border border-slate-800/80 rounded-xl p-6 text-slate-200 text-base leading-relaxed focus:outline-none focus:border-purple-500/50 resize-y overflow-y-auto" placeholder="Write your chapter content here..."></div>
                 
-                <!-- CHOOSE-YOUR-OWN-PATH BRANCHING CHOICES BUILDER -->
+                <!-- CHOOSE-YOUR-OWN-PATH BRANCHING CHOICES BUILDER WITH RPG CONDITIONS -->
                 <div class="bg-slate-950 border border-purple-500/30 rounded-xl p-4 space-y-3">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-purple-400 uppercase tracking-wider"><i class="fas fa-code-branch mr-1"></i> Interactive Branching Choices (End of Chapter)</span>
@@ -589,7 +610,7 @@
             </div>
         </section>
 
-        <!-- READER OVERLAY VIEW WITH PARAGRAPH-LEVEL COMMENTS & READING PROGRESS -->
+        <!-- READER OVERLAY VIEW WITH PARAGRAPH-LEVEL COMMENTS & SOUNDTRACK PLAYER -->
         <div id="reader-view" class="hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur overflow-y-auto p-4 md:p-8">
             <div class="max-w-4xl mx-auto space-y-6">
                 
@@ -597,6 +618,13 @@
                     <button onclick="closeReaderView()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
                         <i class="fas fa-arrow-left"></i> Exit Reader
                     </button>
+
+                    <!-- Active Reader Soundtrack Bar -->
+                    <div id="reader-soundtrack-player" class="hidden flex items-center gap-2 bg-indigo-950/80 px-3 py-1 rounded-xl border border-indigo-700/50 text-xs text-indigo-300">
+                        <i class="fas fa-music animate-pulse"></i>
+                        <span id="soundtrack-title-display">Playing...</span>
+                        <a id="soundtrack-link-btn" href="#" target="_blank" class="text-indigo-400 hover:underline text-[10px]"><i class="fas fa-external-link-alt"></i></a>
+                    </div>
 
                     <!-- Reading Progress Indicator -->
                     <div class="flex items-center gap-2 bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 text-xs">
@@ -614,7 +642,7 @@
                         </button>
 
                         <button onclick="shareActiveStory()" class="px-3 py-1.5 bg-purple-900/30 hover:bg-purple-900/50 text-purple-300 border border-purple-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                            <i class="fas fa-share-alt"></i> Share Story
+                            <i class="fas fa-copy"></i> Copy Link
                         </button>
                     </div>
 
@@ -753,7 +781,7 @@
         </div>
     </div>
 
-    <!-- WORLD LORE ENTRY MODAL -->
+    <!-- ENHANCED NOVELCRAFT-STYLE WORLD LORE ENTRY MODAL -->
     <div id="lore-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -770,23 +798,26 @@
                     </div>
                     <div>
                         <label class="text-xs text-slate-400 block mb-1">Category *</label>
-                        <select id="lore-category" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                        <select id="lore-category" onchange="updateLoreDynamicFields(this.value)" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
                             <option value="Character">Character</option>
                             <option value="Faction">Faction</option>
                             <option value="Location">Location</option>
-                            <option value="Magic System">Magic System</option>
+                            <option value="Magic System">Magic System / Item</option>
                             <option value="Note">Note / Plot Idea</option>
                         </select>
                     </div>
                 </div>
 
                 <div>
-                    <label class="text-xs text-slate-400 block mb-1">Short Tagline / Role</label>
-                    <input type="text" id="lore-summary" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                    <label class="text-xs text-slate-400 block mb-1">Aliases / Search Keywords (Comma-separated for text tracking)</label>
+                    <input type="text" id="lore-aliases" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-purple-300 focus:outline-none focus:border-purple-500" placeholder="e.g. Caelen, The Shadow Blade, Cael">
                 </div>
 
+                <!-- NOVELCRAFT DYNAMIC ATTRIBUTES CONTAINER -->
+                <div id="lore-dynamic-attrs" class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-3"></div>
+
                 <div class="space-y-2 border border-slate-800/80 p-3 rounded-xl bg-slate-950/50">
-                    <label class="text-xs text-purple-400 font-semibold block"><i class="fas fa-image mr-1"></i> Character / Location Photo</label>
+                    <label class="text-xs text-purple-400 font-semibold block"><i class="fas fa-image mr-1"></i> Character / Lore Visual Image</label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
                         <div>
                             <span class="text-[11px] text-slate-400 block mb-1">Upload File:</span>
@@ -805,7 +836,7 @@
 
                 <div>
                     <label class="text-xs text-slate-400 block mb-1">Full Lore Description & Backstory</label>
-                    <textarea id="lore-description" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
+                    <textarea id="lore-description" rows="4" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
                 </div>
 
                 <div class="flex items-center justify-between pt-3 border-t border-slate-800">
@@ -988,6 +1019,7 @@
             mediaTracks: [],
             paraComments: {},
             activeParaId: null,
+            readerInventory: ['Silver Key'],
             dailyLog: { date: new Date().toISOString().slice(0, 10), wordsWritten: 0, target: 1000, streak: 1 },
             currentProjectId: null,
             currentChapterId: null,
@@ -1006,6 +1038,43 @@
             initAuthListener();
             renderUI();
         });
+
+        // ONE-CLICK COPY HELPER FUNCTION
+        function copyToClipboard(text, successMsg = "Copied to clipboard!") {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    alert(successMsg);
+                }).catch(() => {
+                    fallbackCopyText(text, successMsg);
+                });
+            } else {
+                fallbackCopyText(text, successMsg);
+            }
+        }
+
+        function fallbackCopyText(text, successMsg) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-9999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                alert(successMsg);
+            } catch (err) {
+                alert("Failed to copy text.");
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function copyChapterContentText() {
+            const editor = document.getElementById('chapter-content-editor');
+            const plainText = editor ? (editor.innerText || editor.textContent || '') : '';
+            if (!plainText.trim()) return alert("Chapter editor is empty.");
+            copyToClipboard(plainText, "Chapter text copied to clipboard!");
+        }
 
         function execEditorCommand(command, value = null) {
             document.execCommand(command, false, value);
@@ -1082,7 +1151,7 @@
                     status: 'Ongoing',
                     rating: 'Young Adult',
                     tags: ['magic', 'choices'],
-                    synopsis: 'An interactive fantasy where your choices determine the fate of the Undercity.',
+                    synopsis: 'An interactive fantasy where Caelen discovers the secrets of the Undercity.',
                     coverUrl: '',
                     votes: 15,
                     isPublished: true,
@@ -1090,11 +1159,12 @@
                         {
                             id: 'chap_1',
                             title: 'Chapter 1: The Crossroads',
+                            soundtrackId: '',
                             choices: [
-                                { text: 'Enter the Shadow Portal', targetChapterId: 'chap_2' },
-                                { text: 'Stay and Fight the Guards', targetChapterId: 'chap_3' }
+                                { text: 'Enter the Shadow Portal', targetChapterId: 'chap_2', requiredItem: '' },
+                                { text: 'Unlock Sealed Vault Door', targetChapterId: 'chap_3', requiredItem: 'Silver Key' }
                             ],
-                            content: '<p>The portal crackled with violet energy before Caelen. Behind him, gauntleted footsteps echoed down the stone corridor.</p>'
+                            content: '<p>The portal crackled with violet energy before Caelen. Behind him, Caelen heard gauntleted footsteps echoing down the stone corridor.</p>'
                         },
                         {
                             id: 'chap_2',
@@ -1104,12 +1174,26 @@
                         },
                         {
                             id: 'chap_3',
-                            title: 'Chapter 3: The City Guard',
+                            title: 'Chapter 3: The Vault',
                             choices: [],
-                            content: '<p>Drawing his sword, Caelen stood his ground against the approaching guard panel.</p>'
+                            content: '<p>Using the Silver Key, Caelen unlocked the heavy vault door.</p>'
                         }
                     ]
                 }];
+            }
+
+            if (state.loreEntries.length === 0) {
+                state.loreEntries = [
+                    {
+                        id: 'lore_1',
+                        title: 'Caelen',
+                        category: 'Character',
+                        aliases: 'Caelen, Cael, Shadow Blade',
+                        attributes: { age: '24', gender: 'Male', role: 'Protagonist', traits: 'Brave, Cautious', physical: 'Dark hair, silver eyes' },
+                        imageUrl: '',
+                        description: 'A skilled wanderer carrying ancient magic.'
+                    }
+                ];
             }
 
             if (state.projects.length > 0) {
@@ -1141,6 +1225,7 @@
             renderChapterEditor();
             renderLoreGrid();
             renderMediaGrid();
+            renderLoreMentionsTracker();
             updateNotificationBadge();
             filterLibrary();
         }
@@ -1198,6 +1283,76 @@
             }
 
             renderAuthorBroadcasts();
+        }
+
+        // LORE KEYWORD MENTIONS TRACKER ENGINE
+        function calculateLoreMentions(loreItem) {
+            const keywords = [loreItem.title, ...(loreItem.aliases ? loreItem.aliases.split(',') : [])].map(k => k.trim()).filter(Boolean);
+            if (keywords.length === 0) return { count: 0, occurrences: [] };
+
+            let totalCount = 0;
+            const occurrences = [];
+
+            state.projects.forEach(proj => {
+                proj.chapters.forEach(chap => {
+                    const plainText = chap.content ? chap.content.replace(/<[^>]*>/g, '') : '';
+                    keywords.forEach(kw => {
+                        const regex = new RegExp(`\\b${kw}\\b`, 'gi');
+                        const matches = plainText.match(regex);
+                        if (matches) {
+                            totalCount += matches.length;
+                            occurrences.push({
+                                bookTitle: proj.title,
+                                chapterTitle: chap.title,
+                                keyword: kw,
+                                count: matches.length
+                            });
+                        }
+                    });
+                });
+            });
+
+            return { count: totalCount, occurrences };
+        }
+
+        function renderLoreMentionsTracker() {
+            const trackerContainer = document.getElementById('lore-mentions-tracker-grid');
+            if (!trackerContainer) return;
+
+            if (state.loreEntries.length === 0) {
+                trackerContainer.innerHTML = `<p class="text-xs text-slate-500 italic col-span-2">No Lore items created yet.</p>`;
+                return;
+            }
+
+            trackerContainer.innerHTML = state.loreEntries.map(l => {
+                const mentionsData = calculateLoreMentions(l);
+                return `
+                    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-900/40 text-purple-300 border border-purple-700/40 uppercase">${l.category}</span>
+                                <h4 class="font-cinzel text-sm font-bold text-white">${l.title}</h4>
+                            </div>
+                            <span class="text-xs font-bold px-2 py-0.5 rounded-full ${mentionsData.count > 0 ? 'bg-emerald-900/40 text-emerald-300 border border-emerald-700/40' : 'bg-slate-800 text-slate-500'}">
+                                ${mentionsData.count} Mention${mentionsData.count === 1 ? '' : 's'}
+                            </span>
+                        </div>
+
+                        ${l.aliases ? `<p class="text-[10px] text-slate-400 font-mono"><i class="fas fa-tags mr-1 text-purple-400"></i> Tracked: ${l.aliases}</p>` : ''}
+
+                        <div class="space-y-1.5 pt-2 border-t border-slate-900">
+                            ${mentionsData.occurrences.length === 0 ? `<p class="text-[11px] text-slate-500 italic">No in-text mentions found in any story chapters.</p>` :
+                                mentionsData.occurrences.map(o => `
+                                    <div class="text-[11px] bg-slate-900/80 p-2 rounded flex items-center justify-between text-slate-300">
+                                        <span><i class="fas fa-book text-indigo-400 mr-1"></i> ${o.bookTitle} &rarr; <strong>${o.chapterTitle}</strong></span>
+                                        <span class="text-[10px] text-purple-300 font-bold">${o.count}x ("${o.keyword}")</span>
+                                    </div>
+                                `).join('')
+                            }
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
 
         function handleProfileFileUpload(e, type) {
@@ -1335,7 +1490,7 @@
                         <div class="space-y-1.5 pl-3 border-l-2 border-purple-500/50">
                             ${c.choices.map(ch => {
                                 const target = proj.chapters.find(tc => tc.id === ch.targetChapterId);
-                                return `<div class="text-xs text-slate-300"><i class="fas fa-long-arrow-alt-right text-indigo-400 mr-1.5"></i> Choice: "<strong>${ch.text}</strong>" &rarr; <span class="text-purple-300 font-semibold">${target ? target.title : 'Unlinked'}</span></div>`;
+                                return `<div class="text-xs text-slate-300"><i class="fas fa-long-arrow-alt-right text-indigo-400 mr-1.5"></i> Choice: "<strong>${ch.text}</strong>" ${ch.requiredItem ? `<span class="text-amber-400 font-mono text-[10px]">[Req: ${ch.requiredItem}]</span>` : ''} &rarr; <span class="text-purple-300 font-semibold">${target ? target.title : 'Unlinked'}</span></div>`;
                             }).join('')}
                         </div>
                     ` : `<p class="text-xs text-slate-500 italic">Sequential chapter node (No choices).</p>`}
@@ -1355,18 +1510,14 @@
             document.getElementById('reader-progress-text').innerText = `${pct}%`;
         }
 
-        // SHARE FUNCTIONS
+        // SHARE FUNCTIONS WITH ONE-CLICK COPY
         function shareUserProfile() {
-            const shareData = { title: state.userProfile.name, text: `Check out ${state.userProfile.name} on LoreCraft!`, url: window.location.href };
-            if (navigator.share) navigator.share(shareData).catch(() => {});
-            else { navigator.clipboard.writeText(window.location.href); alert("Profile link copied!"); }
+            copyToClipboard(window.location.href, "Profile link copied to clipboard!");
         }
 
         function shareActiveStory() {
             if (!state.activeReaderProject) return;
-            const shareData = { title: state.activeReaderProject.title, text: `Read ${state.activeReaderProject.title}!`, url: window.location.href };
-            if (navigator.share) navigator.share(shareData).catch(() => {});
-            else { navigator.clipboard.writeText(window.location.href); alert("Story link copied!"); }
+            copyToClipboard(window.location.href, `Link for "${state.activeReaderProject.title}" copied to clipboard!`);
         }
 
         function openFollowListModal(type) {
@@ -1423,7 +1574,7 @@
 
         function switchProfileSubTab(tab) {
             state.profileSubTab = tab;
-            ['bookmarks', 'stories', 'updates'].forEach(t => {
+            ['bookmarks', 'stories', 'lore-monitor', 'updates'].forEach(t => {
                 document.getElementById(`prof-sec-${t}`).classList.add('hidden');
                 document.getElementById(`prof-subtab-${t}`).className = "text-sm font-bold text-slate-400 hover:text-slate-200 pb-3 flex items-center gap-2";
             });
@@ -1503,15 +1654,65 @@
 
         function renderLoreGrid() {
             const grid = document.getElementById('lore-grid');
-            grid.innerHTML = state.loreEntries.map(l => `
-                <div onclick="openLoreModal('${l.id}')" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center gap-3 cursor-pointer hover:border-purple-500/50 transition">
-                    ${l.imageUrl ? `<img src="${l.imageUrl}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 text-xs font-bold">${l.category[0]}</div>`}
-                    <div>
-                        <h4 class="font-cinzel text-xs font-bold text-white">${l.title}</h4>
-                        <p class="text-[10px] text-slate-400">${l.category}</p>
+            grid.innerHTML = state.loreEntries.map(l => {
+                const mentions = calculateLoreMentions(l).count;
+                return `
+                    <div onclick="openLoreModal('${l.id}')" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-purple-500/50 transition">
+                        <div class="flex items-center gap-3">
+                            ${l.imageUrl ? `<img src="${l.imageUrl}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 text-xs font-bold">${l.category[0]}</div>`}
+                            <div>
+                                <h4 class="font-cinzel text-xs font-bold text-white">${l.title}</h4>
+                                <p class="text-[10px] text-slate-400">${l.category}</p>
+                            </div>
+                        </div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-900 text-purple-300 border border-slate-800" title="In-text Mentions">
+                            <i class="fas fa-eye mr-1"></i>${mentions}
+                        </span>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+        }
+
+        function updateLoreDynamicFields(category, attrs = {}) {
+            const container = document.getElementById('lore-dynamic-attrs');
+            if (category === 'Character') {
+                container.innerHTML = `
+                    <span class="text-[10px] font-bold text-purple-400 uppercase tracking-widest block mb-2">Character Profile Attributes</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="attr-age" value="${attrs.age || ''}" placeholder="Age / Lifespan" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                        <input type="text" id="attr-gender" value="${attrs.gender || ''}" placeholder="Gender / Species" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                        <input type="text" id="attr-role" value="${attrs.role || ''}" placeholder="Role (Protagonist, Rival, Villain)" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                        <input type="text" id="attr-traits" value="${attrs.traits || ''}" placeholder="Personality Traits" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                    </div>
+                    <input type="text" id="attr-physical" value="${attrs.physical || ''}" placeholder="Physical Appearance / Signature Weapons" class="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                `;
+            } else if (category === 'Location') {
+                container.innerHTML = `
+                    <span class="text-[10px] font-bold text-purple-400 uppercase tracking-widest block mb-2">Location Attributes</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="attr-region" value="${attrs.region || ''}" placeholder="Region / Realm" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                        <input type="text" id="attr-climate" value="${attrs.climate || ''}" placeholder="Climate / Terrain" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                    </div>
+                `;
+            } else if (category === 'Faction') {
+                container.innerHTML = `
+                    <span class="text-[10px] font-bold text-purple-400 uppercase tracking-widest block mb-2">Faction Attributes</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="attr-alignment" value="${attrs.alignment || ''}" placeholder="Alignment / Motto" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                        <input type="text" id="attr-leader" value="${attrs.leader || ''}" placeholder="Leader / Faction Head" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                    </div>
+                `;
+            } else if (category === 'Magic System') {
+                container.innerHTML = `
+                    <span class="text-[10px] font-bold text-purple-400 uppercase tracking-widest block mb-2">Magic & Artifact Attributes</span>
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="attr-element" value="${attrs.element || ''}" placeholder="Element / Source" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                        <input type="text" id="attr-cost" value="${attrs.cost || ''}" placeholder="Limitations / Cost" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                    </div>
+                `;
+            } else {
+                container.innerHTML = `<p class="text-xs text-slate-500 italic">General note mode.</p>`;
+            }
         }
 
         function openLoreModal(loreId = null) {
@@ -1521,13 +1722,15 @@
                 document.getElementById('lore-id').value = l.id;
                 document.getElementById('lore-title').value = l.title;
                 document.getElementById('lore-category').value = l.category;
-                document.getElementById('lore-summary').value = l.summary || '';
+                document.getElementById('lore-aliases').value = l.aliases || '';
                 document.getElementById('lore-description').value = l.description || '';
+                updateLoreDynamicFields(l.category, l.attributes || {});
                 previewImageURL(l.imageUrl);
                 document.getElementById('delete-lore-btn').classList.remove('hidden');
             } else {
                 document.getElementById('lore-form').reset();
                 document.getElementById('lore-id').value = '';
+                updateLoreDynamicFields('Character');
                 previewImageURL(null);
                 document.getElementById('delete-lore-btn').classList.add('hidden');
             }
@@ -1561,20 +1764,39 @@
             const id = document.getElementById('lore-id').value;
             const title = document.getElementById('lore-title').value;
             const category = document.getElementById('lore-category').value;
-            const summary = document.getElementById('lore-summary').value;
+            const aliases = document.getElementById('lore-aliases').value;
             const imageUrl = tempBase64Image || document.getElementById('lore-image-url').value;
             const description = document.getElementById('lore-description').value;
 
+            const attributes = {};
+            if (category === 'Character') {
+                attributes.age = document.getElementById('attr-age')?.value || '';
+                attributes.gender = document.getElementById('attr-gender')?.value || '';
+                attributes.role = document.getElementById('attr-role')?.value || '';
+                attributes.traits = document.getElementById('attr-traits')?.value || '';
+                attributes.physical = document.getElementById('attr-physical')?.value || '';
+            } else if (category === 'Location') {
+                attributes.region = document.getElementById('attr-region')?.value || '';
+                attributes.climate = document.getElementById('attr-climate')?.value || '';
+            } else if (category === 'Faction') {
+                attributes.alignment = document.getElementById('attr-alignment')?.value || '';
+                attributes.leader = document.getElementById('attr-leader')?.value || '';
+            } else if (category === 'Magic System') {
+                attributes.element = document.getElementById('attr-element')?.value || '';
+                attributes.cost = document.getElementById('attr-cost')?.value || '';
+            }
+
             if (id) {
                 const l = state.loreEntries.find(entry => entry.id === id);
-                if (l) Object.assign(l, { title, category, summary, imageUrl, description });
+                if (l) Object.assign(l, { title, category, aliases, attributes, imageUrl, description });
             } else {
-                state.loreEntries.push({ id: 'lore_' + Date.now(), title, category, summary, imageUrl, description });
+                state.loreEntries.push({ id: 'lore_' + Date.now(), title, category, aliases, attributes, imageUrl, description });
             }
             tempBase64Image = null;
             saveState();
             closeLoreModal();
             renderLoreGrid();
+            renderLoreMentionsTracker();
             renderDashboard();
         }
 
@@ -1585,6 +1807,7 @@
                 saveState();
                 closeLoreModal();
                 renderLoreGrid();
+                renderLoreMentionsTracker();
                 renderDashboard();
             }
         }
@@ -1599,6 +1822,11 @@
                     </div>
                 </div>
             `).join('');
+
+            // Soundtracks dropdown in chapter editor
+            const soundtrackSelect = document.getElementById('chapter-soundtrack-select');
+            soundtrackSelect.innerHTML = `<option value="">🎵 No Soundtrack Attached</option>` +
+                state.mediaTracks.map(m => `<option value="${m.id}">🎵 ${m.title} (${m.platform})</option>`).join('');
         }
 
         function openMediaModal(mediaId = null) {
@@ -1705,19 +1933,20 @@
             }
         }
 
-        function addBranchChoiceRow(text = '', targetId = '') {
+        function addBranchChoiceRow(text = '', targetId = '', requiredItem = '') {
             const container = document.getElementById('branch-choices-list');
             const proj = state.projects.find(p => p.id === state.currentProjectId);
             const chapOptions = proj ? proj.chapters.map(c => `<option value="${c.id}" ${c.id === targetId ? 'selected' : ''}>${c.title}</option>`).join('') : '';
 
             const div = document.createElement('div');
-            div.className = "flex items-center gap-2 choice-row-item";
+            div.className = "flex flex-col sm:flex-row items-center gap-2 choice-row-item bg-slate-900/60 p-2 rounded-lg border border-slate-800";
             div.innerHTML = `
-                <input type="text" value="${text}" placeholder="Choice Button Text (e.g. Open Portal)" class="choice-text-input flex-1 bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500">
-                <select class="choice-target-select bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-purple-300 focus:outline-none">
-                    <option value="">Select Target Chapter</option>
+                <input type="text" value="${text}" placeholder="Choice Button Text" class="choice-text-input flex-1 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500">
+                <select class="choice-target-select bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-purple-300 focus:outline-none">
+                    <option value="">Target Chapter</option>
                     ${chapOptions}
                 </select>
+                <input type="text" value="${requiredItem}" placeholder="Req. Item/Stat (e.g. Silver Key)" class="choice-req-input w-full sm:w-44 bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-amber-300 focus:outline-none" title="Leave empty for unlocked choice">
                 <button type="button" onclick="this.parentElement.remove()" class="text-red-400 text-xs px-2"><i class="fas fa-trash"></i></button>
             `;
             container.appendChild(div);
@@ -1729,7 +1958,8 @@
             rows.forEach(r => {
                 const txt = r.querySelector('.choice-text-input').value.trim();
                 const tgt = r.querySelector('.choice-target-select').value;
-                if (txt && tgt) choices.push({ text: txt, targetChapterId: tgt });
+                const req = r.querySelector('.choice-req-input').value.trim();
+                if (txt && tgt) choices.push({ text: txt, targetChapterId: tgt, requiredItem: req });
             });
             return choices;
         }
@@ -1816,6 +2046,7 @@
 
             if (chap) {
                 document.getElementById('chapter-title-input').value = chap.title;
+                document.getElementById('chapter-soundtrack-select').value = chap.soundtrackId || '';
                 const editor = document.getElementById('chapter-content-editor');
                 editor.innerHTML = chap.content || '';
                 handleEditorInput();
@@ -1823,7 +2054,7 @@
                 const choiceList = document.getElementById('branch-choices-list');
                 choiceList.innerHTML = '';
                 if (chap.choices && chap.choices.length > 0) {
-                    chap.choices.forEach(c => addBranchChoiceRow(c.text, c.targetChapterId));
+                    chap.choices.forEach(c => addBranchChoiceRow(c.text, c.targetChapterId, c.requiredItem));
                 }
             }
         }
@@ -1834,12 +2065,14 @@
 
             if (chap) {
                 chap.title = document.getElementById('chapter-title-input').value;
+                chap.soundtrackId = document.getElementById('chapter-soundtrack-select').value;
                 chap.content = document.getElementById('chapter-content-editor').innerHTML;
                 chap.choices = saveBranchChoicesFromUI();
                 
                 addNotification("Chapter Saved", `Draft saved for "${chap.title}" in ${proj.title}.`, "book_update");
 
                 saveState();
+                renderLoreMentionsTracker();
                 alert("Draft saved!");
                 renderProjectPicker();
             }
@@ -1905,6 +2138,17 @@
             document.getElementById('reader-chapter-select').value = index;
             document.getElementById('reader-chapter-title').innerText = chap.title;
 
+            // Soundtrack player bar
+            const stPlayer = document.getElementById('reader-soundtrack-player');
+            if (chap.soundtrackId) {
+                const track = state.mediaTracks.find(t => t.id === chap.soundtrackId);
+                if (track) {
+                    document.getElementById('soundtrack-title-display').innerText = track.title;
+                    document.getElementById('soundtrack-link-btn').href = track.url;
+                    stPlayer.classList.remove('hidden');
+                } else stPlayer.classList.add('hidden');
+            } else stPlayer.classList.add('hidden');
+
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = chap.content || '';
             const paragraphs = tempDiv.querySelectorAll('p');
@@ -1923,14 +2167,19 @@
 
             document.getElementById('reader-chapter-body').innerHTML = tempDiv.innerHTML;
 
+            // Choice Buttons with RPG Item/Lock Verification
             const choicesContainer = document.getElementById('reader-branch-choices');
             const choicesButtons = document.getElementById('reader-choices-buttons');
             if (chap.choices && chap.choices.length > 0) {
-                choicesButtons.innerHTML = chap.choices.map(c => `
-                    <button onclick="jumpToBranchChapter('${c.targetChapterId}')" class="w-full py-3 bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 text-white rounded-xl text-xs font-bold shadow-lg transition">
-                        ${c.text} <i class="fas fa-arrow-right ml-1"></i>
-                    </button>
-                `).join('');
+                choicesButtons.innerHTML = chap.choices.map(c => {
+                    const isLocked = c.requiredItem && !state.readerInventory.includes(c.requiredItem);
+                    return `
+                        <button ${isLocked ? 'disabled' : `onclick="jumpToBranchChapter('${c.targetChapterId}')"`} class="w-full py-3 ${isLocked ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed' : 'bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 text-white shadow-lg'} rounded-xl text-xs font-bold transition flex items-center justify-between px-4">
+                            <span>${c.text}</span>
+                            ${c.requiredItem ? `<span class="${isLocked ? 'text-red-400' : 'text-amber-300'} text-[10px]"><i class="fas ${isLocked ? 'fa-lock' : 'fa-key'} mr-1"></i>Req: ${c.requiredItem}</span>` : `<i class="fas fa-arrow-right"></i>`}
+                        </button>
+                    `;
+                }).join('');
                 choicesContainer.classList.remove('hidden');
             } else {
                 choicesContainer.classList.add('hidden');
