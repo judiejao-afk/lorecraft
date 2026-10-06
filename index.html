@@ -906,6 +906,11 @@
         </div>
     </div>
 
+    <!-- STORY OVERVIEW (synopsis, author & chapters before reading) -->
+    <div id="story-overview" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur overflow-y-auto p-4 md:p-8">
+        <div id="story-overview-card" class="max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden"></div>
+    </div>
+
     <!-- PARAGRAPH COMMENTS SLIDE-OUT PANEL -->
     <div id="para-comments-panel" class="hidden fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-slate-900 border-l border-slate-800 p-6 space-y-4 shadow-2xl overflow-y-auto">
         <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -1172,13 +1177,13 @@
 
             document.addEventListener('keydown', (e) => {
                 if (e.key !== 'Escape') return;
-                ['lore-modal', 'media-modal', 'notif-modal', 'backup-modal', 'auth-modal', 'profile-modal', 'follow-list-modal', 'branch-graph-modal']
+                ['lore-modal', 'media-modal', 'notif-modal', 'backup-modal', 'auth-modal', 'profile-modal', 'follow-list-modal', 'branch-graph-modal', 'story-overview']
                     .forEach(id => document.getElementById(id)?.classList.add('hidden'));
                 closeParaCommentsPanel();
             });
 
             // Close a modal when clicking the dark backdrop
-            document.querySelectorAll('#lore-modal, #media-modal, #notif-modal, #backup-modal, #auth-modal, #profile-modal, #follow-list-modal, #branch-graph-modal')
+            document.querySelectorAll('#lore-modal, #media-modal, #notif-modal, #backup-modal, #auth-modal, #profile-modal, #follow-list-modal, #branch-graph-modal, #story-overview')
                 .forEach(m => m.addEventListener('click', (e) => { if (e.target === m) m.classList.add('hidden'); }));
         });
 
@@ -1367,6 +1372,8 @@
             state.followingUserIds = readJSON('lorecraft_following', []);
             state.followersUserIds = readJSON('lorecraft_followers', []);
             state.readingProgress = readJSON('lorecraft_progress', {});
+            state.readingPosition = readJSON('lorecraft_position', {});
+            state.seenWorkVersions = readJSON('lorecraft_seen_versions', {});
             state.authorBroadcasts = readJSON('lorecraft_broadcasts', []);
             state.dailyLog = Object.assign(d.dailyLog, readJSON('lorecraft_daily_log', {}));
             state.publicProjects = readJSON('lorecraft_public_projects', []);
@@ -1454,6 +1461,8 @@
                 lorecraft_following: state.followingUserIds,
                 lorecraft_followers: state.followersUserIds,
                 lorecraft_progress: state.readingProgress,
+                lorecraft_position: state.readingPosition || {},
+                lorecraft_seen_versions: state.seenWorkVersions || {},
                 lorecraft_broadcasts: state.authorBroadcasts,
                 lorecraft_daily_log: state.dailyLog
             };
@@ -1514,8 +1523,9 @@
             set('profile-name-display', p.name || 'New Storyteller');
             set('profile-handle-display', p.handle || '@new_writer');
             set('profile-bio-display', p.bio || '');
-            set('profile-followers-count', state.followersUserIds.length);
-            set('profile-following-count', state.followingUserIds.length);
+            const online = cloudOn() && currentUser;
+            set('profile-followers-count', online ? cloud.followers.length : state.followersUserIds.length);
+            set('profile-following-count', online ? cloud.following.size : state.followingUserIds.length);
 
             const locationDisp = document.getElementById('profile-location-display');
             if (locationDisp) {
@@ -1572,7 +1582,7 @@
                         <h4 class="font-cinzel text-base font-bold text-white mt-1">${esc(p.title)}</h4>
                         <p class="text-xs text-slate-400">By ${esc(p.author || 'Author')} · ${state.readingProgress[p.id] || 0}% read</p>
                     </div>
-                    <button onclick="openReaderView(${jsArg(p.id)})" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold">Read Story</button>
+                    <button onclick="openStoryOverview(${jsArg(p.id)})" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold">View Story</button>
                 </div>
             `).join('');
         }
@@ -1858,6 +1868,8 @@
             const pct = Math.round(((chapIndex + 1) / totalChapters) * 100);
             // Keep the furthest point reached
             state.readingProgress[projId] = Math.max(state.readingProgress[projId] || 0, pct);
+            if (!state.readingPosition) state.readingPosition = {};
+            state.readingPosition[projId] = chapIndex;
             saveState();
             const progressTxt = document.getElementById('reader-progress-text');
             if (progressTxt) progressTxt.innerText = `${pct}%`;
@@ -1881,12 +1893,13 @@
             const m = window.location.hash.match(/^#read=(.+)$/);
             if (!m) return;
             const id = decodeURIComponent(m[1]);
-            if ([...state.publicProjects, ...state.projects].some(p => p.id === id)) openReaderView(id);
+            if ([...state.publicProjects, ...state.projects].some(p => p.id === id)) openStoryOverview(id);
         }
 
         /* ================= FOLLOWERS ================= */
 
         function openFollowListModal(type) {
+            if (cloudOn() && currentUser) return openCloudFollowList(type);
             const title = document.getElementById('follow-modal-title');
             const list = document.getElementById('follow-users-list');
 
@@ -1926,7 +1939,48 @@
             document.getElementById('follow-list-modal').classList.remove('hidden');
         }
 
-        function closeFollowListModal() { document.getElementById('follow-list-modal').classList.add('hidden'); }
+        function openCloudFollowList(type) {
+            cloud.openFollowList = type;
+            const title = document.getElementById('follow-modal-title');
+            const list = document.getElementById('follow-users-list');
+            if (title) title.innerText = type === 'followers' ? 'Your Followers' : 'Authors You Follow';
+            const people = type === 'followers'
+                ? cloud.followers.map(f => ({ uid: f.followerUid, name: f.followerName }))
+                : [...cloud.following.values()].map(f => ({ uid: f.authorUid, name: f.authorName }));
+
+            if (list) {
+                list.innerHTML = people.length === 0
+                    ? `<p class="text-xs text-slate-500 italic p-4 text-center">${type === 'followers' ? 'No followers yet. Publish a story to start building your audience!' : 'You aren\'t following anyone yet. Open a story in the Public Library and tap "Follow Author".'}</p>`
+                    : people.map(u => {
+                        const youFollow = cloud.following.has(u.uid);
+                        const storyCount = state.publicProjects.filter(w => w.ownerUid === u.uid).length;
+                        return `
+                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full bg-purple-900/40 text-purple-300 font-bold flex items-center justify-center text-xs">${esc((u.name || '?')[0])}</div>
+                                <div>
+                                    <h4 class="font-bold text-xs text-white">${esc(u.name || 'Reader')}</h4>
+                                    <p class="text-[10px] text-slate-400">${storyCount} published ${storyCount === 1 ? 'story' : 'stories'}</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                ${storyCount ? `<button onclick="showAuthorInLibrary(${jsArg(u.name)})" class="px-2.5 py-1 text-xs rounded-lg bg-slate-800 text-purple-300 border border-slate-700">Stories</button>` : ''}
+                                <button onclick="toggleFollowAuthor(${jsArg(u.uid)}, ${jsArg(u.name)})" class="px-3 py-1 text-xs rounded-lg font-semibold transition ${youFollow ? 'bg-slate-800 text-slate-300' : 'bg-purple-600 text-white'}">${youFollow ? 'Unfollow' : 'Follow back'}</button>
+                            </div>
+                        </div>`;
+                    }).join('');
+            }
+            document.getElementById('follow-list-modal').classList.remove('hidden');
+        }
+
+        function showAuthorInLibrary(name) {
+            closeFollowListModal();
+            switchMainPage('published');
+            const input = document.getElementById('library-search-input');
+            if (input) { input.value = name || ''; filterLibrary(); }
+        }
+
+        function closeFollowListModal() { cloud.openFollowList = null; document.getElementById('follow-list-modal').classList.add('hidden'); }
 
         function toggleFollowUser(targetAuthorId, listType = 'following') {
             const idx = state.followingUserIds.indexOf(targetAuthorId);
@@ -2034,6 +2088,8 @@
                 renderBookmarks();
                 renderWrittenStoriesList();
                 if (cloud.pendingLinkOpen) { cloud.pendingLinkOpen = false; openStoryFromLink(); }
+                renderStoryOverview();
+                checkFollowedAuthorUpdates();
             }, err => {
                 console.warn('Library sync failed:', err);
                 cloud.error = err.message;
@@ -2167,6 +2223,252 @@
                 .catch(() => { });
         }
 
+
+        /* ================= STORY OVERVIEW ================= */
+
+        function findWork(id) {
+            return state.publicProjects.find(p => p.id === id) || state.projects.find(p => p.id === id);
+        }
+
+        function worksByAuthor(work) {
+            return state.publicProjects.filter(p => p.id !== work.id &&
+                (work.ownerUid ? p.ownerUid === work.ownerUid : (p.author || '') === (work.author || '')));
+        }
+
+        function openStoryOverview(id) {
+            flushAutosave();
+            const work = findWork(id);
+            if (!work) return alert("This story couldn't be found. It may have been unpublished.");
+            state.overviewWorkId = id;
+            renderStoryOverview();
+            document.getElementById('story-overview').classList.remove('hidden');
+            document.getElementById('story-overview').scrollTo(0, 0);
+            document.body.style.overflow = 'hidden';
+            if (work.ownerUid && cloudOn()) loadFollowerCount(work.ownerUid);
+        }
+
+        function closeStoryOverview() {
+            document.getElementById('story-overview').classList.add('hidden');
+            document.body.style.overflow = '';
+            state.overviewWorkId = null;
+            if (window.location.hash.startsWith('#read=')) history.replaceState(null, '', baseUrl());
+        }
+
+        function renderStoryOverview() {
+            const card = document.getElementById('story-overview-card');
+            const work = state.overviewWorkId ? findWork(state.overviewWorkId) : null;
+            if (!card || !work) return;
+
+            const chapters = work.chapters || [];
+            const words = chapters.reduce((sum, c) => sum + countWords(c.content), 0);
+            const cover = safeImg(work.coverUrl);
+            const tags = Array.isArray(work.tags) ? work.tags : [];
+            const progress = state.readingProgress[work.id] || 0;
+            const position = state.readingPosition?.[work.id];
+            const resumeIdx = (position != null && position < chapters.length) ? position : 0;
+            const bookmarked = state.bookmarkedProjectIds.includes(work.id);
+            const isOwn = work.ownerUid ? currentUser?.uid === work.ownerUid : state.projects.some(p => p.id === work.id);
+            const more = worksByAuthor(work).slice(0, 4);
+            const authorName = work.author || 'Author';
+            const followers = work.ownerUid ? cloud.followerCounts[work.ownerUid] : null;
+
+            let followBtn = '';
+            if (isOwn) {
+                followBtn = `<span class="text-[11px] text-slate-500 italic">This is your story</span>`;
+            } else if (work.ownerUid && cloudOn()) {
+                const following = cloud.following.has(work.ownerUid);
+                followBtn = `<button onclick="toggleFollowAuthor(${jsArg(work.ownerUid)}, ${jsArg(authorName)})" class="px-4 py-1.5 rounded-lg text-xs font-semibold transition ${following ? 'bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700' : 'bg-purple-600 hover:bg-purple-500 text-white'}">
+                        <i class="fas ${following ? 'fa-user-check' : 'fa-user-plus'} mr-1"></i>${following ? 'Following' : 'Follow Author'}
+                    </button>`;
+            } else {
+                followBtn = `<span class="text-[11px] text-slate-500 italic">Following is available for stories in the online library</span>`;
+            }
+
+            card.innerHTML = `
+                <div class="relative">
+                    ${cover
+                        ? `<img src="${esc(cover)}" class="w-full h-56 md:h-72 object-cover">`
+                        : `<div class="w-full h-40 md:h-52 bg-gradient-to-br from-purple-900 via-indigo-900 to-slate-900 flex items-center justify-center px-6"><span class="font-cinzel text-2xl md:text-3xl font-bold text-white/80 text-center">${esc(work.title)}</span></div>`}
+                    <button onclick="closeStoryOverview()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white" title="Close"><i class="fas fa-times"></i></button>
+                </div>
+
+                <div class="p-6 md:p-8 space-y-6">
+                    <div class="space-y-3">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/40 uppercase">${esc(work.type || 'Novel')}</span>
+                            ${work.genre ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-900/40 text-purple-300 border border-purple-700/40 uppercase">${esc(work.genre)}</span>` : ''}
+                            <span class="text-[10px] px-2 py-0.5 rounded ${work.status === 'Completed' ? 'bg-emerald-900/40 text-emerald-300' : 'bg-amber-900/40 text-amber-300'}">${esc(work.status || 'Ongoing')}</span>
+                            ${work.rating ? `<span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-300">${esc(work.rating)}</span>` : ''}
+                        </div>
+                        <h2 class="font-cinzel text-3xl md:text-4xl font-bold text-white">${esc(work.title)}</h2>
+                    </div>
+
+                    <!-- Author -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-950 border border-slate-800 rounded-2xl p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-full bg-purple-900/50 text-purple-200 font-bold flex items-center justify-center">${esc(authorName[0] || 'A')}</div>
+                            <div>
+                                <p class="text-[10px] text-slate-500 uppercase font-bold">Written by</p>
+                                <p class="text-sm font-bold text-white">${esc(authorName)}</p>
+                                ${followers != null ? `<p class="text-[11px] text-slate-400">${followers} follower${followers === 1 ? '' : 's'}</p>` : ''}
+                            </div>
+                        </div>
+                        ${followBtn}
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-white">${chapters.length}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Chapters</p></div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-white">${words.toLocaleString()}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Words</p></div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-amber-300">${work.votes || 0}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Votes</p></div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-purple-300">${progress}%</p><p class="text-[10px] text-slate-500 uppercase font-bold">You've Read</p></div>
+                    </div>
+
+                    <!-- Synopsis -->
+                    <div class="space-y-2">
+                        <h3 class="font-cinzel text-lg font-bold text-white">Synopsis</h3>
+                        ${work.synopsis
+                            ? `<p class="font-lora text-base leading-relaxed text-slate-200 whitespace-pre-wrap">${esc(work.synopsis)}</p>`
+                            : `<p class="text-sm text-slate-500 italic">The author hasn't added a synopsis yet.</p>`}
+                        ${tags.length ? `<div class="flex flex-wrap gap-1.5 pt-1">${tags.map(t => `<span class="text-[11px] text-purple-300 bg-purple-950/60 border border-purple-800/40 px-2 py-0.5 rounded">#${esc(t)}</span>`).join('')}</div>` : ''}
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex flex-wrap gap-2">
+                        <button onclick="startReadingFromOverview(${jsArg(work.id)}, ${resumeIdx})" class="flex-1 min-w-[180px] py-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-sm font-bold shadow">
+                            <i class="fas fa-book-open mr-1"></i> ${resumeIdx > 0 ? `Continue: ${esc(chapters[resumeIdx]?.title || 'Chapter ' + (resumeIdx + 1))}` : 'Start Reading'}
+                        </button>
+                        <button onclick="toggleBookmarkById(${jsArg(work.id)})" class="px-4 py-3 rounded-xl text-sm font-semibold border ${bookmarked ? 'bg-pink-900/40 text-pink-200 border-pink-700/50' : 'bg-slate-800 text-slate-200 border-slate-700 hover:bg-slate-700'}">
+                            <i class="${bookmarked ? 'fas' : 'far'} fa-bookmark mr-1"></i>${bookmarked ? 'In Reading List' : 'Add to Reading List'}
+                        </button>
+                        <button onclick="copyToClipboard(baseUrl() + '#read=' + encodeURIComponent(${jsArg(work.id)}), 'Story link copied to clipboard!')" class="px-4 py-3 rounded-xl text-sm font-semibold bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700" title="Copy link to this story">
+                            <i class="fas fa-link"></i>
+                        </button>
+                    </div>
+
+                    <!-- Chapters -->
+                    <div class="space-y-2">
+                        <h3 class="font-cinzel text-lg font-bold text-white">Chapters</h3>
+                        <div class="divide-y divide-slate-800 border border-slate-800 rounded-xl overflow-hidden">
+                            ${chapters.map((c, i) => `
+                                <button onclick="startReadingFromOverview(${jsArg(work.id)}, ${i})" class="w-full text-left px-4 py-3 bg-slate-950 hover:bg-slate-900 flex items-center justify-between gap-3 text-sm">
+                                    <span class="text-slate-200"><span class="text-purple-400 font-bold mr-2">${i + 1}.</span>${esc(c.title)}</span>
+                                    <span class="text-[11px] text-slate-500 whitespace-nowrap">${countWords(c.content).toLocaleString()} words${position === i ? ' · <span class="text-purple-300">last read</span>' : ''}</span>
+                                </button>`).join('')}
+                        </div>
+                    </div>
+
+                    ${more.length ? `
+                    <div class="space-y-2">
+                        <h3 class="font-cinzel text-lg font-bold text-white">More by ${esc(authorName)}</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            ${more.map(m => `
+                                <button onclick="openStoryOverview(${jsArg(m.id)})" class="text-left bg-slate-950 border border-slate-800 hover:border-purple-500/50 rounded-xl p-3">
+                                    <p class="font-cinzel text-sm font-bold text-white">${esc(m.title)}</p>
+                                    <p class="text-[11px] text-slate-400 line-clamp-2">${esc(m.synopsis || 'No synopsis yet.')}</p>
+                                </button>`).join('')}
+                        </div>
+                    </div>` : ''}
+                </div>
+            `;
+        }
+
+        function startReadingFromOverview(id, chapterIndex) {
+            closeStoryOverview();
+            openReaderView(id);
+            if (chapterIndex > 0) loadReaderChapter(chapterIndex);
+        }
+
+        function toggleBookmarkById(id) {
+            const idx = state.bookmarkedProjectIds.indexOf(id);
+            if (idx > -1) state.bookmarkedProjectIds.splice(idx, 1);
+            else state.bookmarkedProjectIds.push(id);
+            saveState();
+            renderBookmarks();
+            renderDashboard();
+            renderStoryOverview();
+        }
+
+        /* ================= FOLLOWING AUTHORS (online) ================= */
+        // Stored in Firestore "follows/{followerUid}_{authorUid}" so follower counts are real.
+
+        cloud.following = new Map();     // authorUid -> follow doc
+        cloud.followers = [];            // people following me
+        cloud.followerCounts = {};       // authorUid -> number
+        cloud.followUnsubs = [];
+
+        function startFollowSync() {
+            cloud.followUnsubs.forEach(u => u());
+            cloud.followUnsubs = [];
+            cloud.following = new Map();
+            cloud.followers = [];
+            if (!cloudOn() || !currentUser) { renderProfilePage(); return; }
+            const uid = currentUser.uid;
+            cloud.followUnsubs.push(db.collection('follows').where('followerUid', '==', uid).onSnapshot(snap => {
+                cloud.following = new Map(snap.docs.map(d => [d.data().authorUid, { ...d.data(), at: tsToIso(d.data().at) }]));
+                renderProfilePage();
+                renderStoryOverview();
+                checkFollowedAuthorUpdates();
+                if (!document.getElementById('follow-list-modal').classList.contains('hidden') && cloud.openFollowList) openFollowListModal(cloud.openFollowList);
+            }, err => console.warn('Follow sync failed:', err)));
+            cloud.followUnsubs.push(db.collection('follows').where('authorUid', '==', uid).onSnapshot(snap => {
+                cloud.followers = snap.docs.map(d => ({ ...d.data(), at: tsToIso(d.data().at) }));
+                cloud.followerCounts[uid] = cloud.followers.length;
+                renderProfilePage();
+                if (!document.getElementById('follow-list-modal').classList.contains('hidden') && cloud.openFollowList) openFollowListModal(cloud.openFollowList);
+            }, err => console.warn('Follower sync failed:', err)));
+        }
+
+        function loadFollowerCount(authorUid) {
+            db.collection('follows').where('authorUid', '==', authorUid).get()
+                .then(snap => { cloud.followerCounts[authorUid] = snap.size; renderStoryOverview(); })
+                .catch(() => { });
+        }
+
+        async function toggleFollowAuthor(authorUid, authorName) {
+            if (!cloudOn()) return alert("Following needs the online library, which isn't available right now.");
+            if (!currentUser) { alert("Sign in to follow authors."); return openAuthModal(); }
+            if (authorUid === currentUser.uid) return;
+            const ref = db.collection('follows').doc(`${currentUser.uid}_${authorUid}`);
+            const following = cloud.following.has(authorUid);
+            try {
+                if (following) {
+                    await ref.delete();
+                } else {
+                    await ref.set({
+                        followerUid: currentUser.uid,
+                        followerName: (state.userProfile.name || (currentUser.email || 'Reader').split('@')[0]).slice(0, 100),
+                        authorUid,
+                        authorName: String(authorName || 'Author').slice(0, 100),
+                        at: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    addNotification("Now Following", `You'll be notified when ${authorName} publishes or updates a story.`, "follow");
+                }
+                cloud.followerCounts[authorUid] = Math.max(0, (cloud.followerCounts[authorUid] || 0) + (following ? -1 : 1));
+                renderStoryOverview();
+            } catch (err) { alert(`Couldn't update follow: ${err.message}`); }
+        }
+
+        // Notify me when an author I follow publishes or updates a story
+        function checkFollowedAuthorUpdates() {
+            if (!currentUser || !cloud.ready || cloud.following.size === 0) return;
+            if (!state.seenWorkVersions) state.seenWorkVersions = {};
+            let changed = false;
+            state.publicProjects.forEach(w => {
+                const follow = cloud.following.get(w.ownerUid);
+                if (!follow || w.ownerUid === currentUser.uid) return;
+                const version = w.updatedAt || w.publishedAt;
+                if (!version || state.seenWorkVersions[w.id] === version) return;
+                const isNewSinceFollow = !follow.at || Date.parse(version) > Date.parse(follow.at);
+                if (state.seenWorkVersions[w.id] !== undefined || isNewSinceFollow) {
+                    if (isNewSinceFollow) addNotification(`New from ${w.author || 'an author you follow'}`, `"${w.title}" was just ${w.publishedAt === version ? 'published' : 'updated'}.`, "follow");
+                }
+                state.seenWorkVersions[w.id] = version;
+                changed = true;
+            });
+            if (changed) saveState();
+        }
+
         /* ================= FIREBASE ACCOUNT SIGN-IN ================= */
 
         function renderAuthButton() {
@@ -2182,6 +2484,8 @@
                 currentUser = user;
                 renderAuthButton();
                 renderCloudStatus();
+                startFollowSync();
+                renderStoryOverview();
                 if (state.activeReaderProject?.isCloud) loadMyVote(state.activeReaderProject.id);
             });
         }
@@ -2633,12 +2937,12 @@
                 return `
                     <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl flex flex-col justify-between">
                         <div class="space-y-3">
-                            ${cover ? `<img src="${esc(cover)}" class="w-full h-40 object-cover rounded-xl border border-slate-800">` : ''}
+                            ${cover ? `<img src="${esc(cover)}" onclick="openStoryOverview(${jsArg(p.id)})" class="w-full h-40 object-cover rounded-xl border border-slate-800 cursor-pointer">` : ''}
                             <div class="flex items-center justify-between gap-2">
                                 <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/40 uppercase">${esc(p.type || 'Novel')}</span>
                                 <span class="text-[10px] px-2 py-0.5 rounded ${p.status === 'Completed' ? 'bg-emerald-900/40 text-emerald-300' : 'bg-amber-900/40 text-amber-300'}">${esc(p.status || 'Ongoing')}</span>
                             </div>
-                            <h3 class="font-cinzel text-xl font-bold text-white line-clamp-1">${esc(p.title)}</h3>
+                            <h3 onclick="openStoryOverview(${jsArg(p.id)})" class="font-cinzel text-xl font-bold text-white line-clamp-1 cursor-pointer hover:text-purple-300">${esc(p.title)}</h3>
                             <p class="text-xs text-slate-400">By ${esc(p.author || 'Author')}${p.genre ? ' · ' + esc(p.genre) : ''}${p.rating ? ' · ' + esc(p.rating) : ''}</p>
                             ${p.synopsis ? `<p class="text-xs text-slate-300 line-clamp-2">${esc(p.synopsis)}</p>` : ''}
                             ${tags.length ? `<div class="flex flex-wrap gap-1">${tags.map(t => `<span class="text-[10px] text-purple-300 bg-purple-950/60 border border-purple-800/40 px-1.5 py-0.5 rounded">#${esc(t)}</span>`).join('')}</div>` : ''}
@@ -2649,8 +2953,8 @@
                                 <span><i class="fas fa-star text-amber-400 mr-1"></i> ${p.votes || 0} Votes</span>
                                 <span class="text-purple-400 font-bold">${prog}% Read</span>
                             </div>
-                            <button onclick="openReaderView(${jsArg(p.id)})" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center gap-1.5">
-                                <i class="fas fa-book-open"></i> Read Book
+                            <button onclick="openStoryOverview(${jsArg(p.id)})" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center gap-1.5">
+                                <i class="fas fa-book-open"></i> View Story
                             </button>
                         </div>
                     </div>
