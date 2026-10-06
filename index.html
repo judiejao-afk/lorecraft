@@ -406,6 +406,8 @@
                 </div>
             </div>
 
+            <div id="cloud-status" class="hidden text-xs rounded-xl border px-4 py-3"></div>
+
             <div id="published-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
@@ -1097,6 +1099,9 @@
             return text ? text.split(' ').length : 0;
         }
 
+        // Safe value for an inline onclick="fn(...)" argument
+        function jsArg(v) { return esc(JSON.stringify(String(v ?? ''))); }
+
         function escapeRegExp(str) { return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
 
         function fmtDate(d) {
@@ -1150,6 +1155,7 @@
 
             loadLocalData();
             initAuthListener();
+            startLibrarySync();
             switchMainPage('dashboard');
             openStoryFromLink();
 
@@ -1566,7 +1572,7 @@
                         <h4 class="font-cinzel text-base font-bold text-white mt-1">${esc(p.title)}</h4>
                         <p class="text-xs text-slate-400">By ${esc(p.author || 'Author')} · ${state.readingProgress[p.id] || 0}% read</p>
                     </div>
-                    <button onclick="openReaderView('${esc(p.id)}')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold">Read Story</button>
+                    <button onclick="openReaderView(${jsArg(p.id)})" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold">Read Story</button>
                 </div>
             `).join('');
         }
@@ -1582,14 +1588,14 @@
 
             list.innerHTML = state.projects.map(p => {
                 const words = (p.chapters || []).reduce((s, c) => s + countWords(c.content), 0);
-                const published = state.publicProjects.some(x => x.id === p.id);
+                const published = isWorkPublished(p);
                 return `
                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-center justify-between gap-3">
                     <div>
                         <h4 class="font-cinzel text-sm font-bold text-white">${esc(p.title)}</h4>
                         <p class="text-xs text-slate-400">${(p.chapters || []).length} Chapters &bull; ${words.toLocaleString()} words &bull; ${esc(p.status || 'Ongoing')} &bull; ${published ? '<span class="text-emerald-400">Published</span>' : 'Draft'}</p>
                     </div>
-                    <button onclick="openInWriter('${esc(p.id)}')" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-purple-300 border border-slate-700 rounded-lg text-xs font-semibold whitespace-nowrap">
+                    <button onclick="openInWriter(${jsArg(p.id)})" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-purple-300 border border-slate-700 rounded-lg text-xs font-semibold whitespace-nowrap">
                         Edit in Studio
                     </button>
                 </div>`;
@@ -1794,7 +1800,7 @@
                             <span class="font-bold text-xs text-purple-300">${esc(b.author)}</span>
                             <span class="flex items-center gap-3">
                                 <span class="text-[10px] text-slate-500">${esc(fmtDate(b.date))}</span>
-                                <button onclick="deleteBroadcast('${esc(b.id)}')" class="text-[10px] text-red-400 hover:text-red-300" title="Delete"><i class="fas fa-trash"></i></button>
+                                <button onclick="deleteBroadcast(${jsArg(b.id)})" class="text-[10px] text-red-400 hover:text-red-300" title="Delete"><i class="fas fa-trash"></i></button>
                             </span>
                         </div>
                         <p class="text-xs text-slate-300 whitespace-pre-wrap">${esc(b.text)}</p>
@@ -1808,8 +1814,8 @@
                             `).join('')}
 
                             <div class="flex gap-2 pt-1">
-                                <input type="text" id="bc-reply-input-${esc(b.id)}" onkeydown="if(event.key==='Enter') addBroadcastComment('${esc(b.id)}')" class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-white flex-1 focus:outline-none" placeholder="Reply to broadcast...">
-                                <button onclick="addBroadcastComment('${esc(b.id)}')" class="px-3 py-1 bg-purple-600 text-white rounded-lg text-xs font-semibold">Reply</button>
+                                <input type="text" id="bc-reply-input-${esc(b.id)}" onkeydown="if(event.key==='Enter') addBroadcastComment(${jsArg(b.id)})" class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-white flex-1 focus:outline-none" placeholder="Reply to broadcast...">
+                                <button onclick="addBroadcastComment(${jsArg(b.id)})" class="px-3 py-1 bg-purple-600 text-white rounded-lg text-xs font-semibold">Reply</button>
                             </div>
                         </div>
                     </div>
@@ -1989,6 +1995,178 @@
 
         function closeNotificationsModal() { document.getElementById('notif-modal').classList.add('hidden'); }
 
+
+        /* ================= ONLINE PUBLIC LIBRARY (Firestore) ================= */
+        // Published works live in the Firestore collection "publicWorks" so every visitor
+        // sees the same library. Paragraph comments and votes are stored under each work.
+        // Drafts, lore, bookmarks and reading progress stay in this browser.
+
+        const cloud = {
+            ready: false,          // first library snapshot received
+            error: null,           // last sync error message
+            comments: {},          // paraId -> [comments] for the work open in the reader
+            commentsUnsub: null,
+            hasVoted: false,
+            pendingLinkOpen: true
+        };
+        const MAX_WORK_BYTES = 900000; // Firestore limit is ~1 MB per document
+
+        function cloudOn() { return !!db; }
+        function worksRef() { return db.collection('publicWorks'); }
+        function tsToIso(t) { return t && t.toDate ? t.toDate().toISOString() : (t || null); }
+
+        function startLibrarySync() {
+            if (!cloudOn()) { renderCloudStatus(); return; }
+            worksRef().orderBy('publishedAt', 'desc').limit(300).onSnapshot(snap => {
+                cloud.ready = true;
+                cloud.error = null;
+                state.publicProjects = snap.docs.map(d => {
+                    const data = d.data();
+                    return { ...data, id: d.id, isCloud: true, publishedAt: tsToIso(data.publishedAt), updatedAt: tsToIso(data.updatedAt) };
+                });
+                saveState(); // keep an offline copy
+                // Point the reader at the fresh copy (e.g. updated vote count)
+                if (state.activeReaderProject?.isCloud) {
+                    const fresh = state.publicProjects.find(p => p.id === state.activeReaderProject.id);
+                    if (fresh) { state.activeReaderProject = fresh; updateReaderVoteState(); }
+                }
+                filterLibrary();
+                renderBookmarks();
+                renderWrittenStoriesList();
+                if (cloud.pendingLinkOpen) { cloud.pendingLinkOpen = false; openStoryFromLink(); }
+            }, err => {
+                console.warn('Library sync failed:', err);
+                cloud.error = err.message;
+                renderCloudStatus();
+            });
+        }
+
+        // The cloud id for one of your works (one per account, so ids never clash)
+        function cloudIdFor(proj) {
+            if (proj.cloudId && proj.cloudOwnerUid === currentUser?.uid) return proj.cloudId;
+            return `${currentUser.uid}_${proj.id}`;
+        }
+
+        function isWorkPublished(proj) {
+            const id = proj.cloudId || proj.id;
+            return state.publicProjects.some(p => p.id === id || p.id === proj.id);
+        }
+
+        // Works you published before the online library existed (only on this device)
+        function localOnlyPublishedWorks() {
+            return state.projects.filter(p => p.isPublished && !p.cloudId && !(p.id === 'proj_1' && p.author === 'Community Writer'));
+        }
+
+        function renderCloudStatus() {
+            const box = document.getElementById('cloud-status');
+            if (!box) return;
+            let html = '', tone = 'border-slate-800 bg-slate-900 text-slate-300';
+            if (!cloudOn()) {
+                html = `<i class="fas fa-plug-circle-xmark mr-1 text-amber-400"></i> Offline mode: couldn't connect to the online library, so you're seeing works saved on this device only.`;
+                tone = 'border-amber-700/50 bg-amber-950/40 text-amber-200';
+            } else if (cloud.error) {
+                html = `<i class="fas fa-triangle-exclamation mr-1 text-amber-400"></i> The online library couldn't load (${esc(cloud.error)}). Showing the last saved copy.`;
+                tone = 'border-amber-700/50 bg-amber-950/40 text-amber-200';
+            } else if (!cloud.ready) {
+                html = `<i class="fas fa-spinner fa-spin mr-1 text-purple-400"></i> Loading the online library…`;
+            } else if (!currentUser) {
+                html = `<i class="fas fa-globe mr-1 text-purple-400"></i> You're browsing the shared library. <button onclick="openAuthModal()" class="text-purple-300 underline font-semibold">Sign in</button> to publish, comment or vote.`;
+            } else {
+                const pending = localOnlyPublishedWorks();
+                if (pending.length) {
+                    html = `<i class="fas fa-cloud-arrow-up mr-1 text-purple-400"></i> You have ${pending.length} work${pending.length === 1 ? '' : 's'} published only on this device. <button onclick="migrateLocalPublished()" class="text-purple-300 underline font-semibold">Publish ${pending.length === 1 ? 'it' : 'them'} online now</button>`;
+                    tone = 'border-purple-700/50 bg-purple-950/40 text-purple-200';
+                }
+            }
+            box.innerHTML = html;
+            box.className = `${html ? '' : 'hidden '}text-xs rounded-xl border px-4 py-3 ${tone}`;
+        }
+
+        // Writes one work to the online library. Returns a promise.
+        async function publishToCloud(proj) {
+            const id = cloudIdFor(proj);
+            const ref = worksRef().doc(id);
+            const data = clone(proj);
+            ['id', 'votes', 'isPublished', 'cloudId', 'cloudOwnerUid', 'publishedAt', 'updatedAt', 'isCloud'].forEach(k => delete data[k]);
+            data.ownerUid = currentUser.uid;
+            data.author = proj.author || state.userProfile.name || 'Author';
+            data.localId = proj.id;
+            data.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
+
+            const bytes = new Blob([JSON.stringify(data)]).size;
+            if (bytes > MAX_WORK_BYTES) {
+                throw new Error(`"${proj.title}" is too large to publish online (${Math.round(bytes / 1024)} KB; the limit is about 900 KB). Try a smaller cover image or split it into separate books.`);
+            }
+
+            const existing = await ref.get();
+            if (existing.exists) {
+                await ref.update(data);          // keeps votes and the original publish date
+            } else {
+                data.votes = 0;
+                data.publishedAt = firebase.firestore.FieldValue.serverTimestamp();
+                await ref.set(data);
+            }
+            proj.cloudId = id;
+            proj.cloudOwnerUid = currentUser.uid;
+            proj.isPublished = true;
+            saveState();
+            return existing.exists;
+        }
+
+        async function migrateLocalPublished() {
+            if (!currentUser) return openAuthModal();
+            const pending = localOnlyPublishedWorks();
+            let ok = 0;
+            for (const proj of pending) {
+                try { await publishToCloud(proj); ok++; }
+                catch (err) { alert(err.message); }
+            }
+            if (ok) addNotification("Library Updated", `${ok} work${ok === 1 ? '' : 's'} published to the online library.`, "publish");
+            renderUI();
+        }
+
+        // ----- Paragraph comments for the work open in the reader -----
+        function getParaComments(paraId) {
+            return state.activeReaderProject?.isCloud ? (cloud.comments[paraId] || []) : (state.paraComments[paraId] || []);
+        }
+
+        function startCommentSync(workId) {
+            stopCommentSync();
+            cloud.comments = {};
+            cloud.commentsUnsub = worksRef().doc(workId).collection('comments').orderBy('createdAt').onSnapshot(snap => {
+                const map = {};
+                snap.docs.forEach(d => {
+                    const c = d.data();
+                    (map[c.paraId] = map[c.paraId] || []).push({ ...c, docId: d.id, date: tsToIso(c.createdAt) || new Date().toISOString() });
+                });
+                cloud.comments = map;
+                if (state.activeReaderProject?.id === workId) {
+                    refreshReaderBadges();
+                    const panelOpen = !document.getElementById('para-comments-panel').classList.contains('hidden');
+                    if (panelOpen && state.activeParaId) renderParaCommentsList(state.activeParaId);
+                }
+            }, err => console.warn('Comment sync failed:', err));
+        }
+
+        function stopCommentSync() {
+            if (cloud.commentsUnsub) { cloud.commentsUnsub(); cloud.commentsUnsub = null; }
+        }
+
+        function deleteParaComment(docId) {
+            const proj = state.activeReaderProject;
+            if (!proj?.isCloud || !confirm('Delete this comment?')) return;
+            worksRef().doc(proj.id).collection('comments').doc(docId).delete().catch(err => alert(err.message));
+        }
+
+        // ----- Votes -----
+        function loadMyVote(workId) {
+            cloud.hasVoted = false;
+            if (!currentUser) return updateReaderVoteState();
+            worksRef().doc(workId).collection('votes').doc(currentUser.uid).get()
+                .then(d => { if (state.activeReaderProject?.id === workId) { cloud.hasVoted = d.exists; updateReaderVoteState(); } })
+                .catch(() => { });
+        }
+
         /* ================= FIREBASE ACCOUNT SIGN-IN ================= */
 
         function renderAuthButton() {
@@ -2003,6 +2181,8 @@
             auth.onAuthStateChanged(user => {
                 currentUser = user;
                 renderAuthButton();
+                renderCloudStatus();
+                if (state.activeReaderProject?.isCloud) loadMyVote(state.activeReaderProject.id);
             });
         }
 
@@ -2057,7 +2237,7 @@
                 const mentions = calculateLoreMentions(l).count;
                 const img = safeImg(l.imageUrl);
                 return `
-                    <div onclick="openLoreModal('${esc(l.id)}')" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-purple-500/50 transition">
+                    <div onclick="openLoreModal(${jsArg(l.id)})" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-purple-500/50 transition">
                         <div class="flex items-center gap-3">
                             ${img ? `<img src="${esc(img)}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 text-xs font-bold">${esc(l.category ? l.category[0] : 'L')}</div>`}
                             <div>
@@ -2206,7 +2386,7 @@
             if (grid) {
                 grid.innerHTML = state.mediaTracks.length === 0 ? `<p class="text-xs text-slate-500 italic">No tracks yet. Add a Suno or YouTube link.</p>` :
                     state.mediaTracks.map(m => `
-                    <div onclick="openMediaModal('${esc(m.id)}')" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-indigo-500/50 transition">
+                    <div onclick="openMediaModal(${jsArg(m.id)})" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-indigo-500/50 transition">
                         <div>
                             <h4 class="font-cinzel text-xs font-bold text-white">${esc(m.title)}</h4>
                             <p class="text-[10px] text-indigo-400">${esc(m.platform)}${m.genre ? ' · ' + esc(m.genre) : ''}</p>
@@ -2304,8 +2484,8 @@
                         <div class="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-3">
                             <h3 class="font-cinzel text-xl font-bold text-purple-300"><i class="fas fa-layer-group mr-2"></i> ${esc(s.title)}</h3>
                             <div class="flex items-center gap-2">
-                                <button onclick="addBookToSeries('${esc(s.id)}')" class="px-3 py-1 bg-purple-600/30 text-purple-300 hover:bg-purple-600 hover:text-white rounded-lg text-xs font-semibold transition">+ Add Book</button>
-                                <button onclick="deleteSeries('${esc(s.id)}')" class="px-2 py-1 text-red-400 hover:text-red-300 text-xs" title="Delete series"><i class="fas fa-trash"></i></button>
+                                <button onclick="addBookToSeries(${jsArg(s.id)})" class="px-3 py-1 bg-purple-600/30 text-purple-300 hover:bg-purple-600 hover:text-white rounded-lg text-xs font-semibold transition">+ Add Book</button>
+                                <button onclick="deleteSeries(${jsArg(s.id)})" class="px-2 py-1 text-red-400 hover:text-red-300 text-xs" title="Delete series"><i class="fas fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -2315,9 +2495,9 @@
                                         <div class="flex items-center justify-between">
                                             <span class="text-[10px] font-bold text-purple-400 block uppercase">Book ${idx + 1}</span>
                                             <span class="flex gap-2 text-[10px] text-slate-400">
-                                                ${idx > 0 ? `<button onclick="moveSeriesBook('${esc(s.id)}', ${idx}, -1)" title="Move earlier"><i class="fas fa-arrow-left"></i></button>` : ''}
-                                                ${idx < seriesBooks.length - 1 ? `<button onclick="moveSeriesBook('${esc(s.id)}', ${idx}, 1)" title="Move later"><i class="fas fa-arrow-right"></i></button>` : ''}
-                                                <button onclick="removeBookFromSeries('${esc(s.id)}', '${esc(b.id)}')" class="text-red-400" title="Remove from series"><i class="fas fa-times"></i></button>
+                                                ${idx > 0 ? `<button onclick="moveSeriesBook(${jsArg(s.id)}, ${idx}, -1)" title="Move earlier"><i class="fas fa-arrow-left"></i></button>` : ''}
+                                                ${idx < seriesBooks.length - 1 ? `<button onclick="moveSeriesBook(${jsArg(s.id)}, ${idx}, 1)" title="Move later"><i class="fas fa-arrow-right"></i></button>` : ''}
+                                                <button onclick="removeBookFromSeries(${jsArg(s.id)}, ${jsArg(b.id)})" class="text-red-400" title="Remove from series"><i class="fas fa-times"></i></button>
                                             </span>
                                         </div>
                                         <h4 class="font-cinzel text-sm font-bold text-white truncate">${esc(b.title)}</h4>
@@ -2433,6 +2613,7 @@
             });
 
             renderPublishedWorks(filtered);
+            renderCloudStatus();
         }
 
         function renderPublishedWorks(works = null) {
@@ -2468,7 +2649,7 @@
                                 <span><i class="fas fa-star text-amber-400 mr-1"></i> ${p.votes || 0} Votes</span>
                                 <span class="text-purple-400 font-bold">${prog}% Read</span>
                             </div>
-                            <button onclick="openReaderView('${esc(p.id)}')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center gap-1.5">
+                            <button onclick="openReaderView(${jsArg(p.id)})" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center gap-1.5">
                                 <i class="fas fa-book-open"></i> Read Book
                             </button>
                         </div>
@@ -2588,59 +2769,91 @@
             setAutosaveStatus('Saved ✓');
         }
 
-        function publishProject() {
+        async function publishProject() {
             const proj = getCurrentProject();
             if (!proj) return alert("No active story selected to publish.");
             if (!proj.chapters?.length) return alert("Add at least one chapter before publishing.");
             saveCurrentChapter();
 
-            proj.isPublished = true;
+            if (cloudOn()) {
+                if (!currentUser) {
+                    alert("Please sign in (or create a free account) to publish to the online Public Library.");
+                    return openAuthModal();
+                }
+                try {
+                    const wasUpdate = await publishToCloud(proj);
+                    addNotification("Work Published", `"${proj.title}" is now live in the online Public Library!`, "publish");
+                    renderWrittenStoriesList();
+                    renderCloudStatus();
+                    alert(`"${proj.title}" has been ${wasUpdate ? 'updated' : 'published'} in the online Public Library. Everyone can read it now.`);
+                } catch (err) {
+                    alert(`Couldn't publish: ${err.message}`);
+                }
+                return;
+            }
 
-            // Publish a snapshot copy: later draft edits only go public when you publish again
+            // Offline fallback: publish on this device only
+            proj.isPublished = true;
             const pubIdx = state.publicProjects.findIndex(p => p.id === proj.id);
             const snapshot = clone(proj);
             snapshot.votes = pubIdx > -1 ? (state.publicProjects[pubIdx].votes || 0) : (proj.votes || 0);
             snapshot.publishedAt = new Date().toISOString();
             if (pubIdx > -1) state.publicProjects[pubIdx] = snapshot;
             else state.publicProjects.push(snapshot);
-
-            addNotification("Work Published", `"${proj.title}" is now available in the Public Library!`, "publish");
-
+            addNotification("Work Published", `"${proj.title}" was published on this device (offline mode).`, "publish");
             if (!saveState()) return;
             filterLibrary();
             renderWrittenStoriesList();
-            alert(`"${proj.title}" has been ${pubIdx > -1 ? 'updated' : 'published'} in the Public Library!`);
+            alert(`"${proj.title}" was published on this device only, because the online library is unavailable right now.`);
         }
 
-        function unpublishProject() {
+        async function unpublishProject() {
             const proj = getCurrentProject();
-            if (!proj || !state.publicProjects.some(p => p.id === proj.id)) return alert("This work isn't published.");
+            if (!proj || !isWorkPublished(proj)) return alert("This work isn't published.");
             if (!confirm(`Remove "${proj.title}" from the Public Library? Your draft is kept.`)) return;
-            state.publicProjects = state.publicProjects.filter(p => p.id !== proj.id);
+
+            if (cloudOn() && proj.cloudId) {
+                if (!currentUser) return openAuthModal();
+                if (proj.cloudOwnerUid && proj.cloudOwnerUid !== currentUser.uid) return alert("This work was published from a different account. Sign in with that account to unpublish it.");
+                try { await worksRef().doc(proj.cloudId).delete(); }
+                catch (err) { return alert(`Couldn't unpublish: ${err.message}`); }
+            }
+            state.publicProjects = state.publicProjects.filter(p => p.id !== proj.id && p.id !== proj.cloudId);
             proj.isPublished = false;
             saveState();
             filterLibrary();
             renderWrittenStoriesList();
         }
 
-        // Find every stored copy of a work (draft + published) so counts stay in sync
-        function allCopies(projId) {
-            return [...state.projects, ...state.publicProjects].filter(p => p.id === projId);
-        }
-
-        function toggleVoteCurrentBook() {
+        async function toggleVoteCurrentBook() {
             const proj = state.activeReaderProject;
             if (!proj) return;
 
+            if (proj.isCloud) {
+                if (!currentUser) { alert("Sign in to vote."); return openAuthModal(); }
+                const workRef = worksRef().doc(proj.id);
+                const voteRef = workRef.collection('votes').doc(currentUser.uid);
+                const adding = !cloud.hasVoted;
+                const batch = db.batch();
+                if (adding) batch.set(voteRef, { at: firebase.firestore.FieldValue.serverTimestamp() });
+                else batch.delete(voteRef);
+                batch.update(workRef, { votes: firebase.firestore.FieldValue.increment(adding ? 1 : -1) });
+                try {
+                    await batch.commit();
+                    cloud.hasVoted = adding;
+                    updateReaderVoteState();
+                } catch (err) { alert(`Couldn't save your vote: ${err.message}`); }
+                return;
+            }
+
+            // Offline / local work
             const idx = state.votedProjectIds.indexOf(proj.id);
             const change = idx > -1 ? -1 : 1;
             if (idx > -1) state.votedProjectIds.splice(idx, 1);
             else state.votedProjectIds.push(proj.id);
-
-            const copies = allCopies(proj.id);
+            const copies = [...state.projects, ...state.publicProjects].filter(p => p.id === proj.id);
             if (!copies.includes(proj)) copies.push(proj);
             copies.forEach(c => c.votes = Math.max(0, (c.votes || 0) + change));
-
             saveState();
             updateReaderVoteState();
             filterLibrary();
@@ -2667,7 +2880,7 @@
             const proj = state.activeReaderProject;
             const voteBtnText = document.getElementById('vote-btn-text');
             if (proj && voteBtnText) {
-                const hasVoted = state.votedProjectIds.includes(proj.id);
+                const hasVoted = proj.isCloud ? cloud.hasVoted : state.votedProjectIds.includes(proj.id);
                 voteBtnText.innerText = `${hasVoted ? 'Voted' : 'Vote'} (${proj.votes || 0})`;
             }
         }
@@ -2686,8 +2899,11 @@
 
             if (confirm(`Are you sure you want to delete "${proj.title}"? It will also be removed from the Public Library and any series. This cannot be undone.`)) {
                 clearTimeout(autosaveTimer); autosaveTimer = null;
+                if (cloudOn() && proj.cloudId && currentUser && (!proj.cloudOwnerUid || proj.cloudOwnerUid === currentUser.uid)) {
+                    worksRef().doc(proj.cloudId).delete().catch(err => alert(`The online copy couldn't be removed: ${err.message}`));
+                }
                 state.projects = state.projects.filter(p => p.id !== proj.id);
-                state.publicProjects = state.publicProjects.filter(p => p.id !== proj.id);
+                state.publicProjects = state.publicProjects.filter(p => p.id !== proj.id && p.id !== proj.cloudId);
                 state.seriesList.forEach(s => s.bookIds = s.bookIds.filter(id => id !== proj.id));
                 state.bookmarkedProjectIds = state.bookmarkedProjectIds.filter(id => id !== proj.id);
 
@@ -2766,6 +2982,13 @@
                 cSelect.innerHTML = proj.chapters.map((c, i) => `<option value="${i}">${esc(c.title)}</option>`).join('');
             }
 
+            stopCommentSync();
+            cloud.comments = {};
+            if (proj.isCloud && cloudOn()) {
+                startCommentSync(proj.id);
+                loadMyVote(proj.id);
+            }
+
             updateReaderVoteState();
             updateReaderBookmarkState();
             loadReaderChapter(0);
@@ -2777,6 +3000,7 @@
             document.getElementById('reader-view').classList.add('hidden');
             document.body.style.overflow = '';
             closeParaCommentsPanel();
+            stopCommentSync();
             if (window.location.hash.startsWith('#read=')) history.replaceState(null, '', baseUrl());
             filterLibrary();
             renderBookmarks();
@@ -2818,7 +3042,7 @@
                 bodyElem.querySelectorAll('p').forEach((p, pIdx) => {
                     const paraId = `${chap.id}_${p.getAttribute('data-pid') || 'p' + pIdx}`;
                     p.classList.add('reader-para');
-                    const count = (state.paraComments[paraId] || []).length;
+                    const count = getParaComments(paraId).length;
                     const badge = document.createElement('button');
                     badge.type = 'button';
                     badge.dataset.paraId = paraId;
@@ -2837,7 +3061,7 @@
                     choicesButtons.innerHTML = validChoices.map(c => {
                         const isLocked = c.requiredItem && !state.readerInventory.includes(c.requiredItem);
                         return `
-                            <button ${isLocked ? 'disabled' : `onclick="jumpToBranchChapter('${esc(c.targetChapterId)}')"`} class="w-full py-3 ${isLocked ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed' : 'bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 text-white shadow-lg'} rounded-xl text-xs font-bold transition flex items-center justify-between px-4">
+                            <button ${isLocked ? 'disabled' : `onclick="jumpToBranchChapter(${jsArg(c.targetChapterId)})"`} class="w-full py-3 ${isLocked ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed' : 'bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 text-white shadow-lg'} rounded-xl text-xs font-bold transition flex items-center justify-between px-4">
                                 <span>${esc(c.text)}</span>
                                 ${c.requiredItem ? `<span class="${isLocked ? 'text-red-400' : 'text-amber-300'} text-[10px]"><i class="fas ${isLocked ? 'fa-lock' : 'fa-key'} mr-1"></i>Req: ${esc(c.requiredItem)}</span>` : `<i class="fas fa-arrow-right"></i>`}
                             </button>
@@ -2852,6 +3076,13 @@
             document.getElementById('reader-view')?.scrollTo(0, 0);
         }
 
+        // Update comment counts without re-rendering the chapter (keeps scroll position)
+        function refreshReaderBadges() {
+            document.querySelectorAll('#reader-chapter-body .para-cmt-badge').forEach(b => {
+                b.innerHTML = `<i class="fas fa-comment"></i> ${getParaComments(b.dataset.paraId).length}`;
+            });
+        }
+
         function jumpToBranchChapter(targetChapId) {
             const proj = state.activeReaderProject;
             if (!proj) return;
@@ -2859,52 +3090,74 @@
             if (idx > -1) loadReaderChapter(idx);
         }
 
+        function renderParaCommentsList(paraId) {
+            const list = document.getElementById('para-comments-list');
+            const cmts = getParaComments(paraId);
+            const proj = state.activeReaderProject;
+            const isWorkOwner = proj?.isCloud && currentUser && proj.ownerUid === currentUser.uid;
+            if (!list) return;
+            list.innerHTML = cmts.length === 0 ? `<p class="text-xs text-slate-500 italic">No reactions on this paragraph yet.</p>` :
+                cmts.map(c => {
+                    const canDelete = c.docId && currentUser && (c.uid === currentUser.uid || isWorkOwner);
+                    return `
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-purple-300">${esc(c.author)}</span>
+                            <span class="flex items-center gap-2">
+                                <span class="text-[10px] text-slate-500">${esc(fmtDate(c.date))}</span>
+                                ${canDelete ? `<button onclick="deleteParaComment(${jsArg(c.docId)})" class="text-[10px] text-red-400 hover:text-red-300" title="Delete comment"><i class="fas fa-trash"></i></button>` : ''}
+                            </span>
+                        </div>
+                        <p class="text-xs text-slate-300 whitespace-pre-wrap">${esc(c.text)}</p>
+                    </div>`;
+                }).join('');
+        }
+
         function openParaCommentsPanel(paraId) {
             state.activeParaId = paraId;
-            const list = document.getElementById('para-comments-list');
-            const cmts = state.paraComments[paraId] || [];
-
-            if (list) {
-                list.innerHTML = cmts.length === 0 ? `<p class="text-xs text-slate-500 italic">No reactions on this paragraph yet.</p>` :
-                    cmts.map(c => `
-                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-bold text-purple-300">${esc(c.author)}</span>
-                                <span class="text-[10px] text-slate-500">${esc(fmtDate(c.date))}</span>
-                            </div>
-                            <p class="text-xs text-slate-300 whitespace-pre-wrap">${esc(c.text)}</p>
-                        </div>
-                    `).join('');
-            }
-
+            renderParaCommentsList(paraId);
+            const input = document.getElementById('para-comment-input');
+            const needsSignIn = state.activeReaderProject?.isCloud && !currentUser;
+            if (input) input.placeholder = needsSignIn ? 'Sign in to comment on this paragraph...' : 'Comment on this paragraph...';
             document.getElementById('para-comments-panel').classList.remove('hidden');
-            document.getElementById('para-comment-input')?.focus();
+            input?.focus();
         }
 
         function closeParaCommentsPanel() { document.getElementById('para-comments-panel')?.classList.add('hidden'); }
 
-        function postParagraphComment() {
+        async function postParagraphComment() {
             const input = document.getElementById('para-comment-input');
             const text = input ? input.value.trim() : '';
             if (!text || !state.activeParaId) return;
             if (text.length > 1000) return alert("Comments can be up to 1,000 characters.");
+            const proj = state.activeReaderProject;
 
+            if (proj?.isCloud) {
+                if (!currentUser) { alert("Sign in to comment."); return openAuthModal(); }
+                try {
+                    await worksRef().doc(proj.id).collection('comments').add({
+                        paraId: state.activeParaId,
+                        text,
+                        author: state.userProfile.name || (currentUser.email || 'Reader').split('@')[0],
+                        uid: currentUser.uid,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    if (input) input.value = '';
+                } catch (err) { alert(`Couldn't post your comment: ${err.message}`); }
+                return; // the live listener updates the list and badges
+            }
+
+            // Offline / local work
             if (!state.paraComments[state.activeParaId]) state.paraComments[state.activeParaId] = [];
             state.paraComments[state.activeParaId].push({
                 author: state.userProfile.name || 'Reader',
                 text: text,
                 date: new Date().toISOString()
             });
-
-            const proj = state.activeReaderProject;
-            if (proj && state.projects.some(p => p.id === proj.id)) {
-                addNotification("New Paragraph Comment", `On "${proj.title}": "${text.slice(0, 50)}${text.length > 50 ? '…' : ''}"`, "comment");
-            }
-
             if (input) input.value = '';
             saveState();
-            openParaCommentsPanel(state.activeParaId);
-            loadReaderChapter(state.activeReaderChapterIndex);
+            renderParaCommentsList(state.activeParaId);
+            refreshReaderBadges();
         }
 
         function toggleStoryDetailsPanel() {
