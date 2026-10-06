@@ -25,7 +25,6 @@
         .font-cinzel {
             font-family: 'Cinzel', serif;
         }
-        /* Custom Scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -46,43 +45,51 @@
 
     <!-- Top Navigation Header -->
     <header class="bg-slate-900/90 border-b border-slate-800 backdrop-blur sticky top-0 z-40 px-4 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             <!-- Brand Logo -->
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
                     <i class="fas fa-feather-alt text-white text-lg"></i>
                 </div>
                 <div>
-                    <h1 class="font-cinzel font-bold text-lg text-white tracking-wide">LoreCraft <span class="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-sans border border-purple-500/30">Studio v4</span></h1>
+                    <h1 class="font-cinzel font-bold text-lg text-white tracking-wide">LoreCraft <span class="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-sans border border-purple-500/30">Studio</span></h1>
                     <p class="text-xs text-slate-400">Storyteller & Visual World Studio</p>
                 </div>
             </div>
 
-            <!-- Tab Navigation Buttons -->
-            <nav class="hidden md:flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80">
-                <button onclick="switchTab('studio')" id="tab-studio" class="px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-purple-600 text-white shadow">
-                    <i class="fas fa-pen-nib text-xs"></i> Story Studio
+            <!-- Role Selector: Reader Mode vs Writer Studio -->
+            <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center">
+                <button onclick="setMode('reader')" id="mode-btn-reader" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow">
+                    <i class="fas fa-book-reader"></i> Reader Mode
                 </button>
-                <button onclick="switchTab('library')" id="tab-library" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-2">
-                    <i class="fas fa-book-bookmark text-xs"></i> World Library
+                <button onclick="setMode('writer')" id="mode-btn-writer" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+                    <i class="fas fa-pen-nib"></i> Writer Studio
                 </button>
-                <button onclick="switchTab('media')" id="tab-media" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-2">
-                    <i class="fas fa-compact-disc text-xs"></i> Suno & YouTube
+            </div>
+
+            <!-- Navigation Tabs (Writer Studio Tabs) -->
+            <nav id="writer-nav-tabs" class="hidden md:flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80">
+                <button onclick="switchTab('studio')" id="tab-studio" class="px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-purple-600 text-white shadow">
+                    <i class="fas fa-edit"></i> Write Story
                 </button>
-                <button onclick="switchTab('published')" id="tab-published" class="px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-2">
-                    <i class="fas fa-scroll text-xs"></i> Published Works
+                <button onclick="switchTab('library')" id="tab-library" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+                    <i class="fas fa-book-bookmark"></i> World Lore
+                </button>
+                <button onclick="switchTab('media')" id="tab-media" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+                    <i class="fas fa-compact-disc"></i> Soundtracks
+                </button>
+                <button onclick="switchTab('published')" id="tab-published" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+                    <i class="fas fa-scroll"></i> Public Showcase
                 </button>
             </nav>
 
             <!-- User Auth & Data Backup Controls -->
             <div class="flex items-center gap-2">
-                <!-- Data Backup Modal Trigger -->
-                <button onclick="openBackupModal()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition text-xs flex items-center gap-1.5 border border-slate-700" title="Backup & Restore Data">
+                <button onclick="openBackupModal()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition text-xs flex items-center gap-1.5 border border-slate-700" title="Backup & Restore">
                     <i class="fas fa-database text-purple-400"></i>
-                    <span class="hidden sm:inline">Backup/Sync</span>
+                    <span class="hidden sm:inline">Backup</span>
                 </button>
 
-                <!-- Cloud Auth Button -->
                 <button id="auth-btn" onclick="openAuthModal()" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold shadow flex items-center gap-1.5 transition">
                     <i class="fas fa-user-circle"></i>
                     <span id="auth-btn-text">Sign In</span>
@@ -94,21 +101,33 @@
     <!-- Main Workspace Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
 
-        <!-- TAB 1: STORY STUDIO EDITOR -->
-        <section id="sec-studio" class="space-y-6">
-            <!-- Studio Toolbar & Project Picker -->
+        <!-- READER MODE / PUBLIC SHOWCASE SECTION -->
+        <section id="sec-published" class="space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div>
+                    <h2 class="font-cinzel text-2xl font-bold text-white"><i class="fas fa-globe text-purple-400 mr-2"></i> Public Library & Published Works</h2>
+                    <p class="text-xs text-slate-400">Browse and read books, novels, and series published by creators across the world.</p>
+                </div>
+            </div>
+
+            <!-- Published Cards Grid -->
+            <div id="published-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Rendered dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- WRITER TAB 1: STORY STUDIO EDITOR -->
+        <section id="sec-studio" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
                 <div class="flex flex-wrap items-center gap-3">
                     <div>
-                        <label class="text-xs text-slate-400 block mb-1">Project Work:</label>
+                        <label class="text-xs text-slate-400 block mb-1">My Project:</label>
                         <select id="project-select" onchange="switchProject(this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-purple-300 focus:outline-none focus:border-purple-500">
-                            <!-- Populated via JS -->
                         </select>
                     </div>
                     <div>
                         <label class="text-xs text-slate-400 block mb-1">Chapter:</label>
                         <select id="chapter-select" onchange="switchChapter(this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-200 focus:outline-none focus:border-purple-500">
-                            <!-- Populated via JS -->
                         </select>
                     </div>
                     <div class="flex items-end gap-1 pt-5">
@@ -122,9 +141,6 @@
                 </div>
 
                 <div class="flex items-center gap-2">
-                    <button onclick="openLoreDrawer()" class="px-3 py-1.5 bg-purple-900/30 hover:bg-purple-900/50 text-purple-300 border border-purple-700/50 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
-                        <i class="fas fa-book-open"></i> Inspect Lore Vault
-                    </button>
                     <button onclick="deleteCurrentProject()" class="px-3 py-1.5 bg-red-900/20 hover:bg-red-900/40 text-red-400 border border-red-800/40 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
                         <i class="fas fa-trash-alt"></i> Delete Work
                     </button>
@@ -137,30 +153,26 @@
             <!-- Chapter Editor Area -->
             <div class="bg-slate-900/80 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
                 <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between border-b border-slate-800 pb-4">
-                    <input type="text" id="chapter-title-input" class="bg-slate-950 border border-slate-800 text-xl font-cinzel font-bold text-white px-4 py-2 rounded-xl w-full sm:w-2/3 focus:outline-none focus:border-purple-500" placeholder="Chapter Title (e.g. Chapter 1: The First Spark)">
-                    
-                    <!-- Chapter Soundtrack Selector -->
+                    <input type="text" id="chapter-title-input" class="bg-slate-950 border border-slate-800 text-xl font-cinzel font-bold text-white px-4 py-2 rounded-xl w-full sm:w-2/3 focus:outline-none focus:border-purple-500" placeholder="Chapter Title">
                     <div class="w-full sm:w-1/3">
                         <select id="chapter-soundtrack-select" class="w-full bg-slate-950 border border-slate-800 text-xs text-indigo-300 px-3 py-2 rounded-xl focus:outline-none focus:border-indigo-500">
                             <option value="">🎵 No Soundtrack Attached</option>
-                            <!-- Populated with Suno/YouTube tracks -->
                         </select>
                     </div>
                 </div>
 
-                <!-- Text Area Draft Editor -->
-                <textarea id="chapter-content-input" rows="18" class="w-full bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-slate-200 text-base leading-relaxed focus:outline-none focus:border-purple-500/50 resize-y font-sans" placeholder="Write your chapter narrative here..."></textarea>
+                <textarea id="chapter-content-input" rows="18" class="w-full bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-slate-200 text-base leading-relaxed focus:outline-none focus:border-purple-500/50 resize-y font-sans" placeholder="Write your chapter content here..."></textarea>
                 
                 <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
                     <span id="word-count-display">0 Words</span>
                     <button onclick="publishProject()" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-lg shadow flex items-center gap-2 transition">
-                        <i class="fas fa-upload"></i> Publish to Works
+                        <i class="fas fa-globe"></i> Publish to Public Library
                     </button>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 2: WORLD LIBRARY & LORE VAULT -->
+        <!-- WRITER TAB 2: WORLD LIBRARY -->
         <section id="sec-library" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
@@ -172,72 +184,38 @@
                 </button>
             </div>
 
-            <!-- Lore Category Filter Pills -->
-            <div class="flex flex-wrap gap-2 border-b border-slate-800 pb-3">
-                <button onclick="filterLore('all')" class="lore-filter-btn active px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-600 text-white">All Entries</button>
-                <button onclick="filterLore('Character')" class="lore-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white">Characters</button>
-                <button onclick="filterLore('Faction')" class="lore-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white">Factions</button>
-                <button onclick="filterLore('Location')" class="lore-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white">Locations</button>
-                <button onclick="filterLore('Magic System')" class="lore-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white">Magic Systems</button>
-                <button onclick="filterLore('Note')" class="lore-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white">Notes</button>
-            </div>
-
-            <!-- Lore Cards Grid -->
-            <div id="lore-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Rendered dynamically via JS -->
-            </div>
+            <div id="lore-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- TAB 3: SUNO & YOUTUBE MEDIA HUB -->
+        <!-- WRITER TAB 3: SUNO & YOUTUBE MEDIA -->
         <section id="sec-media" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <h2 class="font-cinzel text-2xl font-bold text-white">Suno & YouTube Media Hub</h2>
-                    <p class="text-xs text-slate-400">Store music links, soundtracks, concept themes, and video teasers to attach to chapters.</p>
+                    <h2 class="font-cinzel text-2xl font-bold text-white">Suno & YouTube Soundtracks</h2>
+                    <p class="text-xs text-slate-400">Attach audio tracks and video themes to your chapters.</p>
                 </div>
                 <button onclick="openMediaModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-semibold shadow flex items-center gap-2 transition">
                     <i class="fas fa-plus"></i> Add Media Track
                 </button>
             </div>
 
-            <!-- Media Cards Grid -->
-            <div id="media-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Rendered dynamically via JS -->
-            </div>
+            <div id="media-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- TAB 4: PUBLISHED WORKS SHOWCASE & READER -->
-        <section id="sec-published" class="hidden space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="font-cinzel text-2xl font-bold text-white">Published Works</h2>
-                    <p class="text-xs text-slate-400">Read your finished stories, novels, and series in Reader Mode.</p>
-                </div>
-            </div>
-
-            <!-- Published Cards Grid -->
-            <div id="published-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Rendered dynamically via JS -->
-            </div>
-        </section>
-
-        <!-- READER PERSPECTIVE MODE SCREEN (Overlay View) -->
+        <!-- READER PERSPECTIVE MODE SCREEN -->
         <div id="reader-view" class="hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur overflow-y-auto p-4 md:p-8">
             <div class="max-w-4xl mx-auto space-y-6">
                 
-                <!-- Reader Top Bar Navigation -->
                 <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 p-4 rounded-2xl sticky top-0 z-10 shadow-2xl">
                     <button onclick="closeReaderView()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
                         <i class="fas fa-arrow-left"></i> Exit Reader View
                     </button>
 
-                    <!-- Sequential Nav Top Buttons -->
                     <div class="flex items-center gap-2">
                         <button id="reader-prev-btn-top" onclick="navigateChapter(-1)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-medium flex items-center gap-1 transition">
                             <i class="fas fa-chevron-left"></i> Previous
                         </button>
                         <select id="reader-chapter-select" onchange="loadReaderChapter(this.value)" class="bg-slate-950 border border-slate-700 text-purple-300 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none">
-                            <!-- Chapters populated dynamically -->
                         </select>
                         <button id="reader-next-btn-top" onclick="navigateChapter(1)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-medium flex items-center gap-1 transition">
                             Next <i class="fas fa-chevron-right"></i>
@@ -245,7 +223,6 @@
                     </div>
                 </div>
 
-                <!-- Active Chapter Attached Soundtrack Player Banner -->
                 <div id="reader-audio-header" class="hidden bg-gradient-to-r from-purple-900/40 via-indigo-900/40 to-slate-900 border border-purple-500/30 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
                     <div class="flex items-center gap-3">
                         <div class="w-10 h-10 rounded-xl bg-purple-600/30 flex items-center justify-center text-purple-300">
@@ -257,19 +234,15 @@
                         </div>
                     </div>
                     <a id="reader-audio-link" href="#" target="_blank" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-bold flex items-center gap-2 transition shadow">
-                        <i class="fas fa-external-link-alt"></i> Listen / Play
+                        <i class="fas fa-external-link-alt"></i> Play Audio
                     </a>
                 </div>
 
-                <!-- Chapter Narrative Container -->
                 <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 md:p-12 space-y-6 shadow-2xl">
                     <h1 id="reader-chapter-title" class="font-cinzel text-3xl md:text-4xl font-bold text-center text-white tracking-wide border-b border-slate-800/80 pb-6">Chapter Title</h1>
-                    <div id="reader-chapter-body" class="prose prose-invert max-w-none text-slate-300 text-lg leading-relaxed whitespace-pre-wrap font-sans">
-                        <!-- Chapter text rendered here -->
-                    </div>
+                    <div id="reader-chapter-body" class="prose prose-invert max-w-none text-slate-300 text-lg leading-relaxed whitespace-pre-wrap font-sans"></div>
                 </div>
 
-                <!-- Reader Bottom Sequential Navigation Footer -->
                 <div class="flex items-center justify-between pt-4 border-t border-slate-800">
                     <button id="reader-prev-btn-bottom" onclick="navigateChapter(-1)" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 rounded-xl text-sm font-medium flex items-center gap-2 transition">
                         <i class="fas fa-arrow-left"></i> Previous Chapter
@@ -278,15 +251,14 @@
                         Next Chapter <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
-
             </div>
         </div>
 
     </main>
 
-    <!-- MODALS & DRAWERS -->
+    <!-- MODALS -->
 
-    <!-- LORE ENTRY MODAL (View / Add / Edit with Local Photo Upload) -->
+    <!-- LORE ENTRY MODAL -->
     <div id="lore-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -314,33 +286,31 @@
                 </div>
 
                 <div>
-                    <label class="text-xs text-slate-400 block mb-1">Short Tagline / Summary</label>
-                    <input type="text" id="lore-summary" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Brief one-line summary">
+                    <label class="text-xs text-slate-400 block mb-1">Short Tagline</label>
+                    <input type="text" id="lore-summary" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
                 </div>
 
-                <!-- Photo Upload Section (Local Device Upload + Web URL) -->
                 <div class="space-y-2 border border-slate-800/80 p-3 rounded-xl bg-slate-950/50">
-                    <label class="text-xs text-purple-400 font-semibold block"><i class="fas fa-image mr-1"></i> Character / Lore Cover Image</label>
+                    <label class="text-xs text-purple-400 font-semibold block"><i class="fas fa-image mr-1"></i> Character Cover Photo</label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
                         <div>
-                            <span class="text-[11px] text-slate-400 block mb-1">Upload File from Device:</span>
-                            <input type="file" id="lore-file-input" accept="image/*" onchange="handleLocalImageUpload(event)" class="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:bg-purple-600/20 file:text-purple-300 hover:file:bg-purple-600/40">
+                            <span class="text-[11px] text-slate-400 block mb-1">Upload File:</span>
+                            <input type="file" id="lore-file-input" accept="image/*" onchange="handleLocalImageUpload(event)" class="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:bg-purple-600/20 file:text-purple-300">
                         </div>
                         <div>
-                            <span class="text-[11px] text-slate-400 block mb-1">Or Paste Image Web URL:</span>
-                            <input type="url" id="lore-image-url" oninput="previewImageURL(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="https://...">
+                            <span class="text-[11px] text-slate-400 block mb-1">Or Web Image URL:</span>
+                            <input type="url" id="lore-image-url" oninput="previewImageURL(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500">
                         </div>
                     </div>
-                    <!-- Live Image Preview Box -->
                     <div id="image-preview-box" class="hidden mt-2 border border-slate-800 rounded-lg p-2 flex items-center gap-3 bg-slate-900">
                         <img id="preview-img-element" src="" class="w-12 h-12 rounded-lg object-cover">
-                        <span class="text-xs text-emerald-400"><i class="fas fa-check-circle"></i> Image attached</span>
+                        <span class="text-xs text-emerald-400"><i class="fas fa-check-circle"></i> Image Attached</span>
                     </div>
                 </div>
 
                 <div>
-                    <label class="text-xs text-slate-400 block mb-1">Full Description & Lore Details</label>
-                    <textarea id="lore-description" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Detailed background lore, personality traits, history..."></textarea>
+                    <label class="text-xs text-slate-400 block mb-1">Full Description</label>
+                    <textarea id="lore-description" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
                 </div>
 
                 <div class="flex items-center justify-between pt-3 border-t border-slate-800">
@@ -354,18 +324,18 @@
         </div>
     </div>
 
-    <!-- MEDIA TRACK MODAL (Suno / YouTube) -->
+    <!-- MEDIA MODAL -->
     <div id="media-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 id="media-modal-title" class="font-cinzel text-xl font-bold text-white">Add Media Track</h3>
+                <h3 class="font-cinzel text-xl font-bold text-white">Add Media Track</h3>
                 <button onclick="closeMediaModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
             </div>
 
             <form id="media-form" onsubmit="saveMediaTrack(event)" class="space-y-4">
                 <input type="hidden" id="media-id">
                 <div>
-                    <label class="text-xs text-slate-400 block mb-1">Track / Video Title *</label>
+                    <label class="text-xs text-slate-400 block mb-1">Track Title *</label>
                     <input type="text" id="media-title" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                 </div>
 
@@ -378,14 +348,14 @@
                         </select>
                     </div>
                     <div>
-                        <label class="text-xs text-slate-400 block mb-1">Genre / Tag</label>
-                        <input type="text" id="media-genre" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="e.g. Dark Orchestral">
+                        <label class="text-xs text-slate-400 block mb-1">Genre</label>
+                        <input type="text" id="media-genre" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                     </div>
                 </div>
 
                 <div>
                     <label class="text-xs text-slate-400 block mb-1">Media Link URL *</label>
-                    <input type="url" id="media-url" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="https://suno.com/song/... or https://youtube.com/watch?v=...">
+                    <input type="url" id="media-url" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                 </div>
 
                 <div class="flex items-center justify-between pt-3 border-t border-slate-800">
@@ -399,14 +369,14 @@
         </div>
     </div>
 
-    <!-- BACKUP & DATA SYNC MODAL -->
+    <!-- BACKUP MODAL -->
     <div id="backup-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-database text-purple-400 mr-2"></i> Data Backup & Restore</h3>
                 <button onclick="closeBackupModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
             </div>
-            <p class="text-xs text-slate-400 leading-relaxed">Export a complete backup JSON file of all your stories, characters, lore entries, and music links to transfer between devices.</p>
+            <p class="text-xs text-slate-400 leading-relaxed">Export a JSON backup of all your works, characters, and tracks to transfer between devices.</p>
             
             <div class="space-y-3 pt-2">
                 <button onclick="exportDataBackup()" class="w-full py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-2 transition shadow">
@@ -422,15 +392,14 @@
         </div>
     </div>
 
-    <!-- CLOUD AUTH MODAL (MOBILE FIXES INCLUDED) -->
+    <!-- AUTH MODAL -->
     <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 class="font-cinzel text-lg font-bold text-white">Cloud Story Sync</h3>
+                <h3 class="font-cinzel text-lg font-bold text-white">Cloud Account Sign In</h3>
                 <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
             </div>
             
-            <!-- Mobile Keyboard Attributes: autocapitalize="none" autocorrect="off" -->
             <form onsubmit="handleCloudAuth(event)" class="space-y-3">
                 <div>
                     <label class="text-xs text-slate-400 block mb-1">Email Address</label>
@@ -442,20 +411,19 @@
                 </div>
                 
                 <div class="flex gap-2 pt-2">
-                    <button type="submit" id="auth-signin-btn" onclick="authAction='signin'" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg shadow">Sign In</button>
-                    <button type="submit" id="auth-signup-btn" onclick="authAction='signup'" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold rounded-lg">Create Account</button>
+                    <button type="submit" onclick="authAction='signin'" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg shadow">Sign In</button>
+                    <button type="submit" onclick="authAction='signup'" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold rounded-lg">Create Account</button>
                 </div>
             </form>
 
             <div class="text-center pt-2 border-t border-slate-800">
-                <button onclick="continueAsGuest()" class="text-xs text-slate-400 hover:text-purple-300">Continue as Guest (Local Only)</button>
+                <button onclick="closeAuthModal()" class="text-xs text-slate-400 hover:text-purple-300">Continue as Guest (Read Only / Local)</button>
             </div>
         </div>
     </div>
 
     <!-- JAVASCRIPT APPLICATION CORE -->
     <script>
-        // FIREBASE CONFIGURATION (pre-configured with your project)
         const firebaseConfig = {
             apiKey: "AIzaSyD5ozv6jQk8wm14CBDVbaydwZvYc1B0cHQ",
             authDomain: "lorecraft-698a1.firebaseapp.com",
@@ -466,24 +434,23 @@
             measurementId: "G-Q267LLYWFX"
         };
 
-        // Initialize Firebase
         let auth, db;
         try {
             firebase.initializeApp(firebaseConfig);
             auth = firebase.auth();
             db = firebase.firestore();
         } catch (e) {
-            console.warn("Firebase initialized in local offline mode.");
+            console.warn("Firebase running in offline mode.");
         }
 
-        // APPLICATION STATE
         let state = {
+            mode: 'reader', // 'reader' or 'writer'
             projects: [],
+            publicProjects: [],
             currentProjectId: null,
             currentChapterId: null,
             loreEntries: [],
             mediaTracks: [],
-            currentLoreFilter: 'all',
             activeReaderProject: null,
             activeReaderChapterIndex: 0
         };
@@ -492,14 +459,32 @@
         let authAction = 'signin';
         let tempBase64Image = null;
 
-        // INITIALIZATION
         window.addEventListener('DOMContentLoaded', () => {
             loadLocalData();
             initAuthListener();
+            loadPublicWorksFromCloud();
             renderUI();
         });
 
-        // LOCAL STORAGE LOAD / SAVE
+        function setMode(mode) {
+            state.mode = mode;
+            const rBtn = document.getElementById('mode-btn-reader');
+            const wBtn = document.getElementById('mode-btn-writer');
+            const wNav = document.getElementById('writer-nav-tabs');
+
+            if (mode === 'reader') {
+                rBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow";
+                wBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5";
+                wNav.classList.add('hidden');
+                switchTab('published');
+            } else {
+                wBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow";
+                rBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5";
+                wNav.classList.remove('hidden');
+                switchTab('studio');
+            }
+        }
+
         function loadLocalData() {
             const savedProjects = localStorage.getItem('lorecraft_projects');
             const savedLore = localStorage.getItem('lorecraft_lore');
@@ -508,44 +493,22 @@
             if (savedProjects) {
                 state.projects = JSON.parse(savedProjects);
             } else {
-                // Initial Default Project
                 state.projects = [{
                     id: 'proj_1',
+                    author: 'Community Writer',
                     title: 'Chronicles of Aetheria',
                     type: 'Novel',
                     chapters: [{
                         id: 'chap_1',
                         title: 'Chapter 1: Whispers of the Void',
                         soundtrackId: '',
-                        content: 'The rain in the Undercity tasted of copper and ozone. Caelen Vane adjusted the straps of his gauntlet as neon lights flickered over wet pavement.\n\nBeneath the towering floating spires of Aetheria, down in the smog-choked alleys known as the Sinks, survival was a daily haggling game...'
+                        content: 'The rain in the Undercity tasted of copper and ozone. Caelen Vane adjusted the straps of his gauntlet as neon lights flickered over wet pavement...'
                     }]
                 }];
             }
 
-            if (savedLore) {
-                state.loreEntries = JSON.parse(savedLore);
-            } else {
-                state.loreEntries = [{
-                    id: 'lore_1',
-                    title: 'Caelen Vane',
-                    category: 'Character',
-                    summary: 'Protagonist & Former Vanguard Officer',
-                    imageUrl: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=600&auto=format&fit=crop&q=80',
-                    description: 'Former vanguard officer empowered by ancient Aether flux. Fiercely protective of his sister Elyse.'
-                }];
-            }
-
-            if (savedMedia) {
-                state.mediaTracks = JSON.parse(savedMedia);
-            } else {
-                state.mediaTracks = [{
-                    id: 'med_1',
-                    title: 'Aetheria City Ambient Theme',
-                    platform: 'Suno AI',
-                    genre: 'Cyber-Gothic Lo-Fi',
-                    url: 'https://suno.com'
-                }];
-            }
+            if (savedLore) state.loreEntries = JSON.parse(savedLore);
+            if (savedMedia) state.mediaTracks = JSON.parse(savedMedia);
 
             if (state.projects.length > 0) {
                 state.currentProjectId = state.projects[0].id;
@@ -558,18 +521,27 @@
             localStorage.setItem('lorecraft_lore', JSON.stringify(state.loreEntries));
             localStorage.setItem('lorecraft_media', JSON.stringify(state.mediaTracks));
 
-            // Sync with Firestore if logged in
             if (currentUser && db) {
                 db.collection('users').doc(currentUser.uid).set({
                     projects: state.projects,
                     loreEntries: state.loreEntries,
-                    mediaTracks: state.mediaTracks,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                }, { merge: true }).catch(err => console.error("Cloud Sync Error:", err));
+                    mediaTracks: state.mediaTracks
+                }, { merge: true });
             }
         }
 
-        // AUTHENTICATION LISTENERS & MOBILE FIX
+        function loadPublicWorksFromCloud() {
+            if (!db) return;
+            db.collection('public_works').limit(20).get().then(snapshot => {
+                const cloudWorks = [];
+                snapshot.forEach(doc => cloudWorks.push(doc.data()));
+                if (cloudWorks.length > 0) {
+                    state.publicProjects = cloudWorks;
+                    renderPublishedWorks();
+                }
+            }).catch(err => console.log("Public works load fallback"));
+        }
+
         function initAuthListener() {
             if (!auth) return;
             auth.onAuthStateChanged(user => {
@@ -577,15 +549,6 @@
                 const btnText = document.getElementById('auth-btn-text');
                 if (user) {
                     btnText.innerText = user.email.split('@')[0];
-                    // Load user cloud data
-                    db.collection('users').doc(user.uid).get().then(doc => {
-                        if (doc.exists && doc.data().projects) {
-                            state.projects = doc.data().projects || state.projects;
-                            state.loreEntries = doc.data().loreEntries || state.loreEntries;
-                            state.mediaTracks = doc.data().mediaTracks || state.mediaTracks;
-                            renderUI();
-                        }
-                    });
                 } else {
                     btnText.innerText = 'Sign In';
                 }
@@ -594,48 +557,36 @@
 
         function handleCloudAuth(e) {
             e.preventDefault();
-            if (!auth) return alert("Firebase auth is running in offline mode.");
-
-            // Mobile input cleanup: trim extra spaces and convert email to lowercase
+            if (!auth) return;
             const email = document.getElementById('auth-email').value.trim().toLowerCase();
             const password = document.getElementById('auth-password').value.trim();
 
             if (authAction === 'signup') {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then(() => {
-                        alert("Account created successfully!");
-                        closeAuthModal();
-                    })
-                    .catch(err => alert("Sign Up Error: " + err.message));
+                auth.createUserWithEmailAndPassword(email, password).then(() => closeAuthModal()).catch(err => alert(err.message));
             } else {
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(() => {
-                        closeAuthModal();
-                    })
-                    .catch(err => alert("Sign In Error: " + err.message));
+                auth.signInWithEmailAndPassword(email, password).then(() => closeAuthModal()).catch(err => alert(err.message));
             }
         }
 
         function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
         function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
-        function continueAsGuest() { closeAuthModal(); }
 
-        // TAB SWITCHING
         function switchTab(tab) {
             ['studio', 'library', 'media', 'published'].forEach(t => {
                 document.getElementById(`sec-${t}`).classList.add('hidden');
-                document.getElementById(`tab-${t}`).className = "px-4 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-2";
+                const tabEl = document.getElementById(`tab-${t}`);
+                if (tabEl) tabEl.className = "px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5";
             });
 
             document.getElementById(`sec-${tab}`).classList.remove('hidden');
-            document.getElementById(`tab-${tab}`).className = "px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2 bg-purple-600 text-white shadow";
+            const activeTabEl = document.getElementById(`tab-${tab}`);
+            if (activeTabEl) activeTabEl.className = "px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-purple-600 text-white shadow";
 
             if (tab === 'published') renderPublishedWorks();
             if (tab === 'library') renderLoreGrid();
             if (tab === 'media') renderMediaGrid();
         }
 
-        // RENDER UI
         function renderUI() {
             renderProjectPicker();
             renderChapterEditor();
@@ -644,7 +595,6 @@
             renderPublishedWorks();
         }
 
-        // PROJECT & CHAPTER MANAGEMENT
         function renderProjectPicker() {
             const pSelect = document.getElementById('project-select');
             const cSelect = document.getElementById('chapter-select');
@@ -683,13 +633,8 @@
                 contentInput.value = chap.content;
                 updateWordCount(chap.content);
 
-                // Populate Soundtrack options
                 soundSelect.innerHTML = '<option value="">🎵 No Soundtrack Attached</option>' +
-                    state.mediaTracks.map(m => `<option value="${m.id}" ${m.id === chap.soundtrackId ? 'selected' : ''}>${m.platform === 'Suno AI' ? '🎵' : '🎬'} ${m.title} (${m.genre || 'Media'})</option>`).join('');
-            } else {
-                titleInput.value = '';
-                contentInput.value = '';
-                updateWordCount('');
+                    state.mediaTracks.map(m => `<option value="${m.id}" ${m.id === chap.soundtrackId ? 'selected' : ''}>${m.platform === 'Suno AI' ? '🎵' : '🎬'} ${m.title}</option>`).join('');
             }
         }
 
@@ -698,27 +643,18 @@
             document.getElementById('word-count-display').innerText = `${words} Words`;
         }
 
-        document.getElementById('chapter-content-input').addEventListener('input', (e) => {
-            updateWordCount(e.target.value);
-        });
+        document.getElementById('chapter-content-input').addEventListener('input', (e) => updateWordCount(e.target.value));
 
         function createNewProject() {
-            const title = prompt("Enter Work Title (Novel, Series, or Story):");
+            const title = prompt("Enter Work Title:");
             if (!title) return;
-            const type = prompt("Enter Type (Novel / Series / Short Story):", "Novel") || "Novel";
-
             const newProj = {
                 id: 'proj_' + Date.now(),
+                author: currentUser ? currentUser.email.split('@')[0] : 'Guest Writer',
                 title: title,
-                type: type,
-                chapters: [{
-                    id: 'chap_' + Date.now(),
-                    title: 'Chapter 1',
-                    soundtrackId: '',
-                    content: ''
-                }]
+                type: 'Novel',
+                chapters: [{ id: 'chap_' + Date.now(), title: 'Chapter 1', soundtrackId: '', content: '' }]
             };
-
             state.projects.push(newProj);
             state.currentProjectId = newProj.id;
             state.currentChapterId = newProj.chapters[0].id;
@@ -729,14 +665,7 @@
         function createNewChapter() {
             const proj = state.projects.find(p => p.id === state.currentProjectId);
             if (!proj) return;
-
-            const newChap = {
-                id: 'chap_' + Date.now(),
-                title: `Chapter ${proj.chapters.length + 1}`,
-                soundtrackId: '',
-                content: ''
-            };
-
+            const newChap = { id: 'chap_' + Date.now(), title: `Chapter ${proj.chapters.length + 1}`, soundtrackId: '', content: '' };
             proj.chapters.push(newChap);
             state.currentChapterId = newChap.id;
             saveState();
@@ -746,46 +675,137 @@
         function saveCurrentChapter() {
             const proj = state.projects.find(p => p.id === state.currentProjectId);
             const chap = proj?.chapters.find(c => c.id === state.currentChapterId);
-
             if (chap) {
                 chap.title = document.getElementById('chapter-title-input').value;
                 chap.content = document.getElementById('chapter-content-input').value;
                 chap.soundtrackId = document.getElementById('chapter-soundtrack-select').value;
                 saveState();
-                alert("Chapter draft saved!");
+                alert("Draft saved!");
                 renderProjectPicker();
             }
         }
 
-        // DELETE CURRENT PROJECT
         function deleteCurrentProject() {
             const proj = state.projects.find(p => p.id === state.currentProjectId);
-            if (!proj) return;
-
-            if (confirm(`Are you sure you want to delete "${proj.title}" and all its chapters?`)) {
+            if (proj && confirm(`Delete "${proj.title}"?`)) {
                 state.projects = state.projects.filter(p => p.id !== state.currentProjectId);
-                if (state.projects.length > 0) {
-                    state.currentProjectId = state.projects[0].id;
-                    state.currentChapterId = state.projects[0].chapters[0]?.id || null;
-                } else {
-                    state.currentProjectId = null;
-                    state.currentChapterId = null;
-                }
+                state.currentProjectId = state.projects[0]?.id || null;
+                state.currentChapterId = state.projects[0]?.chapters[0]?.id || null;
                 saveState();
                 renderUI();
-                alert("Project deleted.");
             }
         }
 
-        // LOCAL DEVICE IMAGE UPLOAD & PREVIEW
-        function handleLocalImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
+        function publishProject() {
+            saveCurrentChapter();
+            const proj = state.projects.find(p => p.id === state.currentProjectId);
+            if (proj && db) {
+                db.collection('public_works').doc(proj.id).set(proj).then(() => {
+                    alert("Published to Global Public Library!");
+                    loadPublicWorksFromCloud();
+                }).catch(() => alert("Saved locally!"));
+            }
+            setMode('reader');
+        }
 
+        // PUBLISHED WORKS SHOWCASE
+        function renderPublishedWorks() {
+            const grid = document.getElementById('published-grid');
+            const allWorks = [...state.projects, ...state.publicProjects.filter(pub => !state.projects.some(p => p.id === pub.id))];
+
+            grid.innerHTML = allWorks.map(p => `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/40 uppercase tracking-wider">${p.type || 'Novel'}</span>
+                            <span class="text-xs text-slate-500">By ${p.author || 'Author'}</span>
+                        </div>
+                        <h3 class="font-cinzel text-xl font-bold text-white">${p.title}</h3>
+                        <p class="text-xs text-slate-400">${p.chapters.length} Chapters Published</p>
+                    </div>
+
+                    <div class="flex items-center gap-2 pt-4 border-t border-slate-800/80">
+                        <button onclick="openReaderView('${p.id}')" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center gap-1.5 transition">
+                            <i class="fas fa-book-open"></i> Read Book
+                        </button>
+                        ${state.mode === 'writer' ? `
+                            <button onclick="deletePublishedWork('${p.id}')" class="px-3 py-2 bg-red-900/20 hover:bg-red-900/40 text-red-400 border border-red-800/40 rounded-xl text-xs font-semibold">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deletePublishedWork(projId) {
+            if (confirm("Delete this work?")) {
+                state.projects = state.projects.filter(p => p.id !== projId);
+                saveState();
+                renderUI();
+            }
+        }
+
+        // READER VIEW
+        function openReaderView(projId) {
+            const allWorks = [...state.projects, ...state.publicProjects];
+            const proj = allWorks.find(p => p.id === projId);
+            if (!proj || proj.chapters.length === 0) return alert("No chapters found.");
+
+            state.activeReaderProject = proj;
+            state.activeReaderChapterIndex = 0;
+
+            const cSelect = document.getElementById('reader-chapter-select');
+            cSelect.innerHTML = proj.chapters.map((c, i) => `<option value="${i}">${c.title}</option>`).join('');
+
+            loadReaderChapter(0);
+            document.getElementById('reader-view').classList.remove('hidden');
+        }
+
+        function closeReaderView() { document.getElementById('reader-view').classList.add('hidden'); }
+
+        function loadReaderChapter(index) {
+            index = parseInt(index);
+            state.activeReaderChapterIndex = index;
+            const proj = state.activeReaderProject;
+            const chap = proj.chapters[index];
+
+            document.getElementById('reader-chapter-select').value = index;
+            document.getElementById('reader-chapter-title').innerText = chap.title;
+            document.getElementById('reader-chapter-body').innerText = chap.content;
+
+            const audioHeader = document.getElementById('reader-audio-header');
+            if (chap.soundtrackId) {
+                const track = state.mediaTracks.find(m => m.id === chap.soundtrackId);
+                if (track) {
+                    document.getElementById('reader-audio-title').innerText = track.title;
+                    document.getElementById('reader-audio-link').href = track.url;
+                    audioHeader.classList.remove('hidden');
+                } else audioHeader.classList.add('hidden');
+            } else audioHeader.classList.add('hidden');
+
+            const isFirst = index === 0;
+            const isLast = index === proj.chapters.length - 1;
+            document.getElementById('reader-prev-btn-top').disabled = isFirst;
+            document.getElementById('reader-prev-btn-bottom').disabled = isFirst;
+            document.getElementById('reader-next-btn-top').disabled = isLast;
+            document.getElementById('reader-next-btn-bottom').disabled = isLast;
+        }
+
+        function navigateChapter(dir) {
+            const newIndex = state.activeReaderChapterIndex + dir;
+            if (newIndex >= 0 && newIndex < state.activeReaderProject.chapters.length) {
+                loadReaderChapter(newIndex);
+            }
+        }
+
+        // IMAGE & LORE
+        function handleLocalImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
             const reader = new FileReader();
-            reader.onload = function (e) {
-                tempBase64Image = e.target.result;
-                document.getElementById('lore-image-url').value = ''; // clear url
+            reader.onload = (evt) => {
+                tempBase64Image = evt.target.result;
                 previewImageURL(tempBase64Image);
             };
             reader.readAsDataURL(file);
@@ -794,64 +814,37 @@
         function previewImageURL(url) {
             const previewBox = document.getElementById('image-preview-box');
             const previewImg = document.getElementById('preview-img-element');
-
             if (url) {
                 previewImg.src = url;
                 previewBox.classList.remove('hidden');
-            } else {
-                previewBox.classList.add('hidden');
-            }
+            } else previewBox.classList.add('hidden');
         }
 
-        // WORLD LIBRARY LORE FUNCTIONS
         function renderLoreGrid() {
             const grid = document.getElementById('lore-grid');
-            const filtered = state.loreFilter === 'all' || !state.loreFilter
-                ? state.loreEntries
-                : state.loreEntries.filter(l => l.category === state.loreFilter);
-
-            grid.innerHTML = filtered.map(l => `
-                <div onclick="openLoreModal('${l.id}')" class="bg-slate-900 border border-slate-800 hover:border-purple-500/50 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-lg group">
-                    ${l.imageUrl ? `<img src="${l.imageUrl}" class="w-full h-40 rounded-xl object-cover border border-slate-800">` : ''}
-                    <div class="flex items-center justify-between">
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-900/40 text-purple-300 border border-purple-700/40 uppercase tracking-wider">${l.category}</span>
-                        <i class="fas fa-pen text-xs text-slate-500 group-hover:text-purple-400"></i>
-                    </div>
-                    <h3 class="font-cinzel text-lg font-bold text-white group-hover:text-purple-300 transition">${l.title}</h3>
-                    <p class="text-xs text-slate-400 line-clamp-2">${l.summary || l.description || 'No description provided.'}</p>
+            grid.innerHTML = state.loreEntries.map(l => `
+                <div onclick="openLoreModal('${l.id}')" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 cursor-pointer">
+                    ${l.imageUrl ? `<img src="${l.imageUrl}" class="w-full h-40 rounded-xl object-cover">` : ''}
+                    <h3 class="font-cinzel text-lg font-bold text-white">${l.title}</h3>
+                    <p class="text-xs text-slate-400 line-clamp-2">${l.summary || l.description}</p>
                 </div>
             `).join('');
         }
 
-        function filterLore(cat) {
-            state.loreFilter = cat;
-            document.querySelectorAll('.lore-filter-btn').forEach(btn => {
-                btn.className = "lore-filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-900 text-slate-400 hover:text-white";
-            });
-            event.target.className = "lore-filter-btn active px-3 py-1.5 rounded-lg text-xs font-medium bg-purple-600 text-white";
-            renderLoreGrid();
-        }
-
         function openLoreModal(loreId = null) {
             const modal = document.getElementById('lore-modal');
-            const deleteBtn = document.getElementById('delete-lore-btn');
-            tempBase64Image = null;
-
             if (loreId) {
-                const lore = state.loreEntries.find(l => l.id === loreId);
-                document.getElementById('lore-id').value = lore.id;
-                document.getElementById('lore-title').value = lore.title;
-                document.getElementById('lore-category').value = lore.category;
-                document.getElementById('lore-summary').value = lore.summary || '';
-                document.getElementById('lore-image-url').value = lore.imageUrl || '';
-                document.getElementById('lore-description').value = lore.description || '';
-                previewImageURL(lore.imageUrl);
-                deleteBtn.classList.remove('hidden');
+                const l = state.loreEntries.find(entry => entry.id === loreId);
+                document.getElementById('lore-id').value = l.id;
+                document.getElementById('lore-title').value = l.title;
+                document.getElementById('lore-category').value = l.category;
+                document.getElementById('lore-summary').value = l.summary || '';
+                document.getElementById('lore-description').value = l.description || '';
+                previewImageURL(l.imageUrl);
             } else {
                 document.getElementById('lore-form').reset();
                 document.getElementById('lore-id').value = '';
                 previewImageURL(null);
-                deleteBtn.classList.add('hidden');
             }
             modal.classList.remove('hidden');
         }
@@ -868,21 +861,11 @@
             const description = document.getElementById('lore-description').value;
 
             if (id) {
-                const lore = state.loreEntries.find(l => l.id === id);
-                if (lore) {
-                    lore.title = title;
-                    lore.category = category;
-                    lore.summary = summary;
-                    lore.imageUrl = imageUrl;
-                    lore.description = description;
-                }
+                const l = state.loreEntries.find(entry => entry.id === id);
+                if (l) Object.assign(l, { title, category, summary, imageUrl, description });
             } else {
-                state.loreEntries.push({
-                    id: 'lore_' + Date.now(),
-                    title, category, summary, imageUrl, description
-                });
+                state.loreEntries.push({ id: 'lore_' + Date.now(), title, category, summary, imageUrl, description });
             }
-
             saveState();
             closeLoreModal();
             renderLoreGrid();
@@ -890,7 +873,7 @@
 
         function deleteLoreEntry() {
             const id = document.getElementById('lore-id').value;
-            if (id && confirm("Delete this lore entry?")) {
+            if (id && confirm("Delete entry?")) {
                 state.loreEntries = state.loreEntries.filter(l => l.id !== id);
                 saveState();
                 closeLoreModal();
@@ -898,39 +881,29 @@
             }
         }
 
-        // MEDIA TRACK FUNCTIONS
+        // MEDIA TRACKS
         function renderMediaGrid() {
             const grid = document.getElementById('media-grid');
             grid.innerHTML = state.mediaTracks.map(m => `
-                <div onclick="openMediaModal('${m.id}')" class="bg-slate-900 border border-slate-800 hover:border-indigo-500/50 rounded-2xl p-5 space-y-3 cursor-pointer transition shadow-lg group">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-indigo-400 flex items-center gap-1.5">
-                            <i class="${m.platform === 'Suno AI' ? 'fas fa-music' : 'fab fa-youtube'}"></i> ${m.platform}
-                        </span>
-                        <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full">${m.genre || 'Track'}</span>
-                    </div>
-                    <h3 class="font-cinzel text-base font-bold text-white group-hover:text-indigo-300 transition">${m.title}</h3>
-                    <a href="${m.url}" target="_blank" onclick="event.stopPropagation()" class="text-xs text-indigo-400 hover:underline block truncate"><i class="fas fa-external-link-alt text-[10px] mr-1"></i> ${m.url}</a>
+                <div onclick="openMediaModal('${m.id}')" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2 cursor-pointer">
+                    <h3 class="font-cinzel text-base font-bold text-white">${m.title}</h3>
+                    <p class="text-xs text-indigo-400">${m.platform} • ${m.genre || 'Soundtrack'}</p>
                 </div>
             `).join('');
         }
 
         function openMediaModal(mediaId = null) {
             const modal = document.getElementById('media-modal');
-            const deleteBtn = document.getElementById('delete-media-btn');
-
             if (mediaId) {
-                const media = state.mediaTracks.find(m => m.id === mediaId);
-                document.getElementById('media-id').value = media.id;
-                document.getElementById('media-title').value = media.title;
-                document.getElementById('media-platform').value = media.platform;
-                document.getElementById('media-genre').value = media.genre || '';
-                document.getElementById('media-url').value = media.url;
-                deleteBtn.classList.remove('hidden');
+                const m = state.mediaTracks.find(track => track.id === mediaId);
+                document.getElementById('media-id').value = m.id;
+                document.getElementById('media-title').value = m.title;
+                document.getElementById('media-platform').value = m.platform;
+                document.getElementById('media-genre').value = m.genre || '';
+                document.getElementById('media-url').value = m.url;
             } else {
                 document.getElementById('media-form').reset();
                 document.getElementById('media-id').value = '';
-                deleteBtn.classList.add('hidden');
             }
             modal.classList.remove('hidden');
         }
@@ -946,17 +919,11 @@
             const url = document.getElementById('media-url').value;
 
             if (id) {
-                const media = state.mediaTracks.find(m => m.id === id);
-                if (media) {
-                    media.title = title;
-                    media.platform = platform;
-                    media.genre = genre;
-                    media.url = url;
-                }
+                const m = state.mediaTracks.find(track => track.id === id);
+                if (m) Object.assign(m, { title, platform, genre, url });
             } else {
                 state.mediaTracks.push({ id: 'med_' + Date.now(), title, platform, genre, url });
             }
-
             saveState();
             closeMediaModal();
             renderMediaGrid();
@@ -964,7 +931,7 @@
 
         function deleteMediaTrack() {
             const id = document.getElementById('media-id').value;
-            if (id && confirm("Delete this media track?")) {
+            if (id && confirm("Delete track?")) {
                 state.mediaTracks = state.mediaTracks.filter(m => m.id !== id);
                 saveState();
                 closeMediaModal();
@@ -972,113 +939,12 @@
             }
         }
 
-        // PUBLISHED WORKS SHOWCASE & READER VIEW
-        function renderPublishedWorks() {
-            const grid = document.getElementById('published-grid');
-            grid.innerHTML = state.projects.map(p => `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl flex flex-col justify-between">
-                    <div class="space-y-2">
-                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/40 uppercase tracking-wider">${p.type}</span>
-                        <h3 class="font-cinzel text-xl font-bold text-white">${p.title}</h3>
-                        <p class="text-xs text-slate-400">${p.chapters.length} Chapters Published</p>
-                    </div>
-
-                    <div class="flex items-center gap-2 pt-4 border-t border-slate-800/80">
-                        <button onclick="openReaderView('${p.id}')" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center gap-1.5 transition">
-                            <i class="fas fa-book-open"></i> Read Story
-                        </button>
-                        <button onclick="deletePublishedWork('${p.id}')" class="px-3 py-2 bg-red-900/20 hover:bg-red-900/40 text-red-400 border border-red-800/40 rounded-xl text-xs font-semibold flex items-center gap-1 transition">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function deletePublishedWork(projId) {
-            const proj = state.projects.find(p => p.id === projId);
-            if (proj && confirm(`Are you sure you want to delete "${proj.title}" from Published Works?`)) {
-                state.projects = state.projects.filter(p => p.id !== projId);
-                saveState();
-                renderUI();
-                alert("Book deleted successfully!");
-            }
-        }
-
-        function publishProject() {
-            saveCurrentChapter();
-            switchTab('published');
-            alert("Project published to Published Works!");
-        }
-
-        // SEQUENTIAL CHAPTER READER PERSPECTIVE
-        function openReaderView(projId) {
-            const proj = state.projects.find(p => p.id === projId);
-            if (!proj || proj.chapters.length === 0) return alert("No chapters found in this work.");
-
-            state.activeReaderProject = proj;
-            state.activeReaderChapterIndex = 0;
-
-            const cSelect = document.getElementById('reader-chapter-select');
-            cSelect.innerHTML = proj.chapters.map((c, i) => `<option value="${i}">${c.title}</option>`).join('');
-
-            loadReaderChapter(0);
-            document.getElementById('reader-view').classList.remove('hidden');
-        }
-
-        function closeReaderView() {
-            document.getElementById('reader-view').classList.add('hidden');
-        }
-
-        function loadReaderChapter(index) {
-            index = parseInt(index);
-            state.activeReaderChapterIndex = index;
-            const proj = state.activeReaderProject;
-            const chap = proj.chapters[index];
-
-            document.getElementById('reader-chapter-select').value = index;
-            document.getElementById('reader-chapter-title').innerText = chap.title;
-            document.getElementById('reader-chapter-body').innerText = chap.content;
-
-            // Audio soundtrack header
-            const audioHeader = document.getElementById('reader-audio-header');
-            if (chap.soundtrackId) {
-                const track = state.mediaTracks.find(m => m.id === chap.soundtrackId);
-                if (track) {
-                    document.getElementById('reader-audio-title').innerText = track.title;
-                    document.getElementById('reader-audio-link').href = track.url;
-                    audioHeader.classList.remove('hidden');
-                } else {
-                    audioHeader.classList.add('hidden');
-                }
-            } else {
-                audioHeader.classList.add('hidden');
-            }
-
-            // Update Next / Prev Buttons Disabled States
-            const isFirst = index === 0;
-            const isLast = index === proj.chapters.length - 1;
-
-            document.getElementById('reader-prev-btn-top').disabled = isFirst;
-            document.getElementById('reader-prev-btn-bottom').disabled = isFirst;
-            document.getElementById('reader-next-btn-top').disabled = isLast;
-            document.getElementById('reader-next-btn-bottom').disabled = isLast;
-        }
-
-        function navigateChapter(direction) {
-            const newIndex = state.activeReaderChapterIndex + direction;
-            if (newIndex >= 0 && newIndex < state.activeReaderProject.chapters.length) {
-                loadReaderChapter(newIndex);
-            }
-        }
-
-        // JSON BACKUP EXPORT / IMPORT
+        // BACKUP
         function openBackupModal() { document.getElementById('backup-modal').classList.remove('hidden'); }
         function closeBackupModal() { document.getElementById('backup-modal').classList.add('hidden'); }
 
         function exportDataBackup() {
-            const backupData = JSON.stringify(state, null, 2);
-            const blob = new Blob([backupData], { type: 'application/json' });
+            const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -1087,26 +953,21 @@
             URL.revokeObjectURL(url);
         }
 
-        function importDataBackup(event) {
-            const file = event.target.files[0];
+        function importDataBackup(e) {
+            const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
-            reader.onload = function (e) {
+            reader.onload = (evt) => {
                 try {
-                    const imported = JSON.parse(e.target.result);
-                    if (imported.projects && imported.loreEntries) {
+                    const imported = JSON.parse(evt.target.result);
+                    if (imported.projects) {
                         state = imported;
                         saveState();
                         renderUI();
                         closeBackupModal();
-                        alert("Data backup imported successfully!");
-                    } else {
-                        alert("Invalid backup JSON format.");
+                        alert("Backup imported!");
                     }
-                } catch (err) {
-                    alert("Error reading JSON file.");
-                }
+                } catch (err) { alert("Invalid backup format."); }
             };
             reader.readAsText(file);
         }
