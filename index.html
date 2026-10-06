@@ -124,6 +124,12 @@
             </nav>
 
             <div class="flex items-center gap-2">
+                <!-- Notifications Bell -->
+                <button onclick="openNotificationsModal()" class="relative p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition text-xs border border-slate-700">
+                    <i class="fas fa-bell text-purple-400 text-sm"></i>
+                    <span id="notif-badge" class="absolute -top-1 -right-1 bg-pink-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full hidden">0</span>
+                </button>
+
                 <button onclick="openBackupModal()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition text-xs flex items-center gap-1.5 border border-slate-700" title="Backup & Restore">
                     <i class="fas fa-database text-purple-400"></i>
                     <span class="hidden sm:inline">Backup</span>
@@ -215,46 +221,93 @@
             </div>
         </section>
 
-        <!-- PAGE 2: PROFILE PAGE -->
+        <!-- PAGE 2: WATTPAD-STYLE PROFILE PAGE -->
         <section id="page-profile" class="hidden space-y-6">
-            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl">
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-slate-800 pb-6">
-                    <div class="flex items-center gap-4">
-                        <div id="profile-avatar-display" class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg overflow-hidden border border-purple-500/30">
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl relative">
+                <!-- Header Banner -->
+                <div id="profile-banner-bg" class="h-48 w-full bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 relative bg-cover bg-center">
+                    <div class="absolute inset-0 bg-black/30"></div>
+                </div>
+
+                <!-- Profile Info Header -->
+                <div class="p-6 md:p-8 -mt-16 relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-end gap-5">
+                        <div id="profile-avatar-display" class="w-28 h-28 rounded-2xl bg-slate-950 border-4 border-slate-900 overflow-hidden shadow-2xl flex items-center justify-center text-3xl font-bold text-purple-400">
                             <i class="fas fa-user-astronaut"></i>
                         </div>
-                        <div>
-                            <h2 id="profile-name-display" class="font-cinzel text-2xl font-bold text-white">Guest Storyteller</h2>
-                            <p id="profile-bio-display" class="text-xs text-slate-400">Fantasy Writer & Reader</p>
+                        <div class="space-y-1">
+                            <h2 id="profile-name-display" class="font-cinzel text-3xl font-bold text-white">Guest Storyteller</h2>
+                            <p id="profile-handle-display" class="text-xs text-purple-400 font-mono">@guest_writer</p>
+                            <p id="profile-bio-display" class="text-xs text-slate-300 max-w-xl">Fantasy Writer & Reader</p>
+                            
+                            <div class="flex items-center gap-4 text-xs text-slate-400 pt-1">
+                                <span id="profile-location-display"><i class="fas fa-map-marker-alt text-purple-400 mr-1"></i> Earth</span>
+                                <a id="profile-website-display" href="#" target="_blank" class="text-indigo-400 hover:underline hidden"><i class="fas fa-link mr-1"></i> Website</a>
+                            </div>
                         </div>
                     </div>
-                    <button onclick="openProfileEditModal()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center gap-2 transition">
-                        <i class="fas fa-user-gear"></i> Edit Profile Settings
-                    </button>
-                </div>
 
-                <div class="flex items-center gap-4 border-b border-slate-800/80 pb-2">
-                    <button onclick="switchProfileSubTab('bookmarks')" id="prof-subtab-bookmarks" class="text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-2 flex items-center gap-2">
-                        <i class="fas fa-bookmark"></i> Reading List / Bookmarks
-                    </button>
-                    <button onclick="switchProfileSubTab('stories')" id="prof-subtab-stories" class="text-sm font-bold text-slate-400 hover:text-slate-200 pb-2 flex items-center gap-2">
-                        <i class="fas fa-scroll"></i> Written Stories
-                    </button>
-                </div>
+                    <div class="flex items-center gap-3 w-full md:w-auto">
+                        <div class="flex items-center gap-4 bg-slate-950/80 px-4 py-2 rounded-2xl border border-slate-800 text-center">
+                            <div>
+                                <span id="profile-followers-count" class="font-bold text-white block text-sm">0</span>
+                                <span class="text-[10px] text-slate-400 uppercase font-bold">Followers</span>
+                            </div>
+                            <div class="h-6 w-px bg-slate-800"></div>
+                            <div>
+                                <span id="profile-following-count" class="font-bold text-white block text-sm">0</span>
+                                <span class="text-[10px] text-slate-400 uppercase font-bold">Following</span>
+                            </div>
+                        </div>
 
-                <div id="prof-sec-bookmarks" class="space-y-4">
-                    <h3 class="font-cinzel text-lg font-bold text-white">My Saved Reading List</h3>
-                    <div id="bookmarks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                </div>
+                        <button id="profile-follow-btn" onclick="toggleFollowUser()" class="hidden px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-semibold shadow flex items-center gap-2 transition">
+                            <i class="fas fa-user-plus"></i> Follow Author
+                        </button>
 
-                <div id="prof-sec-stories" class="hidden space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h3 class="font-cinzel text-lg font-bold text-white">My Author Works</h3>
-                        <button onclick="switchMainPage('writer'); createNewProject();" class="px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-semibold">
-                            + Create New Work
+                        <button id="profile-edit-btn" onclick="openProfileEditModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold shadow flex items-center gap-2 transition">
+                            <i class="fas fa-user-gear text-purple-400"></i> Edit Profile
                         </button>
                     </div>
-                    <div id="written-stories-list" class="space-y-3"></div>
+                </div>
+
+                <!-- Sub-tabs -->
+                <div class="px-6 md:px-8 border-b border-slate-800 flex items-center gap-6">
+                    <button onclick="switchProfileSubTab('bookmarks')" id="prof-subtab-bookmarks" class="text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-3 flex items-center gap-2">
+                        <i class="fas fa-bookmark"></i> Reading List / Bookmarks
+                    </button>
+                    <button onclick="switchProfileSubTab('stories')" id="prof-subtab-stories" class="text-sm font-bold text-slate-400 hover:text-slate-200 pb-3 flex items-center gap-2">
+                        <i class="fas fa-scroll"></i> Written Stories
+                    </button>
+                    <button onclick="switchProfileSubTab('updates')" id="prof-subtab-updates" class="text-sm font-bold text-slate-400 hover:text-slate-200 pb-3 flex items-center gap-2">
+                        <i class="fas fa-bullhorn"></i> Author Broadcasts
+                    </button>
+                </div>
+
+                <div class="p-6 md:p-8 space-y-6">
+                    <div id="prof-sec-bookmarks" class="space-y-4">
+                        <h3 class="font-cinzel text-lg font-bold text-white">My Saved Reading List</h3>
+                        <div id="bookmarks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                    </div>
+
+                    <div id="prof-sec-stories" class="hidden space-y-4">
+                        <div class="flex items-center justify-between">
+                            <h3 class="font-cinzel text-lg font-bold text-white">My Author Works</h3>
+                            <button onclick="switchMainPage('writer'); createNewProject();" class="px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-semibold">
+                                + Create New Work
+                            </button>
+                        </div>
+                        <div id="written-stories-list" class="space-y-3"></div>
+                    </div>
+
+                    <div id="prof-sec-updates" class="hidden space-y-4">
+                        <div class="bg-slate-950 p-4 rounded-2xl border border-slate-800 space-y-3">
+                            <textarea id="author-broadcast-input" rows="2" class="w-full bg-slate-900 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Post a new message or update to your followers..."></textarea>
+                            <div class="flex justify-end">
+                                <button onclick="postAuthorBroadcast()" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">Broadcast Update</button>
+                            </div>
+                        </div>
+                        <div id="author-broadcasts-list" class="space-y-3"></div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -573,6 +626,74 @@
 
     </main>
 
+    <!-- NOTIFICATIONS & ACTIVITY FEED MODAL -->
+    <div id="notif-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl max-h-[80vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-bell text-purple-400 mr-2"></i> Notifications & Feed</h3>
+                <button onclick="closeNotificationsModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
+
+            <div id="notif-list" class="flex-1 overflow-y-auto space-y-3 pr-1"></div>
+        </div>
+    </div>
+
+    <!-- WATTPAD PROFILE EDIT MODAL -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-user-gear text-purple-400 mr-2"></i> Edit Wattpad Profile</h3>
+                <button onclick="closeProfileEditModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+
+            <form onsubmit="saveUserProfile(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Display Name *</label>
+                        <input type="text" id="prof-name" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Author Handle (@username)</label>
+                        <input type="text" id="prof-handle" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-purple-300 focus:outline-none focus:border-purple-500" placeholder="@username">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Profile Bio</label>
+                    <textarea id="prof-bio" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Tell readers about yourself..."></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Location</label>
+                        <input type="text" id="prof-location" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="City, Country">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Website / Social Link</label>
+                        <input type="url" id="prof-website" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="https://...">
+                    </div>
+                </div>
+
+                <div class="space-y-3 border-t border-slate-800 pt-3">
+                    <span class="text-xs font-bold text-purple-400 uppercase tracking-wider block">Custom Images</span>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Avatar Image URL</label>
+                        <input type="url" id="prof-avatar-url" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="https://image-link.png">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Header Banner URL</label>
+                        <input type="url" id="prof-banner-url" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="https://banner-link.png">
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+                    <button type="button" onclick="closeProfileEditModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold shadow">Save Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- WORLD LORE ENTRY MODAL -->
     <div id="lore-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
@@ -701,32 +822,6 @@
         <div id="para-comments-list" class="space-y-3 pt-2"></div>
     </div>
 
-    <!-- PROFILE EDIT MODAL -->
-    <div id="profile-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
-            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-user-circle text-purple-400 mr-2"></i> Profile Settings</h3>
-                <button onclick="closeProfileEditModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
-            </div>
-
-            <form onsubmit="saveUserProfile(event)" class="space-y-4">
-                <div>
-                    <label class="text-xs text-slate-400 block mb-1">Author / Reader Display Name</label>
-                    <input type="text" id="prof-name" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
-                </div>
-                <div>
-                    <label class="text-xs text-slate-400 block mb-1">Author Bio</label>
-                    <input type="text" id="prof-bio" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
-                </div>
-
-                <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
-                    <button type="button" onclick="closeProfileEditModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold shadow">Save Profile</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <!-- BACKUP MODAL -->
     <div id="backup-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
@@ -760,7 +855,7 @@
             <form onsubmit="handleCloudAuth(event)" class="space-y-3">
                 <div>
                     <label class="text-xs text-slate-400 block mb-1">Email Address</label>
-                    <input type="email" id="auth-email" required autocapitalize="none" autocorrect="off" spellcheck="false" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="you@example.com">
+                    <input type="email" id="auth-email" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="you@example.com">
                 </div>
                 <div>
                     <label class="text-xs text-slate-400 block mb-1">Password</label>
@@ -803,7 +898,22 @@
         let state = {
             currentPage: 'dashboard',
             profileSubTab: 'bookmarks',
-            userProfile: { name: 'Guest Storyteller', bio: 'Fantasy Writer & Reader', avatar: '' },
+            userProfile: { 
+                name: 'Guest Storyteller', 
+                handle: '@guest_writer',
+                bio: 'Fantasy Writer & Reader', 
+                location: 'Earth',
+                website: '',
+                avatar: '', 
+                banner: '' 
+            },
+            followingUserIds: [],
+            followersCount: 12,
+            notifications: [
+                { id: 'n1', title: 'New Chapter Published!', body: 'Chronicles of Aetheria updated Chapter 2.', date: '2h ago', type: 'book_update', read: false },
+                { id: 'n2', title: 'New Follower', body: 'AetherWriter started following your profile.', date: '1d ago', type: 'follow', read: false }
+            ],
+            authorBroadcasts: [],
             bookmarkedProjectIds: [],
             votedProjectIds: [],
             seriesList: [],
@@ -823,7 +933,6 @@
         let currentUser = null;
         let authAction = 'signin';
         let tempBase64Image = null;
-        let tempCoverBase64 = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             loadLocalData();
@@ -842,7 +951,6 @@
             const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
             document.getElementById('word-count-display').innerText = `${wordCount.toLocaleString()} Words`;
 
-            // Track Daily Analytics
             const todayStr = new Date().toISOString().slice(0, 10);
             if (state.dailyLog.date !== todayStr) {
                 state.dailyLog.date = todayStr;
@@ -878,14 +986,18 @@
             const savedBookmarks = localStorage.getItem('lorecraft_bookmarks');
             const savedVotes = localStorage.getItem('lorecraft_votes');
             const savedParaCmts = localStorage.getItem('lorecraft_para_comments');
+            const savedNotifs = localStorage.getItem('lorecraft_notifs');
+            const savedFollowing = localStorage.getItem('lorecraft_following');
 
-            if (savedProfile) state.userProfile = JSON.parse(savedProfile);
+            if (savedProfile) state.userProfile = Object.assign(state.userProfile, JSON.parse(savedProfile));
             if (savedBookmarks) state.bookmarkedProjectIds = JSON.parse(savedBookmarks);
             if (savedVotes) state.votedProjectIds = JSON.parse(savedVotes);
             if (savedSeries) state.seriesList = JSON.parse(savedSeries);
             if (savedLore) state.loreEntries = JSON.parse(savedLore);
             if (savedMedia) state.mediaTracks = JSON.parse(savedMedia);
             if (savedParaCmts) state.paraComments = JSON.parse(savedParaCmts);
+            if (savedNotifs) state.notifications = JSON.parse(savedNotifs);
+            if (savedFollowing) state.followingUserIds = JSON.parse(savedFollowing);
 
             if (savedProjects) {
                 state.projects = JSON.parse(savedProjects);
@@ -930,17 +1042,8 @@
             localStorage.setItem('lorecraft_bookmarks', JSON.stringify(state.bookmarkedProjectIds));
             localStorage.setItem('lorecraft_votes', JSON.stringify(state.votedProjectIds));
             localStorage.setItem('lorecraft_para_comments', JSON.stringify(state.paraComments));
-
-            if (currentUser && db) {
-                db.collection('users').doc(currentUser.uid).set({
-                    profile: state.userProfile,
-                    projects: state.projects,
-                    seriesList: state.seriesList,
-                    loreEntries: state.loreEntries,
-                    mediaTracks: state.mediaTracks,
-                    bookmarks: state.bookmarkedProjectIds
-                }, { merge: true });
-            }
+            localStorage.setItem('lorecraft_notifs', JSON.stringify(state.notifications));
+            localStorage.setItem('lorecraft_following', JSON.stringify(state.followingUserIds));
         }
 
         function renderUI() {
@@ -951,6 +1054,7 @@
             renderChapterEditor();
             renderLoreGrid();
             renderMediaGrid();
+            updateNotificationBadge();
             filterLibrary();
         }
 
@@ -970,7 +1074,6 @@
             document.getElementById('stat-lore-count').innerText = state.loreEntries.length;
             document.getElementById('stat-words-count').innerText = totalWords.toLocaleString();
 
-            // Daily Analytics
             document.getElementById('analytics-words-today').innerText = state.dailyLog.wordsWritten.toLocaleString();
             const pct = Math.min(100, Math.round((state.dailyLog.wordsWritten / state.dailyLog.target) * 100));
             document.getElementById('analytics-progress-bar').style.width = `${pct}%`;
@@ -978,9 +1081,163 @@
         }
 
         function renderProfilePage() {
-            document.getElementById('profile-name-display').innerText = state.userProfile.name || 'Guest Storyteller';
-            document.getElementById('profile-bio-display').innerText = state.userProfile.bio || 'Fantasy Writer & Reader';
+            const p = state.userProfile;
+            document.getElementById('profile-name-display').innerText = p.name || 'Guest Storyteller';
+            document.getElementById('profile-handle-display').innerText = p.handle || '@guest_writer';
+            document.getElementById('profile-bio-display').innerText = p.bio || 'Fantasy Writer & Reader';
+            document.getElementById('profile-followers-count').innerText = state.followersCount;
+            document.getElementById('profile-following-count').innerText = state.followingUserIds.length;
+
+            if (p.location) {
+                document.getElementById('profile-location-display').innerHTML = `<i class="fas fa-map-marker-alt text-purple-400 mr-1"></i> ${p.location}`;
+            }
+
+            const webDisplay = document.getElementById('profile-website-display');
+            if (p.website) {
+                webDisplay.href = p.website;
+                webDisplay.classList.remove('hidden');
+            } else webDisplay.classList.add('hidden');
+
+            const avatarBox = document.getElementById('profile-avatar-display');
+            if (p.avatar) {
+                avatarBox.innerHTML = `<img src="${p.avatar}" class="w-full h-full object-cover">`;
+            }
+
+            const bannerBg = document.getElementById('profile-banner-bg');
+            if (p.banner) {
+                bannerBg.style.backgroundImage = `url('${p.banner}')`;
+            }
         }
+
+        function openProfileEditModal() {
+            const p = state.userProfile;
+            document.getElementById('prof-name').value = p.name || '';
+            document.getElementById('prof-handle').value = p.handle || '';
+            document.getElementById('prof-bio').value = p.bio || '';
+            document.getElementById('prof-location').value = p.location || '';
+            document.getElementById('prof-website').value = p.website || '';
+            document.getElementById('prof-avatar-url').value = p.avatar || '';
+            document.getElementById('prof-banner-url').value = p.banner || '';
+            document.getElementById('profile-modal').classList.remove('hidden');
+        }
+
+        function closeProfileEditModal() { document.getElementById('profile-modal').classList.add('hidden'); }
+
+        function saveUserProfile(e) {
+            e.preventDefault();
+            const p = state.userProfile;
+            p.name = document.getElementById('prof-name').value;
+            p.handle = document.getElementById('prof-handle').value;
+            p.bio = document.getElementById('prof-bio').value;
+            p.location = document.getElementById('prof-location').value;
+            p.website = document.getElementById('prof-website').value;
+            p.avatar = document.getElementById('prof-avatar-url').value;
+            p.banner = document.getElementById('prof-banner-url').value;
+
+            // Broadcast notification to followers about profile update
+            addNotification("Profile Updated", `${p.name} updated their Wattpad profile.`, "profile");
+
+            saveState();
+            closeProfileEditModal();
+            renderProfilePage();
+        }
+
+        function toggleFollowUser(targetAuthorId = 'author_demo') {
+            const idx = state.followingUserIds.indexOf(targetAuthorId);
+            if (idx > -1) {
+                state.followingUserIds.splice(idx, 1);
+            } else {
+                state.followingUserIds.push(targetAuthorId);
+                addNotification("New Follow", `You are now following this author!`, "follow");
+            }
+            saveState();
+            renderProfilePage();
+        }
+
+        function switchProfileSubTab(tab) {
+            state.profileSubTab = tab;
+            ['bookmarks', 'stories', 'updates'].forEach(t => {
+                document.getElementById(`prof-sec-${t}`).classList.add('hidden');
+                document.getElementById(`prof-subtab-${t}`).className = "text-sm font-bold text-slate-400 hover:text-slate-200 pb-3 flex items-center gap-2";
+            });
+            document.getElementById(`prof-sec-${tab}`).classList.remove('hidden');
+            document.getElementById(`prof-subtab-${tab}`).className = "text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-3 flex items-center gap-2";
+        }
+
+        function postAuthorBroadcast() {
+            const input = document.getElementById('author-broadcast-input');
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            state.authorBroadcasts.unshift({
+                id: 'bc_' + Date.now(),
+                author: state.userProfile.name,
+                text: txt,
+                date: 'Just now'
+            });
+
+            addNotification("Broadcast Posted", `You announced: "${txt.slice(0, 30)}..."`, "broadcast");
+
+            input.value = '';
+            saveState();
+            renderAuthorBroadcasts();
+        }
+
+        function renderAuthorBroadcasts() {
+            const list = document.getElementById('author-broadcasts-list');
+            list.innerHTML = state.authorBroadcasts.length === 0 ? `<p class="text-xs text-slate-500 italic">No broadcasts posted yet.</p>` :
+                state.authorBroadcasts.map(b => `
+                    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-xs text-purple-300">${b.author}</span>
+                            <span class="text-[10px] text-slate-500">${b.date}</span>
+                        </div>
+                        <p class="text-xs text-slate-300">${b.text}</p>
+                    </div>
+                `).join('');
+        }
+
+        // NOTIFICATIONS
+        function addNotification(title, body, type = 'general') {
+            state.notifications.unshift({
+                id: 'notif_' + Date.now(),
+                title, body, type,
+                date: 'Just now',
+                read: false
+            });
+            saveState();
+            updateNotificationBadge();
+        }
+
+        function updateNotificationBadge() {
+            const unread = state.notifications.filter(n => !n.read).length;
+            const badge = document.getElementById('notif-badge');
+            if (unread > 0) {
+                badge.innerText = unread;
+                badge.classList.remove('hidden');
+            } else badge.classList.add('hidden');
+        }
+
+        function openNotificationsModal() {
+            const list = document.getElementById('notif-list');
+            state.notifications.forEach(n => n.read = true);
+            updateNotificationBadge();
+            saveState();
+
+            list.innerHTML = state.notifications.map(n => `
+                <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1">
+                    <div class="flex items-center justify-between">
+                        <span class="font-bold text-xs text-purple-300">${n.title}</span>
+                        <span class="text-[10px] text-slate-500">${n.date}</span>
+                    </div>
+                    <p class="text-xs text-slate-300">${n.body}</p>
+                </div>
+            `).join('');
+
+            document.getElementById('notif-modal').classList.remove('hidden');
+        }
+
+        function closeNotificationsModal() { document.getElementById('notif-modal').classList.add('hidden'); }
 
         // AUTHENTICATION LOGIC
         function initAuthListener() {
@@ -1330,7 +1587,6 @@
                 editor.innerHTML = chap.content || '';
                 handleEditorInput();
 
-                // Load Branching Choices
                 const choiceList = document.getElementById('branch-choices-list');
                 choiceList.innerHTML = '';
                 if (chap.choices && chap.choices.length > 0) {
@@ -1347,6 +1603,10 @@
                 chap.title = document.getElementById('chapter-title-input').value;
                 chap.content = document.getElementById('chapter-content-editor').innerHTML;
                 chap.choices = saveBranchChoicesFromUI();
+                
+                // Add notification for book update to readers
+                addNotification("Chapter Saved", `Draft saved for "${chap.title}" in ${proj.title}.`, "book_update");
+
                 saveState();
                 alert("Draft saved!");
                 renderProjectPicker();
@@ -1411,7 +1671,6 @@
             document.getElementById('reader-chapter-select').value = index;
             document.getElementById('reader-chapter-title').innerText = chap.title;
 
-            // PARAGRAPH-LEVEL COMMENTS ENHANCEMENT
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = chap.content || '';
             const paragraphs = tempDiv.querySelectorAll('p');
@@ -1430,7 +1689,6 @@
 
             document.getElementById('reader-chapter-body').innerHTML = tempDiv.innerHTML;
 
-            // Render Branching Choice Buttons
             const choicesContainer = document.getElementById('reader-branch-choices');
             const choicesButtons = document.getElementById('reader-choices-buttons');
             if (chap.choices && chap.choices.length > 0) {
@@ -1497,27 +1755,10 @@
             if (!file) return;
             const reader = new FileReader();
             reader.onload = function(evt) {
-                tempCoverBase64 = evt.target.result;
+                const tempCoverBase64 = evt.target.result;
                 document.getElementById('metadata-cover-preview').innerHTML = `<img src="${tempCoverBase64}" class="w-full h-full object-cover">`;
             };
             reader.readAsDataURL(file);
-        }
-
-        function openProfileEditModal() {
-            document.getElementById('prof-name').value = state.userProfile.name || '';
-            document.getElementById('prof-bio').value = state.userProfile.bio || '';
-            document.getElementById('profile-modal').classList.remove('hidden');
-        }
-
-        function closeProfileEditModal() { document.getElementById('profile-modal').classList.add('hidden'); }
-
-        function saveUserProfile(e) {
-            e.preventDefault();
-            state.userProfile.name = document.getElementById('prof-name').value;
-            state.userProfile.bio = document.getElementById('prof-bio').value;
-            saveState();
-            closeProfileEditModal();
-            renderUI();
         }
 
         function openBackupModal() { document.getElementById('backup-modal').classList.remove('hidden'); }
