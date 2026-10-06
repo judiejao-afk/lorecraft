@@ -420,6 +420,9 @@
                         <button onclick="toggleStoryDetailsPanel()" class="px-3 py-1.5 bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 border border-purple-700/50 text-xs rounded-lg flex items-center gap-1 transition">
                             <i class="fas fa-sliders-h"></i> Work Metadata
                         </button>
+                        <button onclick="openBranchGraphModal()" class="px-3 py-1.5 bg-indigo-900/40 hover:bg-indigo-900/60 text-indigo-300 border border-indigo-700/50 text-xs rounded-lg flex items-center gap-1 transition">
+                            <i class="fas fa-sitemap"></i> View Branching Graph
+                        </button>
                     </div>
                 </div>
 
@@ -586,7 +589,7 @@
             </div>
         </section>
 
-        <!-- READER OVERLAY VIEW WITH PARAGRAPH-LEVEL COMMENTS -->
+        <!-- READER OVERLAY VIEW WITH PARAGRAPH-LEVEL COMMENTS & READING PROGRESS -->
         <div id="reader-view" class="hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur overflow-y-auto p-4 md:p-8">
             <div class="max-w-4xl mx-auto space-y-6">
                 
@@ -594,6 +597,12 @@
                     <button onclick="closeReaderView()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
                         <i class="fas fa-arrow-left"></i> Exit Reader
                     </button>
+
+                    <!-- Reading Progress Indicator -->
+                    <div class="flex items-center gap-2 bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 text-xs">
+                        <span class="text-slate-400 font-medium">Progress:</span>
+                        <span id="reader-progress-text" class="text-purple-400 font-bold">0%</span>
+                    </div>
 
                     <div class="flex items-center gap-2">
                         <button id="reader-vote-btn" onclick="toggleVoteCurrentBook()" class="px-3 py-1.5 bg-amber-900/30 hover:bg-amber-900/50 text-amber-300 border border-amber-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
@@ -631,6 +640,17 @@
         </div>
 
     </main>
+
+    <!-- BRANCHING GRAPH MODAL -->
+    <div id="branch-graph-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-sitemap text-purple-400 mr-2"></i> Story Branching Flowchart</h3>
+                <button onclick="closeBranchGraphModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            <div id="branch-graph-container" class="flex-1 overflow-y-auto space-y-4 p-2"></div>
+        </div>
+    </div>
 
     <!-- FOLLOWERS & FOLLOWING LIST MODAL -->
     <div id="follow-list-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
@@ -934,7 +954,6 @@
             console.warn("Firebase running in offline mode.");
         }
 
-        // Demo database of users to populate follow views
         const communityUsers = [
             { id: 'usr_1', name: 'AetheriaWriter', handle: '@aether_author', bio: 'Fantasy author writing web novels.', avatar: '' },
             { id: 'usr_2', name: 'MythosCraft', handle: '@mythos_studio', bio: 'Sci-fi & Cyberpunk builder.', avatar: '' },
@@ -953,12 +972,13 @@
                 avatar: '', 
                 banner: '' 
             },
-            followingUserIds: [], // STARTS AT 0
-            followersUserIds: [], // STARTS AT 0
+            followingUserIds: [],
+            followersUserIds: [],
             notifications: [
                 { id: 'n1', title: 'Welcome to LoreCraft!', body: 'Start writing your first novel or build world lore.', date: 'Just now', type: 'system', read: false }
             ],
             authorBroadcasts: [],
+            readingProgress: {}, // { projId: index }
             bookmarkedProjectIds: [],
             votedProjectIds: [],
             seriesList: [],
@@ -1036,6 +1056,7 @@
             const savedNotifs = localStorage.getItem('lorecraft_notifs');
             const savedFollowing = localStorage.getItem('lorecraft_following');
             const savedFollowers = localStorage.getItem('lorecraft_followers');
+            const savedProgress = localStorage.getItem('lorecraft_progress');
 
             if (savedProfile) state.userProfile = Object.assign(state.userProfile, JSON.parse(savedProfile));
             if (savedBookmarks) state.bookmarkedProjectIds = JSON.parse(savedBookmarks);
@@ -1047,6 +1068,7 @@
             if (savedNotifs) state.notifications = JSON.parse(savedNotifs);
             if (savedFollowing) state.followingUserIds = JSON.parse(savedFollowing);
             if (savedFollowers) state.followersUserIds = JSON.parse(savedFollowers);
+            if (savedProgress) state.readingProgress = JSON.parse(savedProgress);
 
             if (savedProjects) {
                 state.projects = JSON.parse(savedProjects);
@@ -1064,15 +1086,29 @@
                     coverUrl: '',
                     votes: 15,
                     isPublished: true,
-                    chapters: [{
-                        id: 'chap_1',
-                        title: 'Chapter 1: The Crossroads',
-                        choices: [
-                            { text: 'Enter the Shadow Portal', targetChapterId: 'chap_2' },
-                            { text: 'Stay and Fight the Guards', targetChapterId: 'chap_3' }
-                        ],
-                        content: '<p>The portal crackled with violet energy before Caelen. Behind him, gauntleted footsteps echoed down the stone corridor.</p><p>He had only seconds to decide his fate.</p>'
-                    }]
+                    chapters: [
+                        {
+                            id: 'chap_1',
+                            title: 'Chapter 1: The Crossroads',
+                            choices: [
+                                { text: 'Enter the Shadow Portal', targetChapterId: 'chap_2' },
+                                { text: 'Stay and Fight the Guards', targetChapterId: 'chap_3' }
+                            ],
+                            content: '<p>The portal crackled with violet energy before Caelen. Behind him, gauntleted footsteps echoed down the stone corridor.</p>'
+                        },
+                        {
+                            id: 'chap_2',
+                            title: 'Chapter 2: The Shadow Realm',
+                            choices: [],
+                            content: '<p>Caelen stepped through the portal into an infinite abyss of starry quiet.</p>'
+                        },
+                        {
+                            id: 'chap_3',
+                            title: 'Chapter 3: The City Guard',
+                            choices: [],
+                            content: '<p>Drawing his sword, Caelen stood his ground against the approaching guard panel.</p>'
+                        }
+                    ]
                 }];
             }
 
@@ -1094,6 +1130,7 @@
             localStorage.setItem('lorecraft_notifs', JSON.stringify(state.notifications));
             localStorage.setItem('lorecraft_following', JSON.stringify(state.followingUserIds));
             localStorage.setItem('lorecraft_followers', JSON.stringify(state.followersUserIds));
+            localStorage.setItem('lorecraft_progress', JSON.stringify(state.readingProgress));
         }
 
         function renderUI() {
@@ -1159,9 +1196,10 @@
             if (p.banner) {
                 bannerBg.style.backgroundImage = `url('${p.banner}')`;
             }
+
+            renderAuthorBroadcasts();
         }
 
-        // HANDLE LOCAL DEVICE IMAGE UPLOADS FOR PROFILE
         function handleProfileFileUpload(e, type) {
             const file = e.target.files[0];
             if (!file) return;
@@ -1214,7 +1252,123 @@
             renderProfilePage();
         }
 
-        // FOLLOWERS / FOLLOWING MODALS & MANAGEMENT
+        function postAuthorBroadcast() {
+            const input = document.getElementById('author-broadcast-input');
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            state.authorBroadcasts.unshift({
+                id: 'bc_' + Date.now(),
+                author: state.userProfile.name,
+                text: txt,
+                date: 'Just now',
+                comments: []
+            });
+
+            addNotification("Broadcast Posted", `You announced: "${txt.slice(0, 30)}..."`, "broadcast");
+
+            input.value = '';
+            saveState();
+            renderAuthorBroadcasts();
+        }
+
+        function addBroadcastComment(bcId) {
+            const input = document.getElementById(`bc-reply-input-${bcId}`);
+            const text = input ? input.value.trim() : '';
+            if (!text) return;
+
+            const bc = state.authorBroadcasts.find(b => b.id === bcId);
+            if (bc) {
+                if (!bc.comments) bc.comments = [];
+                bc.comments.push({
+                    author: state.userProfile.name || 'Reader',
+                    text: text,
+                    date: 'Just now'
+                });
+                saveState();
+                renderAuthorBroadcasts();
+            }
+        }
+
+        function renderAuthorBroadcasts() {
+            const list = document.getElementById('author-broadcasts-list');
+            list.innerHTML = state.authorBroadcasts.length === 0 ? `<p class="text-xs text-slate-500 italic">No broadcasts posted yet.</p>` :
+                state.authorBroadcasts.map(b => `
+                    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-xs text-purple-300">${b.author}</span>
+                            <span class="text-[10px] text-slate-500">${b.date}</span>
+                        </div>
+                        <p class="text-xs text-slate-300">${b.text}</p>
+
+                        <!-- Comments section -->
+                        <div class="space-y-2 pt-2 border-t border-slate-900">
+                            ${(b.comments || []).map(c => `
+                                <div class="bg-slate-900/60 p-2 rounded-lg text-xs space-y-0.5">
+                                    <span class="font-semibold text-purple-400 text-[11px]">${c.author}:</span>
+                                    <span class="text-slate-300">${c.text}</span>
+                                </div>
+                            `).join('')}
+
+                            <div class="flex gap-2 pt-1">
+                                <input type="text" id="bc-reply-input-${b.id}" class="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-white flex-1 focus:outline-none" placeholder="Reply to broadcast...">
+                                <button onclick="addBroadcastComment('${b.id}')" class="px-3 py-1 bg-purple-600 text-white rounded-lg text-xs font-semibold">Reply</button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        // BRANCHING GRAPH VISUALIZER
+        function openBranchGraphModal() {
+            const proj = state.projects.find(p => p.id === state.currentProjectId);
+            if (!proj) return;
+
+            const container = document.getElementById('branch-graph-container');
+            container.innerHTML = proj.chapters.map(c => `
+                <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-cinzel text-sm font-bold text-purple-300"><i class="fas fa-file-alt mr-2"></i>${c.title}</h4>
+                        <span class="text-[10px] text-slate-500">${c.choices ? c.choices.length : 0} Branches</span>
+                    </div>
+                    ${c.choices && c.choices.length > 0 ? `
+                        <div class="space-y-1.5 pl-3 border-l-2 border-purple-500/50">
+                            ${c.choices.map(ch => {
+                                const target = proj.chapters.find(tc => tc.id === ch.targetChapterId);
+                                return `<div class="text-xs text-slate-300"><i class="fas fa-long-arrow-alt-right text-indigo-400 mr-1.5"></i> Choice: "<strong>${ch.text}</strong>" &rarr; <span class="text-purple-300 font-semibold">${target ? target.title : 'Unlinked'}</span></div>`;
+                            }).join('')}
+                        </div>
+                    ` : `<p class="text-xs text-slate-500 italic">Sequential chapter node (No choices).</p>`}
+                </div>
+            `).join('');
+
+            document.getElementById('branch-graph-modal').classList.remove('hidden');
+        }
+
+        function closeBranchGraphModal() { document.getElementById('branch-graph-modal').classList.add('hidden'); }
+
+        // READ PROGRESS CALCULATION
+        function updateReadingProgress(projId, chapIndex, totalChapters) {
+            const pct = Math.round(((chapIndex + 1) / totalChapters) * 100);
+            state.readingProgress[projId] = pct;
+            saveState();
+            document.getElementById('reader-progress-text').innerText = `${pct}%`;
+        }
+
+        // SHARE FUNCTIONS
+        function shareUserProfile() {
+            const shareData = { title: state.userProfile.name, text: `Check out ${state.userProfile.name} on LoreCraft!`, url: window.location.href };
+            if (navigator.share) navigator.share(shareData).catch(() => {});
+            else { navigator.clipboard.writeText(window.location.href); alert("Profile link copied!"); }
+        }
+
+        function shareActiveStory() {
+            if (!state.activeReaderProject) return;
+            const shareData = { title: state.activeReaderProject.title, text: `Read ${state.activeReaderProject.title}!`, url: window.location.href };
+            if (navigator.share) navigator.share(shareData).catch(() => {});
+            else { navigator.clipboard.writeText(window.location.href); alert("Story link copied!"); }
+        }
+
         function openFollowListModal(type) {
             const title = document.getElementById('follow-modal-title');
             const list = document.getElementById('follow-users-list');
@@ -1267,36 +1421,6 @@
             openFollowListModal('following');
         }
 
-        // SHARE PROFILE & NOVEL FUNCTIONS
-        function shareUserProfile() {
-            const shareData = {
-                title: `${state.userProfile.name} on LoreCraft Studio`,
-                text: `Check out ${state.userProfile.name}'s storyteller profile on LoreCraft Studio!`,
-                url: window.location.href
-            };
-            if (navigator.share) {
-                navigator.share(shareData).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert("Profile share link copied to clipboard!");
-            }
-        }
-
-        function shareActiveStory() {
-            if (!state.activeReaderProject) return;
-            const shareData = {
-                title: state.activeReaderProject.title,
-                text: `Read "${state.activeReaderProject.title}" on LoreCraft Studio!`,
-                url: window.location.href
-            };
-            if (navigator.share) {
-                navigator.share(shareData).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                alert("Novel share link copied to clipboard!");
-            }
-        }
-
         function switchProfileSubTab(tab) {
             state.profileSubTab = tab;
             ['bookmarks', 'stories', 'updates'].forEach(t => {
@@ -1307,40 +1431,6 @@
             document.getElementById(`prof-subtab-${tab}`).className = "text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-3 flex items-center gap-2";
         }
 
-        function postAuthorBroadcast() {
-            const input = document.getElementById('author-broadcast-input');
-            const txt = input.value.trim();
-            if (!txt) return;
-
-            state.authorBroadcasts.unshift({
-                id: 'bc_' + Date.now(),
-                author: state.userProfile.name,
-                text: txt,
-                date: 'Just now'
-            });
-
-            addNotification("Broadcast Posted", `You announced: "${txt.slice(0, 30)}..."`, "broadcast");
-
-            input.value = '';
-            saveState();
-            renderAuthorBroadcasts();
-        }
-
-        function renderAuthorBroadcasts() {
-            const list = document.getElementById('author-broadcasts-list');
-            list.innerHTML = state.authorBroadcasts.length === 0 ? `<p class="text-xs text-slate-500 italic">No broadcasts posted yet.</p>` :
-                state.authorBroadcasts.map(b => `
-                    <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-1">
-                        <div class="flex items-center justify-between">
-                            <span class="font-bold text-xs text-purple-300">${b.author}</span>
-                            <span class="text-[10px] text-slate-500">${b.date}</span>
-                        </div>
-                        <p class="text-xs text-slate-300">${b.text}</p>
-                    </div>
-                `).join('');
-        }
-
-        // NOTIFICATIONS
         function addNotification(title, body, type = 'general') {
             state.notifications.unshift({
                 id: 'notif_' + Date.now(),
@@ -1382,7 +1472,6 @@
 
         function closeNotificationsModal() { document.getElementById('notif-modal').classList.add('hidden'); }
 
-        // AUTHENTICATION LOGIC
         function initAuthListener() {
             if (!auth) return;
             auth.onAuthStateChanged(user => {
@@ -1412,7 +1501,6 @@
         function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
         function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
 
-        // LORE VAULT FUNCTIONS
         function renderLoreGrid() {
             const grid = document.getElementById('lore-grid');
             grid.innerHTML = state.loreEntries.map(l => `
@@ -1501,7 +1589,6 @@
             }
         }
 
-        // MEDIA TRACK FUNCTIONS
         function renderMediaGrid() {
             const grid = document.getElementById('media-grid');
             grid.innerHTML = state.mediaTracks.map(m => `
@@ -1563,7 +1650,6 @@
             }
         }
 
-        // SERIES MANAGER
         function createNewSeries() {
             const title = prompt("Enter Series Title:");
             if (!title) return;
@@ -1619,7 +1705,6 @@
             }
         }
 
-        // BRANCHING CHOICES BUILDER
         function addBranchChoiceRow(text = '', targetId = '') {
             const container = document.getElementById('branch-choices-list');
             const proj = state.projects.find(p => p.id === state.currentProjectId);
@@ -1649,7 +1734,6 @@
             return choices;
         }
 
-        // LIBRARY SEARCH AND FILTER ENGINE
         function filterLibrary() {
             const query = document.getElementById('library-search-input')?.value.toLowerCase().trim() || '';
             const fmt = document.getElementById('filter-format')?.value || 'All';
@@ -1673,28 +1757,32 @@
             const grid = document.getElementById('published-grid');
             const allWorks = works || state.projects;
 
-            grid.innerHTML = allWorks.map(p => `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl flex flex-col justify-between">
-                    <div class="space-y-3">
-                        <div class="flex items-center justify-between gap-2">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/40 uppercase">${p.type || 'Novel'}</span>
-                            <span class="text-[10px] px-2 py-0.5 rounded ${p.status === 'Completed' ? 'bg-emerald-900/40 text-emerald-300' : 'bg-amber-900/40 text-amber-300'}">${p.status || 'Ongoing'}</span>
+            grid.innerHTML = allWorks.map(p => {
+                const prog = state.readingProgress[p.id] || 0;
+                return `
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl flex flex-col justify-between">
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/40 uppercase">${p.type || 'Novel'}</span>
+                                <span class="text-[10px] px-2 py-0.5 rounded ${p.status === 'Completed' ? 'bg-emerald-900/40 text-emerald-300' : 'bg-amber-900/40 text-amber-300'}">${p.status || 'Ongoing'}</span>
+                            </div>
+                            <h3 class="font-cinzel text-xl font-bold text-white line-clamp-1">${p.title}</h3>
+                            <p class="text-xs text-slate-400">By ${p.author || 'Author'}</p>
+                            ${p.synopsis ? `<p class="text-xs text-slate-300 line-clamp-2">${p.synopsis}</p>` : ''}
                         </div>
-                        <h3 class="font-cinzel text-xl font-bold text-white line-clamp-1">${p.title}</h3>
-                        <p class="text-xs text-slate-400">By ${p.author || 'Author'}</p>
-                        ${p.synopsis ? `<p class="text-xs text-slate-300 line-clamp-2">${p.synopsis}</p>` : ''}
-                    </div>
 
-                    <div class="flex items-center justify-between pt-4 border-t border-slate-800">
-                        <span class="text-[11px] text-slate-400"><i class="fas fa-star text-amber-400 mr-1"></i> ${p.votes || 0} Votes</span>
-                        <div class="flex items-center gap-2">
-                            <button onclick="openReaderView('${p.id}')" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center gap-1.5">
+                        <div class="space-y-2 pt-4 border-t border-slate-800">
+                            <div class="flex items-center justify-between text-[11px] text-slate-400">
+                                <span><i class="fas fa-star text-amber-400 mr-1"></i> ${p.votes || 0} Votes</span>
+                                <span class="text-purple-400 font-bold">${prog}% Read</span>
+                            </div>
+                            <button onclick="openReaderView('${p.id}')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center gap-1.5">
                                 <i class="fas fa-book-open"></i> Read Book
                             </button>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function renderProjectPicker() {
@@ -1812,6 +1900,8 @@
             const proj = state.activeReaderProject;
             const chap = proj.chapters[index];
 
+            updateReadingProgress(proj.id, index, proj.chapters.length);
+
             document.getElementById('reader-chapter-select').value = index;
             document.getElementById('reader-chapter-title').innerText = chap.title;
 
@@ -1853,7 +1943,6 @@
             if (idx > -1) loadReaderChapter(idx);
         }
 
-        // PARAGRAPH COMMENTS PANEL
         function openParaCommentsPanel(paraId) {
             state.activeParaId = paraId;
             const list = document.getElementById('para-comments-list');
