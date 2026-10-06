@@ -168,9 +168,8 @@
             </div>
         </section>
 
-        <!-- PAGE 2: PROFILE PAGE (Settings, Bookmarks / Reading List, Written Stories) -->
+        <!-- PAGE 2: PROFILE PAGE -->
         <section id="page-profile" class="hidden space-y-6">
-            <!-- Profile Card & Settings Header -->
             <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl">
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-slate-800 pb-6">
                     <div class="flex items-center gap-4">
@@ -203,7 +202,7 @@
                     <div id="bookmarks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
 
-                <!-- Sub-Tab 2: Written Stories List (Published or Draft) -->
+                <!-- Sub-Tab 2: Written Stories List -->
                 <div id="prof-sec-stories" class="hidden space-y-4">
                     <div class="flex items-center justify-between">
                         <h3 class="font-cinzel text-lg font-bold text-white">My Author Projects</h3>
@@ -229,7 +228,6 @@
 
         <!-- PAGE 4: WRITER STUDIO -->
         <section id="page-writer" class="hidden space-y-6">
-            <!-- Studio Secondary Bar -->
             <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
                 <div class="flex flex-wrap items-center gap-3">
                     <div>
@@ -281,7 +279,7 @@
                 </div>
             </div>
 
-            <!-- Lore & Soundtracks Section inside Studio -->
+            <!-- Lore & Soundtracks Section -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
                     <div class="flex items-center justify-between">
@@ -301,7 +299,7 @@
             </div>
         </section>
 
-        <!-- READER PERSPECTIVE OVERLAY VIEW WITH BOOKMARK BUTTON -->
+        <!-- READER PERSPECTIVE OVERLAY -->
         <div id="reader-view" class="hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur overflow-y-auto p-4 md:p-8">
             <div class="max-w-4xl mx-auto space-y-6">
                 
@@ -310,7 +308,6 @@
                         <i class="fas fa-arrow-left"></i> Exit Reader View
                     </button>
 
-                    <!-- Bookmark Button -->
                     <button id="reader-bookmark-btn" onclick="toggleBookmarkCurrentBook()" class="px-3 py-1.5 bg-pink-900/30 hover:bg-pink-900/50 text-pink-300 border border-pink-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
                         <i class="fas fa-bookmark"></i> <span id="bookmark-btn-text">Bookmark Book</span>
                     </button>
@@ -355,7 +352,7 @@
                     </button>
                 </div>
 
-                <!-- COMMENT SECTIONS -->
+                <!-- COMMENTS -->
                 <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-6">
                     <div class="flex items-center gap-4 border-b border-slate-800 pb-3">
                         <button onclick="switchCommentTab('chapter')" id="cmt-tab-chapter" class="text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-2">Chapter Comments</button>
@@ -379,13 +376,11 @@
 
     </main>
 
-    <!-- MODALS -->
-
-    <!-- PROFILE EDIT MODAL -->
+    <!-- PROFILE EDIT MODAL (WITH LOCAL PHOTO UPLOAD) -->
     <div id="profile-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-user-circle text-purple-400 mr-2"></i> User Profile Settings</h3>
+                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-user-circle text-purple-400 mr-2"></i> Profile Settings</h3>
                 <button onclick="closeProfileEditModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
             </div>
 
@@ -398,9 +393,25 @@
                     <label class="text-xs text-slate-400 block mb-1">Author Bio / Tagline</label>
                     <input type="text" id="prof-bio" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Fantasy author, worldbuilder...">
                 </div>
-                <div>
-                    <label class="text-xs text-slate-400 block mb-1">Avatar Image URL</label>
-                    <input type="url" id="prof-avatar" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="https://...">
+
+                <!-- Avatar Photo Uploader (Device File Upload + Web URL) -->
+                <div class="space-y-2 border border-slate-800/80 p-3 rounded-xl bg-slate-950/50">
+                    <label class="text-xs text-purple-400 font-semibold block"><i class="fas fa-image mr-1"></i> User Avatar Picture</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                        <div>
+                            <span class="text-[11px] text-slate-400 block mb-1">Upload File from Device:</span>
+                            <input type="file" id="avatar-file-input" accept="image/*" onchange="handleAvatarLocalUpload(event)" class="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:bg-purple-600/20 file:text-purple-300">
+                        </div>
+                        <div>
+                            <span class="text-[11px] text-slate-400 block mb-1">Or Web Image URL:</span>
+                            <input type="url" id="prof-avatar" oninput="previewAvatarURL(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="https://...">
+                        </div>
+                    </div>
+                    <!-- Live Avatar Preview Box -->
+                    <div id="avatar-preview-box" class="hidden mt-2 border border-slate-800 rounded-lg p-2 flex items-center gap-3 bg-slate-900">
+                        <img id="preview-avatar-element" src="" class="w-10 h-10 rounded-full object-cover">
+                        <span class="text-xs text-emerald-400"><i class="fas fa-check-circle"></i> Avatar attached</span>
+                    </div>
                 </div>
 
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
@@ -411,7 +422,7 @@
         </div>
     </div>
 
-    <!-- LORE ENTRY MODAL -->
+    <!-- OTHER MODALS -->
     <div id="lore-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -477,7 +488,6 @@
         </div>
     </div>
 
-    <!-- MEDIA MODAL -->
     <div id="media-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -522,7 +532,6 @@
         </div>
     </div>
 
-    <!-- BACKUP MODAL -->
     <div id="backup-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -545,7 +554,6 @@
         </div>
     </div>
 
-    <!-- AUTH MODAL -->
     <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -597,8 +605,8 @@
         }
 
         let state = {
-            currentPage: 'dashboard', // dashboard, profile, published, writer
-            profileSubTab: 'bookmarks', // bookmarks, stories
+            currentPage: 'dashboard',
+            profileSubTab: 'bookmarks',
             userProfile: { name: 'Guest Storyteller', bio: 'Fantasy Writer & Reader', avatar: '' },
             bookmarkedProjectIds: [],
             projects: [],
@@ -616,6 +624,7 @@
         let currentUser = null;
         let authAction = 'signin';
         let tempBase64Image = null;
+        let tempAvatarBase64 = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             loadLocalData();
@@ -624,7 +633,6 @@
             renderUI();
         });
 
-        // PAGE NAVIGATION SWITCHER
         function switchMainPage(page) {
             state.currentPage = page;
             ['dashboard', 'profile', 'published', 'writer'].forEach(p => {
@@ -731,7 +739,6 @@
         function renderDashboard() {
             document.getElementById('dash-welcome-text').innerText = `Welcome back, ${state.userProfile.name || 'Writer'}!`;
             
-            // Total words calculate
             let totalWords = 0;
             state.projects.forEach(p => {
                 p.chapters.forEach(c => {
@@ -756,7 +763,6 @@
                 avatarContainer.innerHTML = `<i class="fas fa-user-astronaut"></i>`;
             }
 
-            // Render Bookmarked List
             const bGrid = document.getElementById('bookmarks-grid');
             const allWorks = [...state.projects, ...state.publicProjects];
             const bookmarkedWorks = allWorks.filter(w => state.bookmarkedProjectIds.includes(w.id));
@@ -779,7 +785,6 @@
                 `).join('');
             }
 
-            // Render Written Stories
             const sList = document.getElementById('written-stories-list');
             sList.innerHTML = state.projects.map(p => `
                 <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-4">
@@ -796,6 +801,31 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        // AVATAR FILE UPLOAD HANDLER
+        function handleAvatarLocalUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                tempAvatarBase64 = evt.target.result;
+                document.getElementById('prof-avatar').value = '';
+                previewAvatarURL(tempAvatarBase64);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function previewAvatarURL(url) {
+            const box = document.getElementById('avatar-preview-box');
+            const img = document.getElementById('preview-avatar-element');
+            if (url) {
+                img.src = url;
+                box.classList.remove('hidden');
+            } else {
+                box.classList.add('hidden');
+            }
         }
 
         function toggleBookmarkCurrentBook() {
@@ -829,9 +859,11 @@
         }
 
         function openProfileEditModal() {
+            tempAvatarBase64 = null;
             document.getElementById('prof-name').value = state.userProfile.name || '';
             document.getElementById('prof-bio').value = state.userProfile.bio || '';
             document.getElementById('prof-avatar').value = state.userProfile.avatar || '';
+            previewAvatarURL(state.userProfile.avatar);
             document.getElementById('profile-modal').classList.remove('hidden');
         }
 
@@ -841,7 +873,7 @@
             e.preventDefault();
             state.userProfile.name = document.getElementById('prof-name').value;
             state.userProfile.bio = document.getElementById('prof-bio').value;
-            state.userProfile.avatar = document.getElementById('prof-avatar').value;
+            state.userProfile.avatar = tempAvatarBase64 || document.getElementById('prof-avatar').value;
             saveState();
             closeProfileEditModal();
             renderUI();
