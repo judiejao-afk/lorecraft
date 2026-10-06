@@ -249,19 +249,19 @@
 
                     <div class="flex items-center gap-3 w-full md:w-auto">
                         <div class="flex items-center gap-4 bg-slate-950/80 px-4 py-2 rounded-2xl border border-slate-800 text-center">
-                            <div>
+                            <div onclick="openFollowListModal('followers')" class="cursor-pointer hover:opacity-80 transition">
                                 <span id="profile-followers-count" class="font-bold text-white block text-sm">0</span>
                                 <span class="text-[10px] text-slate-400 uppercase font-bold">Followers</span>
                             </div>
                             <div class="h-6 w-px bg-slate-800"></div>
-                            <div>
+                            <div onclick="openFollowListModal('following')" class="cursor-pointer hover:opacity-80 transition">
                                 <span id="profile-following-count" class="font-bold text-white block text-sm">0</span>
                                 <span class="text-[10px] text-slate-400 uppercase font-bold">Following</span>
                             </div>
                         </div>
 
-                        <button id="profile-follow-btn" onclick="toggleFollowUser()" class="hidden px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-xs font-semibold shadow flex items-center gap-2 transition">
-                            <i class="fas fa-user-plus"></i> Follow Author
+                        <button onclick="shareUserProfile()" class="p-2.5 bg-slate-800 hover:bg-slate-700 text-purple-400 border border-slate-700 rounded-xl text-xs font-semibold shadow flex items-center gap-1.5 transition" title="Share Profile">
+                            <i class="fas fa-share-alt"></i> <span class="hidden sm:inline">Share</span>
                         </button>
 
                         <button id="profile-edit-btn" onclick="openProfileEditModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl text-xs font-semibold shadow flex items-center gap-2 transition">
@@ -595,13 +595,19 @@
                         <i class="fas fa-arrow-left"></i> Exit Reader
                     </button>
 
-                    <button id="reader-vote-btn" onclick="toggleVoteCurrentBook()" class="px-3 py-1.5 bg-amber-900/30 hover:bg-amber-900/50 text-amber-300 border border-amber-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                        <i class="fas fa-star text-amber-400"></i> <span id="vote-btn-text">Vote (0)</span>
-                    </button>
+                    <div class="flex items-center gap-2">
+                        <button id="reader-vote-btn" onclick="toggleVoteCurrentBook()" class="px-3 py-1.5 bg-amber-900/30 hover:bg-amber-900/50 text-amber-300 border border-amber-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+                            <i class="fas fa-star text-amber-400"></i> <span id="vote-btn-text">Vote (0)</span>
+                        </button>
 
-                    <button id="reader-bookmark-btn" onclick="toggleBookmarkCurrentBook()" class="px-3 py-1.5 bg-pink-900/30 hover:bg-pink-900/50 text-pink-300 border border-pink-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                        <i class="fas fa-bookmark"></i> <span id="bookmark-btn-text">Bookmark</span>
-                    </button>
+                        <button id="reader-bookmark-btn" onclick="toggleBookmarkCurrentBook()" class="px-3 py-1.5 bg-pink-900/30 hover:bg-pink-900/50 text-pink-300 border border-pink-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+                            <i class="fas fa-bookmark"></i> <span id="bookmark-btn-text">Bookmark</span>
+                        </button>
+
+                        <button onclick="shareActiveStory()" class="px-3 py-1.5 bg-purple-900/30 hover:bg-purple-900/50 text-purple-300 border border-purple-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+                            <i class="fas fa-share-alt"></i> Share Story
+                        </button>
+                    </div>
 
                     <div class="flex items-center gap-2">
                         <select id="reader-chapter-select" onchange="loadReaderChapter(this.value)" class="bg-slate-950 border border-slate-700 text-purple-300 rounded-lg px-2.5 py-1 text-xs font-semibold focus:outline-none"></select>
@@ -626,6 +632,18 @@
 
     </main>
 
+    <!-- FOLLOWERS & FOLLOWING LIST MODAL -->
+    <div id="follow-list-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl max-h-[80vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 id="follow-modal-title" class="font-cinzel text-lg font-bold text-white">Users</h3>
+                <button onclick="closeFollowListModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
+
+            <div id="follow-users-list" class="flex-1 overflow-y-auto space-y-3 pr-1"></div>
+        </div>
+    </div>
+
     <!-- NOTIFICATIONS & ACTIVITY FEED MODAL -->
     <div id="notif-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl max-h-[80vh] flex flex-col">
@@ -638,7 +656,7 @@
         </div>
     </div>
 
-    <!-- WATTPAD PROFILE EDIT MODAL -->
+    <!-- WATTPAD PROFILE EDIT MODAL WITH LOCAL FILE UPLOADS -->
     <div id="profile-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -674,15 +692,36 @@
                     </div>
                 </div>
 
-                <div class="space-y-3 border-t border-slate-800 pt-3">
-                    <span class="text-xs font-bold text-purple-400 uppercase tracking-wider block">Custom Images</span>
-                    <div>
-                        <label class="text-xs text-slate-400 block mb-1">Avatar Image URL</label>
-                        <input type="url" id="prof-avatar-url" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="https://image-link.png">
+                <!-- LOCAL FILE UPLOADS & WEB URLS -->
+                <div class="space-y-4 border-t border-slate-800 pt-3">
+                    <span class="text-xs font-bold text-purple-400 uppercase tracking-wider block">Custom Profile Images</span>
+                    
+                    <div class="space-y-2 bg-slate-950 p-3 rounded-xl border border-slate-800">
+                        <label class="text-xs text-slate-300 font-semibold block"><i class="fas fa-user-circle text-purple-400 mr-1"></i> Avatar Image</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                            <div>
+                                <span class="text-[10px] text-slate-400 block mb-1">Upload Device File:</span>
+                                <input type="file" id="avatar-file-input" accept="image/*" onchange="handleProfileFileUpload(event, 'avatar')" class="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:bg-purple-600/20 file:text-purple-300 w-full">
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-slate-400 block mb-1">Or Web Image URL:</span>
+                                <input type="url" id="prof-avatar-url" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="https://...">
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label class="text-xs text-slate-400 block mb-1">Header Banner URL</label>
-                        <input type="url" id="prof-banner-url" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="https://banner-link.png">
+
+                    <div class="space-y-2 bg-slate-950 p-3 rounded-xl border border-slate-800">
+                        <label class="text-xs text-slate-300 font-semibold block"><i class="fas fa-image text-indigo-400 mr-1"></i> Header Banner Image</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                            <div>
+                                <span class="text-[10px] text-slate-400 block mb-1">Upload Device File:</span>
+                                <input type="file" id="banner-file-input" accept="image/*" onchange="handleProfileFileUpload(event, 'banner')" class="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:bg-purple-600/20 file:text-purple-300 w-full">
+                            </div>
+                            <div>
+                                <span class="text-[10px] text-slate-400 block mb-1">Or Web Image URL:</span>
+                                <input type="url" id="prof-banner-url" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="https://...">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -895,23 +934,29 @@
             console.warn("Firebase running in offline mode.");
         }
 
+        // Demo database of users to populate follow views
+        const communityUsers = [
+            { id: 'usr_1', name: 'AetheriaWriter', handle: '@aether_author', bio: 'Fantasy author writing web novels.', avatar: '' },
+            { id: 'usr_2', name: 'MythosCraft', handle: '@mythos_studio', bio: 'Sci-fi & Cyberpunk builder.', avatar: '' },
+            { id: 'usr_3', name: 'LunaReader', handle: '@luna_reads', bio: 'Avid romance and YA reader.', avatar: '' }
+        ];
+
         let state = {
             currentPage: 'dashboard',
             profileSubTab: 'bookmarks',
             userProfile: { 
-                name: 'Guest Storyteller', 
-                handle: '@guest_writer',
+                name: 'New Storyteller', 
+                handle: '@new_writer',
                 bio: 'Fantasy Writer & Reader', 
                 location: 'Earth',
                 website: '',
                 avatar: '', 
                 banner: '' 
             },
-            followingUserIds: [],
-            followersCount: 12,
+            followingUserIds: [], // STARTS AT 0
+            followersUserIds: [], // STARTS AT 0
             notifications: [
-                { id: 'n1', title: 'New Chapter Published!', body: 'Chronicles of Aetheria updated Chapter 2.', date: '2h ago', type: 'book_update', read: false },
-                { id: 'n2', title: 'New Follower', body: 'AetherWriter started following your profile.', date: '1d ago', type: 'follow', read: false }
+                { id: 'n1', title: 'Welcome to LoreCraft!', body: 'Start writing your first novel or build world lore.', date: 'Just now', type: 'system', read: false }
             ],
             authorBroadcasts: [],
             bookmarkedProjectIds: [],
@@ -927,7 +972,9 @@
             currentProjectId: null,
             currentChapterId: null,
             activeReaderProject: null,
-            activeReaderChapterIndex: 0
+            activeReaderChapterIndex: 0,
+            tempProfileAvatarBase64: null,
+            tempProfileBannerBase64: null
         };
 
         let currentUser = null;
@@ -988,6 +1035,7 @@
             const savedParaCmts = localStorage.getItem('lorecraft_para_comments');
             const savedNotifs = localStorage.getItem('lorecraft_notifs');
             const savedFollowing = localStorage.getItem('lorecraft_following');
+            const savedFollowers = localStorage.getItem('lorecraft_followers');
 
             if (savedProfile) state.userProfile = Object.assign(state.userProfile, JSON.parse(savedProfile));
             if (savedBookmarks) state.bookmarkedProjectIds = JSON.parse(savedBookmarks);
@@ -998,6 +1046,7 @@
             if (savedParaCmts) state.paraComments = JSON.parse(savedParaCmts);
             if (savedNotifs) state.notifications = JSON.parse(savedNotifs);
             if (savedFollowing) state.followingUserIds = JSON.parse(savedFollowing);
+            if (savedFollowers) state.followersUserIds = JSON.parse(savedFollowers);
 
             if (savedProjects) {
                 state.projects = JSON.parse(savedProjects);
@@ -1044,6 +1093,7 @@
             localStorage.setItem('lorecraft_para_comments', JSON.stringify(state.paraComments));
             localStorage.setItem('lorecraft_notifs', JSON.stringify(state.notifications));
             localStorage.setItem('lorecraft_following', JSON.stringify(state.followingUserIds));
+            localStorage.setItem('lorecraft_followers', JSON.stringify(state.followersUserIds));
         }
 
         function renderUI() {
@@ -1082,10 +1132,10 @@
 
         function renderProfilePage() {
             const p = state.userProfile;
-            document.getElementById('profile-name-display').innerText = p.name || 'Guest Storyteller';
-            document.getElementById('profile-handle-display').innerText = p.handle || '@guest_writer';
+            document.getElementById('profile-name-display').innerText = p.name || 'New Storyteller';
+            document.getElementById('profile-handle-display').innerText = p.handle || '@new_writer';
             document.getElementById('profile-bio-display').innerText = p.bio || 'Fantasy Writer & Reader';
-            document.getElementById('profile-followers-count').innerText = state.followersCount;
+            document.getElementById('profile-followers-count').innerText = state.followersUserIds.length;
             document.getElementById('profile-following-count').innerText = state.followingUserIds.length;
 
             if (p.location) {
@@ -1101,12 +1151,31 @@
             const avatarBox = document.getElementById('profile-avatar-display');
             if (p.avatar) {
                 avatarBox.innerHTML = `<img src="${p.avatar}" class="w-full h-full object-cover">`;
+            } else {
+                avatarBox.innerHTML = `<i class="fas fa-user-astronaut"></i>`;
             }
 
             const bannerBg = document.getElementById('profile-banner-bg');
             if (p.banner) {
                 bannerBg.style.backgroundImage = `url('${p.banner}')`;
             }
+        }
+
+        // HANDLE LOCAL DEVICE IMAGE UPLOADS FOR PROFILE
+        function handleProfileFileUpload(e, type) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                if (type === 'avatar') {
+                    state.tempProfileAvatarBase64 = evt.target.result;
+                    document.getElementById('prof-avatar-url').value = '';
+                } else if (type === 'banner') {
+                    state.tempProfileBannerBase64 = evt.target.result;
+                    document.getElementById('prof-banner-url').value = '';
+                }
+            };
+            reader.readAsDataURL(file);
         }
 
         function openProfileEditModal() {
@@ -1131,27 +1200,101 @@
             p.bio = document.getElementById('prof-bio').value;
             p.location = document.getElementById('prof-location').value;
             p.website = document.getElementById('prof-website').value;
-            p.avatar = document.getElementById('prof-avatar-url').value;
-            p.banner = document.getElementById('prof-banner-url').value;
+            
+            p.avatar = state.tempProfileAvatarBase64 || document.getElementById('prof-avatar-url').value;
+            p.banner = state.tempProfileBannerBase64 || document.getElementById('prof-banner-url').value;
 
-            // Broadcast notification to followers about profile update
-            addNotification("Profile Updated", `${p.name} updated their Wattpad profile.`, "profile");
+            state.tempProfileAvatarBase64 = null;
+            state.tempProfileBannerBase64 = null;
+
+            addNotification("Profile Updated", `${p.name} updated their profile settings.`, "profile");
 
             saveState();
             closeProfileEditModal();
             renderProfilePage();
         }
 
-        function toggleFollowUser(targetAuthorId = 'author_demo') {
+        // FOLLOWERS / FOLLOWING MODALS & MANAGEMENT
+        function openFollowListModal(type) {
+            const title = document.getElementById('follow-modal-title');
+            const list = document.getElementById('follow-users-list');
+
+            title.innerText = type === 'followers' ? 'Followers' : 'Following Users';
+            
+            const users = type === 'followers' ? 
+                communityUsers.filter(u => state.followersUserIds.includes(u.id)) :
+                communityUsers.filter(u => state.followingUserIds.includes(u.id));
+
+            if (users.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-500 italic p-4 text-center">No ${type} yet.</p>`;
+            } else {
+                list.innerHTML = users.map(u => {
+                    const isFollowing = state.followingUserIds.includes(u.id);
+                    return `
+                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-full bg-purple-900/40 text-purple-300 font-bold flex items-center justify-center text-xs">
+                                    ${u.name[0]}
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-xs text-white">${u.name}</h4>
+                                    <p class="text-[10px] text-purple-400 font-mono">${u.handle}</p>
+                                </div>
+                            </div>
+                            <button onclick="toggleFollowUser('${u.id}')" class="px-3 py-1 text-xs rounded-lg font-semibold transition ${isFollowing ? 'bg-slate-800 text-slate-300' : 'bg-purple-600 text-white'}">
+                                ${isFollowing ? 'Unfollow' : 'Follow'}
+                            </button>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            document.getElementById('follow-list-modal').classList.remove('hidden');
+        }
+
+        function closeFollowListModal() { document.getElementById('follow-list-modal').classList.add('hidden'); }
+
+        function toggleFollowUser(targetAuthorId) {
             const idx = state.followingUserIds.indexOf(targetAuthorId);
             if (idx > -1) {
                 state.followingUserIds.splice(idx, 1);
             } else {
                 state.followingUserIds.push(targetAuthorId);
-                addNotification("New Follow", `You are now following this author!`, "follow");
+                addNotification("New Follow", `You started following a user!`, "follow");
             }
             saveState();
             renderProfilePage();
+            openFollowListModal('following');
+        }
+
+        // SHARE PROFILE & NOVEL FUNCTIONS
+        function shareUserProfile() {
+            const shareData = {
+                title: `${state.userProfile.name} on LoreCraft Studio`,
+                text: `Check out ${state.userProfile.name}'s storyteller profile on LoreCraft Studio!`,
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Profile share link copied to clipboard!");
+            }
+        }
+
+        function shareActiveStory() {
+            if (!state.activeReaderProject) return;
+            const shareData = {
+                title: state.activeReaderProject.title,
+                text: `Read "${state.activeReaderProject.title}" on LoreCraft Studio!`,
+                url: window.location.href
+            };
+            if (navigator.share) {
+                navigator.share(shareData).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Novel share link copied to clipboard!");
+            }
         }
 
         function switchProfileSubTab(tab) {
@@ -1544,9 +1687,11 @@
 
                     <div class="flex items-center justify-between pt-4 border-t border-slate-800">
                         <span class="text-[11px] text-slate-400"><i class="fas fa-star text-amber-400 mr-1"></i> ${p.votes || 0} Votes</span>
-                        <button onclick="openReaderView('${p.id}')" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center gap-1.5">
-                            <i class="fas fa-book-open"></i> Read Book
-                        </button>
+                        <div class="flex items-center gap-2">
+                            <button onclick="openReaderView('${p.id}')" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center gap-1.5">
+                                <i class="fas fa-book-open"></i> Read Book
+                            </button>
+                        </div>
                     </div>
                 </div>
             `).join('');
@@ -1604,7 +1749,6 @@
                 chap.content = document.getElementById('chapter-content-editor').innerHTML;
                 chap.choices = saveBranchChoicesFromUI();
                 
-                // Add notification for book update to readers
                 addNotification("Chapter Saved", `Draft saved for "${chap.title}" in ${proj.title}.`, "book_update");
 
                 saveState();
@@ -1618,7 +1762,7 @@
             if (!title) return;
             const newProj = {
                 id: 'proj_' + Date.now(),
-                author: state.userProfile.name || 'Guest Writer',
+                author: state.userProfile.name || 'New Writer',
                 title: title,
                 type: 'Novel',
                 genre: 'Fantasy',
