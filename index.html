@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoreCraft Studio - Storyteller & Visual World Studio</title>
+    <title>LoreCraft Studio - Wattpad-Style Storyteller Studio</title>
     <!-- Favicon Logo -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='f' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%239333ea'/><stop offset='50%' stop-color='%234f46e5'/><stop offset='100%' stop-color='%23ec4899'/></linearGradient></defs><rect width='100' height='100' rx='24' fill='%230f172a'/><rect width='92' height='92' x='4' y='4' rx='20' fill='none' stroke='url(%23f)' stroke-width='3'/><path d='M30 75 C 35 45, 55 25, 75 20 C 70 40, 55 55, 30 75 Z' fill='url(%23f)'/><path d='M30 75 L 42 62 M 45 52 L 57 40' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/></svg>">
     
@@ -12,7 +12,7 @@
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Lora:ital,wght@0,400;0,600;1,400&family=Fira+Code:wght@400;500&family=Caveat:wght@600&display=swap" rel="stylesheet">
     
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
@@ -25,23 +25,35 @@
             background-color: #0b0f19;
             color: #f3f4f6;
         }
-        .font-cinzel {
-            font-family: 'Cinzel', serif;
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .font-lora { font-family: 'Lora', serif; }
+        .font-mono-code { font-family: 'Fira Code', monospace; }
+        .font-cursive { font-family: 'Caveat', cursive; }
+
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
+
+        /* WYSIWYG Editor Styles */
+        [contenteditable="true"]:empty:before {
+            content: attr(placeholder);
+            color: #6b7280;
+            pointer-events: none;
+            display: block;
         }
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #111827;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #4b5563;
-        }
+        .editor-content p { margin-bottom: 1em; }
+        .editor-content h1 { font-size: 1.875rem; font-weight: 700; margin-top: 1em; margin-bottom: 0.5em; color: #ffffff; }
+        .editor-content h2 { font-size: 1.5rem; font-weight: 700; margin-top: 0.85em; margin-bottom: 0.4em; color: #f3f4f6; }
+        .editor-content h3 { font-size: 1.25rem; font-weight: 600; margin-top: 0.75em; margin-bottom: 0.3em; color: #e5e7eb; }
+        .editor-content ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1em; }
+        .editor-content ol { list-style-type: decimal; padding-left: 1.5rem; margin-bottom: 1em; }
+        .editor-content blockquote { border-left: 4px solid #a855f7; padding-left: 1rem; color: #cbd5e1; font-style: italic; margin-bottom: 1em; }
+        
+        /* Reader Themes */
+        .theme-dark { background-color: #0b0f19; color: #e2e8f0; }
+        .theme-sepia { background-color: #fbf0d9; color: #3f2a1d; }
+        .theme-night { background-color: #000000; color: #94a3b8; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col pb-24">
@@ -50,7 +62,6 @@
     <header class="bg-slate-900/90 border-b border-slate-800 backdrop-blur sticky top-0 z-40 px-4 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             
-            <!-- Brand Logo -->
             <div class="flex items-center gap-3">
                 <div class="relative group cursor-pointer" onclick="switchMainPage('dashboard')">
                     <div class="absolute -inset-0.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 rounded-xl blur opacity-50 group-hover:opacity-100 transition duration-300"></div>
@@ -72,7 +83,7 @@
                     <h1 class="font-cinzel font-bold text-lg text-white tracking-wide flex items-center gap-1.5">
                         LoreCraft <span class="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 font-sans border border-purple-500/30 uppercase tracking-widest font-semibold">Studio</span>
                     </h1>
-                    <p class="text-[11px] text-slate-400 font-medium tracking-tight">Storyteller & Visual World Studio</p>
+                    <p class="text-[11px] text-slate-400 font-medium tracking-tight">Storyteller & Wattpad Studio</p>
                 </div>
             </div>
 
@@ -82,7 +93,7 @@
                     <i class="fas fa-chart-line"></i> Dashboard
                 </button>
                 <button onclick="switchMainPage('published')" id="nav-published" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
-                    <i class="fas fa-globe"></i> Library
+                    <i class="fas fa-book-open"></i> Public Library
                 </button>
                 <button onclick="switchMainPage('writer')" id="nav-writer" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
                     <i class="fas fa-pen-nib"></i> Writer Studio
@@ -92,7 +103,6 @@
                 </button>
             </nav>
 
-            <!-- User Auth & Controls -->
             <div class="flex items-center gap-2">
                 <button onclick="openBackupModal()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition text-xs flex items-center gap-1.5 border border-slate-700" title="Backup & Restore">
                     <i class="fas fa-database text-purple-400"></i>
@@ -115,8 +125,8 @@
             <div class="bg-gradient-to-r from-purple-900/50 via-slate-900 to-indigo-900/40 border border-purple-500/30 rounded-3xl p-6 md:p-8 space-y-4 shadow-2xl relative overflow-hidden">
                 <div class="max-w-2xl space-y-2 relative z-10">
                     <span class="text-xs font-bold text-purple-400 uppercase tracking-widest bg-purple-950/80 border border-purple-800/80 px-3 py-1 rounded-full">Storyteller Workspace</span>
-                    <h2 id="dash-welcome-text" class="font-cinzel text-3xl md:text-4xl font-bold text-white">Welcome back, Writer!</h2>
-                    <p class="text-slate-300 text-sm leading-relaxed">Organize your lore, write your chapters, attach soundtracks, and publish your works to the world.</p>
+                    <h2 id="dash-welcome-text" class="font-cinzel text-3xl md:text-4xl font-bold text-white">Welcome back, Author!</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed">Draft your stories, apply rich formatting, design custom covers, categorize by genre, and publish your works.</p>
                 </div>
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-800/80 relative z-10">
                     <div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800">
@@ -128,11 +138,11 @@
                         <span id="stat-bookmarks-count" class="font-cinzel text-2xl font-bold text-pink-400">0</span>
                     </div>
                     <div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800">
-                        <span class="text-xs text-slate-400 block">Lore Entries</span>
+                        <span class="text-xs text-slate-400 block">Lore Vault Entries</span>
                         <span id="stat-lore-count" class="font-cinzel text-2xl font-bold text-indigo-400">0</span>
                     </div>
                     <div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800">
-                        <span class="text-xs text-slate-400 block">Total Words</span>
+                        <span class="text-xs text-slate-400 block">Total Words Written</span>
                         <span id="stat-words-count" class="font-cinzel text-2xl font-bold text-emerald-400">0</span>
                     </div>
                 </div>
@@ -144,7 +154,7 @@
                         <i class="fas fa-feather-alt"></i>
                     </div>
                     <h3 class="font-cinzel text-xl font-bold text-white group-hover:text-purple-300">Writer Studio</h3>
-                    <p class="text-xs text-slate-400">Write chapters, edit drafts, and attach Suno audio themes.</p>
+                    <p class="text-xs text-slate-400">Write chapters with bold, italics, font sizing, and custom styling.</p>
                 </div>
 
                 <div onclick="switchMainPage('published')" class="bg-slate-900 border border-slate-800 hover:border-indigo-500/50 p-6 rounded-2xl space-y-3 cursor-pointer transition shadow-xl group">
@@ -152,7 +162,7 @@
                         <i class="fas fa-book-open"></i>
                     </div>
                     <h3 class="font-cinzel text-xl font-bold text-white group-hover:text-indigo-300">Public Library</h3>
-                    <p class="text-xs text-slate-400">Browse and read novel series published by community authors.</p>
+                    <p class="text-xs text-slate-400">Filter by category, search tags, completion status, and format.</p>
                 </div>
 
                 <div onclick="switchMainPage('profile')" class="bg-slate-900 border border-slate-800 hover:border-pink-500/50 p-6 rounded-2xl space-y-3 cursor-pointer transition shadow-xl group">
@@ -160,7 +170,7 @@
                         <i class="fas fa-bookmark"></i>
                     </div>
                     <h3 class="font-cinzel text-xl font-bold text-white group-hover:text-pink-300">Profile & Reading List</h3>
-                    <p class="text-xs text-slate-400">View your saved bookmarks, manage profile, and inspect written stories.</p>
+                    <p class="text-xs text-slate-400">View saved bookmarks, update author bio, and manage avatar.</p>
                 </div>
             </div>
         </section>
@@ -188,18 +198,18 @@
                         <i class="fas fa-bookmark"></i> Reading List / Bookmarks
                     </button>
                     <button onclick="switchProfileSubTab('stories')" id="prof-subtab-stories" class="text-sm font-bold text-slate-400 hover:text-slate-200 pb-2 flex items-center gap-2">
-                        <i class="fas fa-scroll"></i> Written Stories (Published & Drafts)
+                        <i class="fas fa-scroll"></i> Written Stories
                     </button>
                 </div>
 
                 <div id="prof-sec-bookmarks" class="space-y-4">
-                    <h3 class="font-cinzel text-lg font-bold text-white">My Bookmarked Stories</h3>
+                    <h3 class="font-cinzel text-lg font-bold text-white">My Saved Reading List</h3>
                     <div id="bookmarks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
 
                 <div id="prof-sec-stories" class="hidden space-y-4">
                     <div class="flex items-center justify-between">
-                        <h3 class="font-cinzel text-lg font-bold text-white">My Author Projects</h3>
+                        <h3 class="font-cinzel text-lg font-bold text-white">My Author Works</h3>
                         <button onclick="switchMainPage('writer'); createNewProject();" class="px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-semibold">
                             + Create New Work
                         </button>
@@ -209,27 +219,87 @@
             </div>
         </section>
 
-        <!-- PAGE 3: PUBLIC LIBRARY -->
+        <!-- PAGE 3: PUBLIC LIBRARY WITH SEARCH & CATEGORIES -->
         <section id="page-published" class="hidden space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="font-cinzel text-2xl font-bold text-white"><i class="fas fa-globe text-purple-400 mr-2"></i> Public Library</h2>
-                    <p class="text-xs text-slate-400">Browse and read books published by creators.</p>
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div>
+                        <h2 class="font-cinzel text-2xl font-bold text-white flex items-center gap-2">
+                            <i class="fas fa-book-open text-purple-400"></i> Public Library
+                        </h2>
+                        <p class="text-xs text-slate-400">Explore web novels, series, poems, and one-shots.</p>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="w-full md:w-80 relative">
+                        <i class="fas fa-search absolute left-3 top-3 text-slate-500 text-xs"></i>
+                        <input type="text" id="library-search-input" oninput="filterLibrary()" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Search by title, author, or tags...">
+                    </div>
+                </div>
+
+                <!-- Filter Row -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 border-t border-slate-800">
+                    <div>
+                        <label class="text-[10px] text-slate-400 block mb-1 uppercase font-bold">Content Format</label>
+                        <select id="filter-format" onchange="filterLibrary()" class="w-full bg-slate-950 border border-slate-800 text-xs text-purple-300 rounded-lg px-2.5 py-1.5 focus:outline-none">
+                            <option value="All">All Formats</option>
+                            <option value="Novel">Novel</option>
+                            <option value="Series">Series</option>
+                            <option value="One Shot">One Shot Story</option>
+                            <option value="Poem">Poem</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] text-slate-400 block mb-1 uppercase font-bold">Genre Category</label>
+                        <select id="filter-genre" onchange="filterLibrary()" class="w-full bg-slate-950 border border-slate-800 text-xs text-purple-300 rounded-lg px-2.5 py-1.5 focus:outline-none">
+                            <option value="All">All Genres</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Sci-Fi">Sci-Fi</option>
+                            <option value="Mystery">Mystery</option>
+                            <option value="Thriller">Thriller</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Slice of Life">Slice of Life</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] text-slate-400 block mb-1 uppercase font-bold">Completion Status</label>
+                        <select id="filter-status" onchange="filterLibrary()" class="w-full bg-slate-950 border border-slate-800 text-xs text-purple-300 rounded-lg px-2.5 py-1.5 focus:outline-none">
+                            <option value="All">All Statuses</option>
+                            <option value="Ongoing">Ongoing</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] text-slate-400 block mb-1 uppercase font-bold">Rating</label>
+                        <select id="filter-rating" onchange="filterLibrary()" class="w-full bg-slate-950 border border-slate-800 text-xs text-purple-300 rounded-lg px-2.5 py-1.5 focus:outline-none">
+                            <option value="All">All Ratings</option>
+                            <option value="Everyone">Everyone</option>
+                            <option value="Young Adult">Young Adult (YA)</option>
+                            <option value="Mature 18+">Mature 18+</option>
+                        </select>
+                    </div>
                 </div>
             </div>
+
+            <!-- Library Grid -->
             <div id="published-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- PAGE 4: WRITER STUDIO -->
+        <!-- PAGE 4: WATTPAD-STYLE WRITER STUDIO WITH RICH TEXT TOOLBAR -->
         <section id="page-writer" class="hidden space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+            <!-- Project Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900/80 p-4 rounded-xl border border-slate-800">
                 <div class="flex flex-wrap items-center gap-3">
                     <div>
-                        <label class="text-xs text-slate-400 block mb-1">My Project:</label>
+                        <label class="text-xs text-slate-400 block mb-1">Select Work:</label>
                         <select id="project-select" onchange="switchProject(this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-purple-300 focus:outline-none focus:border-purple-500"></select>
                     </div>
                     <div>
-                        <label class="text-xs text-slate-400 block mb-1">Chapter:</label>
+                        <label class="text-xs text-slate-400 block mb-1">Select Chapter:</label>
                         <select id="chapter-select" onchange="switchChapter(this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-200 focus:outline-none focus:border-purple-500"></select>
                     </div>
                     <div class="flex items-end gap-1 pt-5">
@@ -239,12 +309,15 @@
                         <button onclick="createNewChapter()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded-lg border border-slate-700 text-slate-300 flex items-center gap-1 transition">
                             <i class="fas fa-file-circle-plus text-indigo-400"></i> New Chapter
                         </button>
+                        <button onclick="toggleStoryDetailsPanel()" class="px-3 py-1.5 bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 border border-purple-700/50 text-xs rounded-lg flex items-center gap-1 transition">
+                            <i class="fas fa-sliders-h"></i> Work Metadata
+                        </button>
                     </div>
                 </div>
 
                 <div class="flex items-center gap-2">
                     <button onclick="deleteCurrentProject()" class="px-3 py-1.5 bg-red-900/20 hover:bg-red-900/40 text-red-400 border border-red-800/40 rounded-lg text-xs font-medium flex items-center gap-1.5 transition">
-                        <i class="fas fa-trash-alt"></i> Delete Work
+                        <i class="fas fa-trash-alt"></i> Delete
                     </button>
                     <button onclick="saveCurrentChapter()" class="px-4 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold shadow flex items-center gap-1.5 transition">
                         <i class="fas fa-save"></i> Save Draft
@@ -252,23 +325,165 @@
                 </div>
             </div>
 
-            <!-- Chapter Editor Area -->
-            <div class="bg-slate-900/80 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
-                <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between border-b border-slate-800 pb-4">
-                    <input type="text" id="chapter-title-input" class="bg-slate-950 border border-slate-800 text-xl font-cinzel font-bold text-white px-4 py-2 rounded-xl w-full sm:w-2/3 focus:outline-none focus:border-purple-500" placeholder="Chapter Title">
-                    <div class="w-full sm:w-1/3">
-                        <select id="chapter-soundtrack-select" class="w-full bg-slate-950 border border-slate-800 text-xs text-indigo-300 px-3 py-2 rounded-xl focus:outline-none focus:border-indigo-500">
+            <!-- STORY METADATA MANAGEMENT PANEL (COLLAPSIBLE) -->
+            <div id="story-metadata-panel" class="hidden bg-slate-900 border border-purple-500/30 rounded-2xl p-6 space-y-4 shadow-xl">
+                <h3 class="font-cinzel text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-book text-purple-400"></i> Story Details & Wattpad Metadata
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Cover Image Picker -->
+                    <div class="space-y-2">
+                        <label class="text-xs text-slate-400 font-semibold block">Book Cover Image</label>
+                        <div id="metadata-cover-preview" class="w-full h-48 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-center overflow-hidden">
+                            <i class="fas fa-image text-slate-700 text-3xl"></i>
+                        </div>
+                        <input type="file" id="cover-file-input" accept="image/*" onchange="handleCoverUpload(event)" class="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:bg-purple-600/20 file:text-purple-300 w-full">
+                    </div>
+
+                    <!-- Metadata Inputs -->
+                    <div class="md:col-span-2 space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Story Format *</label>
+                                <select id="meta-format" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                                    <option value="Novel">Novel</option>
+                                    <option value="Series">Series</option>
+                                    <option value="One Shot">One Shot Story</option>
+                                    <option value="Poem">Poem</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Primary Genre *</label>
+                                <select id="meta-genre" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                                    <option value="Fantasy">Fantasy</option>
+                                    <option value="Romance">Romance</option>
+                                    <option value="Sci-Fi">Sci-Fi</option>
+                                    <option value="Mystery">Mystery</option>
+                                    <option value="Thriller">Thriller</option>
+                                    <option value="Horror">Horror</option>
+                                    <option value="Slice of Life">Slice of Life</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Completion Status</label>
+                                <select id="meta-status" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                                    <option value="Ongoing">Ongoing</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label class="text-xs text-slate-400 block mb-1">Target Audience Rating</label>
+                                <select id="meta-rating" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500">
+                                    <option value="Everyone">Everyone</option>
+                                    <option value="Young Adult">Young Adult (YA)</option>
+                                    <option value="Mature 18+">Mature 18+</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-slate-400 block mb-1">Tags (Comma-separated)</label>
+                            <input type="text" id="meta-tags" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="magic, dragons, slowburn, urban fantasy">
+                        </div>
+
+                        <div>
+                            <label class="text-xs text-slate-400 block mb-1">Story Synopsis / Blurb</label>
+                            <textarea id="meta-synopsis" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Write a compelling blurb for readers..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHAPTER EDITOR WITH RICH TEXT FORMATTING TOOLBAR -->
+            <div class="bg-slate-900/90 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
+                <!-- Chapter Settings Top Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 border-b border-slate-800 pb-4">
+                    <div class="sm:col-span-2">
+                        <label class="text-xs text-slate-400 block mb-1">Chapter Title</label>
+                        <input type="text" id="chapter-title-input" class="bg-slate-950 border border-slate-800 text-lg font-cinzel font-bold text-white px-4 py-2 rounded-xl w-full focus:outline-none focus:border-purple-500" placeholder="Chapter Title">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Attached Soundtrack</label>
+                        <select id="chapter-soundtrack-select" class="w-full bg-slate-950 border border-slate-800 text-xs text-indigo-300 px-3 py-2.5 rounded-xl focus:outline-none focus:border-indigo-500">
                             <option value="">🎵 No Soundtrack Attached</option>
                         </select>
                     </div>
                 </div>
 
-                <textarea id="chapter-content-input" rows="18" class="w-full bg-slate-950 border border-slate-800/80 rounded-xl p-4 text-slate-200 text-base leading-relaxed focus:outline-none focus:border-purple-500/50 resize-y font-sans" placeholder="Write your chapter content here..."></textarea>
+                <!-- Wattpad Author Notes Header -->
+                <div>
+                    <label class="text-xs text-purple-400 font-semibold block mb-1"><i class="fas fa-comment-dots mr-1"></i> Author's Opening Note (Optional)</label>
+                    <input type="text" id="chapter-note-top" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500" placeholder="Hey readers! Welcome to this chapter...">
+                </div>
+
+                <!-- RICH TEXT FORMATTING TOOLBAR -->
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-2 flex flex-wrap items-center gap-1.5 text-xs text-slate-300">
+                    
+                    <!-- Font Family Selector -->
+                    <select onchange="execEditorCommand('fontName', this.value)" class="bg-slate-900 border border-slate-800 text-xs text-slate-200 px-2 py-1 rounded focus:outline-none">
+                        <option value="Inter">Sans-Serif (Inter)</option>
+                        <option value="Cinzel">Cinzel (Serif)</option>
+                        <option value="Lora">Lora (Literary Serif)</option>
+                        <option value="Fira Code">Fira Code (Monospace)</option>
+                        <option value="Caveat">Caveat (Script)</option>
+                    </select>
+
+                    <!-- Font Size Selector -->
+                    <select onchange="execEditorCommand('fontSize', this.value)" class="bg-slate-900 border border-slate-800 text-xs text-slate-200 px-2 py-1 rounded focus:outline-none">
+                        <option value="3">Size: Normal</option>
+                        <option value="1">Size: Small</option>
+                        <option value="4">Size: Medium</option>
+                        <option value="5">Size: Large</option>
+                        <option value="6">Size: XL</option>
+                    </select>
+
+                    <div class="h-4 w-px bg-slate-800 mx-1"></div>
+
+                    <!-- Styling Buttons -->
+                    <button type="button" onclick="execEditorCommand('bold')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Bold"><i class="fas fa-bold"></i></button>
+                    <button type="button" onclick="execEditorCommand('italic')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Italic"><i class="fas fa-italic"></i></button>
+                    <button type="button" onclick="execEditorCommand('underline')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Underline"><i class="fas fa-underline"></i></button>
+                    <button type="button" onclick="execEditorCommand('strikeThrough')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Strikethrough"><i class="fas fa-strikethrough"></i></button>
+
+                    <div class="h-4 w-px bg-slate-800 mx-1"></div>
+
+                    <!-- Alignment Buttons -->
+                    <button type="button" onclick="execEditorCommand('justifyLeft')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Align Left"><i class="fas fa-align-left"></i></button>
+                    <button type="button" onclick="execEditorCommand('justifyCenter')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Align Center"><i class="fas fa-align-center"></i></button>
+                    <button type="button" onclick="execEditorCommand('justifyRight')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Align Right"><i class="fas fa-align-right"></i></button>
+                    <button type="button" onclick="execEditorCommand('justifyFull')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Justify"><i class="fas fa-align-justify"></i></button>
+
+                    <div class="h-4 w-px bg-slate-800 mx-1"></div>
+
+                    <!-- Structure Buttons -->
+                    <button type="button" onclick="execEditorCommand('insertUnorderedList')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Bullet List"><i class="fas fa-list-ul"></i></button>
+                    <button type="button" onclick="execEditorCommand('insertOrderedList')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Numbered List"><i class="fas fa-list-ol"></i></button>
+                    <button type="button" onclick="execEditorCommand('formatBlock', '<blockquote>')" class="p-1.5 hover:bg-slate-800 rounded text-slate-200" title="Quote Block"><i class="fas fa-quote-right"></i></button>
+
+                    <div class="h-4 w-px bg-slate-800 mx-1"></div>
+
+                    <!-- Paragraph Presets -->
+                    <button type="button" onclick="execEditorCommand('formatBlock', '<h1>')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-[10px] font-bold rounded">H1</button>
+                    <button type="button" onclick="execEditorCommand('formatBlock', '<h2>')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-[10px] font-bold rounded">H2</button>
+                    <button type="button" onclick="execEditorCommand('formatBlock', '<p>')" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-[10px] rounded">Normal</button>
+                </div>
+
+                <!-- WYSIWYG Content Editable Canvas -->
+                <div id="chapter-content-editor" contenteditable="true" oninput="handleEditorInput()" class="editor-content w-full min-h-[400px] bg-slate-950 border border-slate-800/80 rounded-xl p-6 text-slate-200 text-base leading-relaxed focus:outline-none focus:border-purple-500/50 resize-y overflow-y-auto" placeholder="Write your chapter content here with full formatting support..."></div>
                 
+                <!-- Wattpad Author Note Bottom -->
+                <div>
+                    <label class="text-xs text-purple-400 font-semibold block mb-1"><i class="fas fa-comment-alt mr-1"></i> Author's Closing Note (Optional)</label>
+                    <input type="text" id="chapter-note-bottom" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-purple-500" placeholder="Thanks for reading! Don't forget to vote if you enjoyed...">
+                </div>
+
                 <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
                     <span id="word-count-display">0 Words</span>
-                    <button onclick="publishProject()" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-lg shadow flex items-center gap-2 transition">
-                        <i class="fas fa-globe"></i> Publish to Public Library
+                    <button onclick="publishProject()" class="px-5 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl shadow flex items-center gap-2 transition">
+                        <i class="fas fa-globe"></i> Publish Work to Public Library
                     </button>
                 </div>
             </div>
@@ -293,31 +508,38 @@
             </div>
         </section>
 
-        <!-- READER PERSPECTIVE OVERLAY VIEW WITH EMBEDDED PLAYER -->
+        <!-- WATTPAD-STYLE READER OVERLAY VIEW WITH THEMES & VOTING -->
         <div id="reader-view" class="hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur overflow-y-auto p-4 md:p-8">
             <div class="max-w-4xl mx-auto space-y-6">
                 
-                <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 p-4 rounded-2xl sticky top-0 z-10 shadow-2xl">
+                <!-- Reader Navigation Controls Header -->
+                <div class="flex flex-wrap items-center justify-between gap-3 bg-slate-900/90 border border-slate-800 p-4 rounded-2xl sticky top-0 z-10 shadow-2xl">
                     <button onclick="closeReaderView()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                        <i class="fas fa-arrow-left"></i> Exit Reader View
+                        <i class="fas fa-arrow-left"></i> Exit Reader
+                    </button>
+
+                    <!-- Vote Button -->
+                    <button id="reader-vote-btn" onclick="toggleVoteCurrentBook()" class="px-3 py-1.5 bg-amber-900/30 hover:bg-amber-900/50 text-amber-300 border border-amber-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fas fa-star text-amber-400"></i> <span id="vote-btn-text">Vote (0)</span>
                     </button>
 
                     <button id="reader-bookmark-btn" onclick="toggleBookmarkCurrentBook()" class="px-3 py-1.5 bg-pink-900/30 hover:bg-pink-900/50 text-pink-300 border border-pink-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
                         <i class="fas fa-bookmark"></i> <span id="bookmark-btn-text">Bookmark Book</span>
                     </button>
 
+                    <!-- Theme & Font Size Controls -->
                     <div class="flex items-center gap-2">
-                        <button id="reader-prev-btn-top" onclick="navigateChapter(-1)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-medium flex items-center gap-1 transition">
-                            <i class="fas fa-chevron-left"></i> Previous
-                        </button>
-                        <select id="reader-chapter-select" onchange="loadReaderChapter(this.value)" class="bg-slate-950 border border-slate-700 text-purple-300 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none"></select>
-                        <button id="reader-next-btn-top" onclick="navigateChapter(1)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-medium flex items-center gap-1 transition">
-                            Next <i class="fas fa-chevron-right"></i>
-                        </button>
+                        <div class="flex bg-slate-950 p-1 rounded-lg border border-slate-800">
+                            <button onclick="setReaderTheme('dark')" class="px-2 py-0.5 text-[10px] rounded text-slate-300 hover:text-white">Dark</button>
+                            <button onclick="setReaderTheme('sepia')" class="px-2 py-0.5 text-[10px] rounded text-amber-200 hover:text-amber-100">Sepia</button>
+                            <button onclick="setReaderTheme('night')" class="px-2 py-0.5 text-[10px] rounded text-slate-400 hover:text-white">OLED</button>
+                        </div>
+
+                        <select id="reader-chapter-select" onchange="loadReaderChapter(this.value)" class="bg-slate-950 border border-slate-700 text-purple-300 rounded-lg px-2.5 py-1 text-xs font-semibold focus:outline-none"></select>
                     </div>
                 </div>
 
-                <!-- EMBEDDED INLINE PLAYER CONTAINER -->
+                <!-- EMBEDDED SOUNDTRACK HEADER -->
                 <div id="reader-audio-header" class="hidden bg-slate-900 border border-purple-500/30 p-4 rounded-2xl space-y-3">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
@@ -330,15 +552,30 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Inline iframe embed container -->
                     <div id="reader-audio-embed-container" class="rounded-xl overflow-hidden border border-slate-800 bg-black"></div>
                 </div>
 
-                <div class="bg-slate-900/60 border border-slate-800/80 rounded-2xl p-6 md:p-12 space-y-6 shadow-2xl">
-                    <h1 id="reader-chapter-title" class="font-cinzel text-3xl md:text-4xl font-bold text-center text-white tracking-wide border-b border-slate-800/80 pb-6">Chapter Title</h1>
-                    <div id="reader-chapter-body" class="prose prose-invert max-w-none text-slate-300 text-lg leading-relaxed whitespace-pre-wrap font-sans"></div>
+                <!-- CHAPTER READING BODY -->
+                <div id="reader-paper" class="theme-dark border border-slate-800/80 rounded-2xl p-6 md:p-12 space-y-6 shadow-2xl transition-colors duration-300">
+                    <h1 id="reader-chapter-title" class="font-cinzel text-3xl md:text-4xl font-bold text-center tracking-wide border-b border-slate-800/80 pb-6">Chapter Title</h1>
+                    
+                    <!-- Author's Note Top -->
+                    <div id="reader-note-top-container" class="hidden bg-purple-950/40 border-l-4 border-purple-500 p-4 rounded-r-xl text-xs italic space-y-1">
+                        <span class="font-bold text-purple-300 block uppercase tracking-wider text-[10px]">Author's Note</span>
+                        <p id="reader-note-top-text"></p>
+                    </div>
+
+                    <!-- Rich Formatted Chapter Content Body -->
+                    <div id="reader-chapter-body" class="editor-content prose prose-invert max-w-none text-lg leading-relaxed whitespace-pre-wrap font-sans"></div>
+
+                    <!-- Author's Note Bottom -->
+                    <div id="reader-note-bottom-container" class="hidden bg-purple-950/40 border-l-4 border-purple-500 p-4 rounded-r-xl text-xs italic space-y-1">
+                        <span class="font-bold text-purple-300 block uppercase tracking-wider text-[10px]">Author's Closing Note</span>
+                        <p id="reader-note-bottom-text"></p>
+                    </div>
                 </div>
 
+                <!-- Bottom Navigation Buttons -->
                 <div class="flex items-center justify-between pt-4 border-t border-slate-800">
                     <button id="reader-prev-btn-bottom" onclick="navigateChapter(-1)" class="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 rounded-xl text-sm font-medium flex items-center gap-2 transition">
                         <i class="fas fa-arrow-left"></i> Previous Chapter
@@ -615,6 +852,7 @@
             profileSubTab: 'bookmarks',
             userProfile: { name: 'Guest Storyteller', bio: 'Fantasy Writer & Reader', avatar: '' },
             bookmarkedProjectIds: [],
+            votedProjectIds: [],
             projects: [],
             publicProjects: [],
             comments: [],
@@ -631,6 +869,7 @@
         let authAction = 'signin';
         let tempBase64Image = null;
         let tempAvatarBase64 = null;
+        let tempCoverBase64 = null;
 
         window.addEventListener('DOMContentLoaded', () => {
             loadLocalData();
@@ -639,11 +878,39 @@
             renderUI();
         });
 
+        // EXECUTE RICH TEXT COMMANDS
+        function execEditorCommand(command, value = null) {
+            document.execCommand(command, false, value);
+            handleEditorInput();
+        }
+
+        function handleEditorInput() {
+            const editor = document.getElementById('chapter-content-editor');
+            const text = editor.innerText || editor.textContent || '';
+            const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+            document.getElementById('word-count-display').innerText = `${wordCount.toLocaleString()} Words`;
+        }
+
+        function toggleStoryDetailsPanel() {
+            const panel = document.getElementById('story-metadata-panel');
+            panel.classList.toggle('hidden');
+        }
+
+        function handleCoverUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                tempCoverBase64 = evt.target.result;
+                document.getElementById('metadata-cover-preview').innerHTML = `<img src="${tempCoverBase64}" class="w-full h-full object-cover">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
         // PARSE YOUTUBE AND SUNO LINKS FOR IN-APP EMBEDDING
         function getEmbeddedPlayerHTML(url) {
             if (!url) return '';
-
-            // YouTube parsing
             if (url.includes('youtube.com') || url.includes('youtu.be')) {
                 let videoId = '';
                 if (url.includes('youtu.be/')) {
@@ -655,16 +922,12 @@
                     return `<iframe class="w-full h-48 rounded-xl" src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
                 }
             }
-
-            // Suno AI parsing
             if (url.includes('suno.com')) {
                 let songId = url.split('song/')[1]?.split('/')[0] || url.split('suno.com/')[1]?.split('/')[0];
                 if (songId) {
                     return `<iframe class="w-full h-36 rounded-xl" src="https://suno.com/embed/${songId}" frameborder="0" allow="autoplay"></iframe>`;
                 }
             }
-
-            // Generic URL fallback
             return `<div class="p-3 bg-slate-900 text-xs text-slate-300 flex items-center justify-between"><span class="truncate">${url}</span><a href="${url}" target="_blank" class="px-2 py-1 bg-purple-600 text-white rounded text-[10px]">Open Link</a></div>`;
         }
 
@@ -723,10 +986,12 @@
             const savedMedia = localStorage.getItem('lorecraft_media');
             const savedComments = localStorage.getItem('lorecraft_comments');
             const savedBookmarks = localStorage.getItem('lorecraft_bookmarks');
+            const savedVotes = localStorage.getItem('lorecraft_votes');
 
             if (savedProfile) state.userProfile = JSON.parse(savedProfile);
             if (savedComments) state.comments = JSON.parse(savedComments);
             if (savedBookmarks) state.bookmarkedProjectIds = JSON.parse(savedBookmarks);
+            if (savedVotes) state.votedProjectIds = JSON.parse(savedVotes);
 
             if (savedProjects) {
                 state.projects = JSON.parse(savedProjects);
@@ -736,12 +1001,21 @@
                     author: 'Community Writer',
                     title: 'Chronicles of Aetheria',
                     type: 'Novel',
+                    genre: 'Fantasy',
+                    status: 'Ongoing',
+                    rating: 'Young Adult',
+                    tags: ['magic', 'dragons', 'adventure'],
+                    synopsis: 'In a world torn by ancient magic, Caelen Vane discovers a forbidden artifact capable of reshaping kingdom fates.',
+                    coverUrl: '',
+                    votes: 12,
                     isPublished: true,
                     chapters: [{
                         id: 'chap_1',
                         title: 'Chapter 1: Whispers of the Void',
                         soundtrackId: '',
-                        content: 'The rain in the Undercity tasted of copper and ozone. Caelen Vane adjusted the straps of his gauntlet as neon lights flickered over wet pavement...'
+                        noteTop: 'Welcome to Chapter 1! Enjoy the read.',
+                        noteBottom: 'Thanks for reading! Leave a vote if you liked it.',
+                        content: '<p>The rain in the Undercity tasted of copper and ozone. <b>Caelen Vane</b> adjusted the straps of his gauntlet as neon lights flickered over wet pavement...</p>'
                     }]
                 }];
             }
@@ -762,6 +1036,7 @@
             localStorage.setItem('lorecraft_media', JSON.stringify(state.mediaTracks));
             localStorage.setItem('lorecraft_comments', JSON.stringify(state.comments));
             localStorage.setItem('lorecraft_bookmarks', JSON.stringify(state.bookmarkedProjectIds));
+            localStorage.setItem('lorecraft_votes', JSON.stringify(state.votedProjectIds));
 
             if (currentUser && db) {
                 db.collection('users').doc(currentUser.uid).set({
@@ -782,16 +1057,17 @@
             renderChapterEditor();
             renderLoreGrid();
             renderMediaGrid();
-            renderPublishedWorks();
+            filterLibrary();
         }
 
         function renderDashboard() {
-            document.getElementById('dash-welcome-text').innerText = `Welcome back, ${state.userProfile.name || 'Writer'}!`;
+            document.getElementById('dash-welcome-text').innerText = `Welcome back, ${state.userProfile.name || 'Author'}!`;
             
             let totalWords = 0;
             state.projects.forEach(p => {
                 p.chapters.forEach(c => {
-                    totalWords += c.content.trim() ? c.content.trim().split(/\s+/).length : 0;
+                    const text = c.content ? c.content.replace(/<[^>]*>/g, '') : '';
+                    totalWords += text.trim() ? text.trim().split(/\s+/).length : 0;
                 });
             });
 
@@ -817,7 +1093,7 @@
             const bookmarkedWorks = allWorks.filter(w => state.bookmarkedProjectIds.includes(w.id));
 
             if (bookmarkedWorks.length === 0) {
-                bGrid.innerHTML = `<p class="text-xs text-slate-500 italic col-span-3">No bookmarked stories yet. Browse the public library and click "Bookmark Book" while reading!</p>`;
+                bGrid.innerHTML = `<p class="text-xs text-slate-500 italic col-span-3">No bookmarked stories yet. Browse the library and click "Bookmark Book"!</p>`;
             } else {
                 bGrid.innerHTML = bookmarkedWorks.map(p => `
                     <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg flex flex-col justify-between">
@@ -827,7 +1103,7 @@
                             <p class="text-xs text-slate-400">By ${p.author || 'Author'}</p>
                         </div>
                         <div class="flex items-center gap-2 pt-2">
-                            <button onclick="openReaderView('${p.id}')" class="flex-1 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">Read Now</button>
+                            <button onclick="openReaderView('${p.id}')" class="flex-1 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">Read Work</button>
                             <button onclick="removeBookmark('${p.id}')" class="px-2.5 py-1.5 bg-red-900/30 text-red-400 rounded-lg text-xs"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
@@ -842,7 +1118,7 @@
                             <h4 class="font-cinzel text-base font-bold text-white">${p.title}</h4>
                             <span class="text-[10px] px-2 py-0.5 rounded ${p.isPublished ? 'bg-emerald-900/40 text-emerald-300 border border-emerald-800/40' : 'bg-amber-900/40 text-amber-300 border border-amber-800/40'}">${p.isPublished ? 'Published' : 'Draft'}</span>
                         </div>
-                        <p class="text-xs text-slate-400">${p.chapters.length} Chapters</p>
+                        <p class="text-xs text-slate-400">${p.chapters.length} Chapters • ${p.genre || 'General'}</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="switchMainPage('writer'); switchProject('${p.id}');" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">Edit in Studio</button>
@@ -852,6 +1128,78 @@
             `).join('');
         }
 
+        // LIBRARY SEARCH AND FILTER ENGINE
+        function filterLibrary() {
+            const query = document.getElementById('library-search-input')?.value.toLowerCase().trim() || '';
+            const fmt = document.getElementById('filter-format')?.value || 'All';
+            const gnr = document.getElementById('filter-genre')?.value || 'All';
+            const sts = document.getElementById('filter-status')?.value || 'All';
+            const rtg = document.getElementById('filter-rating')?.value || 'All';
+
+            const allWorks = [...state.projects, ...state.publicProjects.filter(pub => !state.projects.some(p => p.id === pub.id))];
+
+            const filtered = allWorks.filter(p => {
+                const matchesQuery = !query || 
+                    p.title.toLowerCase().includes(query) || 
+                    (p.author && p.author.toLowerCase().includes(query)) ||
+                    (p.tags && p.tags.some(t => t.toLowerCase().includes(query))) ||
+                    (p.synopsis && p.synopsis.toLowerCase().includes(query));
+
+                const matchesFmt = (fmt === 'All') || (p.type === fmt);
+                const matchesGnr = (gnr === 'All') || (p.genre === gnr);
+                const matchesSts = (sts === 'All') || (p.status === sts);
+                const matchesRtg = (rtg === 'All') || (p.rating === rtg);
+
+                return matchesQuery && matchesFmt && matchesGnr && matchesSts && matchesRtg;
+            });
+
+            renderPublishedWorks(filtered);
+        }
+
+        function renderPublishedWorks(works = null) {
+            const grid = document.getElementById('published-grid');
+            const allWorks = works || [...state.projects, ...state.publicProjects.filter(pub => !state.projects.some(p => p.id === pub.id))];
+
+            if (allWorks.length === 0) {
+                grid.innerHTML = `<div class="col-span-3 text-center py-12 bg-slate-900 border border-slate-800 rounded-2xl"><p class="text-slate-400 text-sm">No stories match your filter criteria.</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = allWorks.map(p => `
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4 shadow-xl flex flex-col justify-between hover:border-purple-500/40 transition">
+                    <div class="space-y-3">
+                        ${p.coverUrl ? `<div class="w-full h-44 rounded-xl overflow-hidden border border-slate-800"><img src="${p.coverUrl}" class="w-full h-full object-cover"></div>` : ''}
+                        
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/40 uppercase">${p.type || 'Novel'}</span>
+                            <span class="text-[10px] px-2 py-0.5 rounded ${p.status === 'Completed' ? 'bg-emerald-900/40 text-emerald-300 border border-emerald-800/40' : 'bg-amber-900/40 text-amber-300 border border-amber-800/40'}">${p.status || 'Ongoing'}</span>
+                        </div>
+
+                        <div>
+                            <h3 class="font-cinzel text-xl font-bold text-white line-clamp-1">${p.title}</h3>
+                            <p class="text-xs text-slate-400">By ${p.author || 'Author'}</p>
+                        </div>
+
+                        ${p.synopsis ? `<p class="text-xs text-slate-300 line-clamp-2 leading-relaxed">${p.synopsis}</p>` : ''}
+
+                        ${p.tags && p.tags.length > 0 ? `
+                            <div class="flex flex-wrap gap-1">
+                                ${p.tags.map(t => `<span class="text-[9px] px-2 py-0.5 rounded bg-slate-950 text-purple-300 border border-slate-800">#${t}</span>`).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-800/80">
+                        <span class="text-[11px] text-slate-400"><i class="fas fa-star text-amber-400 mr-1"></i> ${p.votes || 0} Votes</span>
+                        <button onclick="openReaderView('${p.id}')" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center gap-1.5 transition">
+                            <i class="fas fa-book-open"></i> Read Book
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // AVATAR FILE UPLOAD
         function handleAvatarLocalUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -893,6 +1241,23 @@
             renderProfilePage();
         }
 
+        function toggleVoteCurrentBook() {
+            const proj = state.activeReaderProject;
+            if (!proj) return;
+
+            const idx = state.votedProjectIds.indexOf(proj.id);
+            if (idx > -1) {
+                state.votedProjectIds.splice(idx, 1);
+                proj.votes = Math.max(0, (proj.votes || 1) - 1);
+            } else {
+                state.votedProjectIds.push(proj.id);
+                proj.votes = (proj.votes || 0) + 1;
+            }
+            saveState();
+            updateVoteButtonState();
+            filterLibrary();
+        }
+
         function removeBookmark(id) {
             state.bookmarkedProjectIds = state.bookmarkedProjectIds.filter(bId => bId !== id);
             saveState();
@@ -904,6 +1269,13 @@
             if (!proj) return;
             const isBookmarked = state.bookmarkedProjectIds.includes(proj.id);
             document.getElementById('bookmark-btn-text').innerText = isBookmarked ? 'Bookmarked' : 'Bookmark Book';
+        }
+
+        function updateVoteButtonState() {
+            const proj = state.activeReaderProject;
+            if (!proj) return;
+            const isVoted = state.votedProjectIds.includes(proj.id);
+            document.getElementById('vote-btn-text').innerText = `${isVoted ? 'Voted' : 'Vote'} (${proj.votes || 0})`;
         }
 
         function openProfileEditModal() {
@@ -935,7 +1307,7 @@
                 snapshot.forEach(doc => cloudWorks.push(doc.data()));
                 if (cloudWorks.length > 0) {
                     state.publicProjects = cloudWorks;
-                    renderPublishedWorks();
+                    filterLibrary();
                 }
             }).catch(err => console.log("Public works load fallback"));
         }
@@ -973,7 +1345,7 @@
             const pSelect = document.getElementById('project-select');
             const cSelect = document.getElementById('chapter-select');
 
-            pSelect.innerHTML = state.projects.map(p => `<option value="${p.id}" ${p.id === state.currentProjectId ? 'selected' : ''}>${p.title} (${p.type})</option>`).join('');
+            pSelect.innerHTML = state.projects.map(p => `<option value="${p.id}" ${p.id === state.currentProjectId ? 'selected' : ''}>${p.title} (${p.type || 'Novel'})</option>`).join('');
             
             const currentProj = state.projects.find(p => p.id === state.currentProjectId);
             if (currentProj) {
@@ -998,26 +1370,36 @@
             const proj = state.projects.find(p => p.id === state.currentProjectId);
             const chap = proj?.chapters.find(c => c.id === state.currentChapterId);
 
-            const titleInput = document.getElementById('chapter-title-input');
-            const contentInput = document.getElementById('chapter-content-input');
-            const soundSelect = document.getElementById('chapter-soundtrack-select');
+            if (proj) {
+                document.getElementById('meta-format').value = proj.type || 'Novel';
+                document.getElementById('meta-genre').value = proj.genre || 'Fantasy';
+                document.getElementById('meta-status').value = proj.status || 'Ongoing';
+                document.getElementById('meta-rating').value = proj.rating || 'Everyone';
+                document.getElementById('meta-tags').value = (proj.tags || []).join(', ');
+                document.getElementById('meta-synopsis').value = proj.synopsis || '';
+                
+                const coverPrev = document.getElementById('metadata-cover-preview');
+                if (proj.coverUrl) {
+                    coverPrev.innerHTML = `<img src="${proj.coverUrl}" class="w-full h-full object-cover">`;
+                } else {
+                    coverPrev.innerHTML = `<i class="fas fa-image text-slate-700 text-3xl"></i>`;
+                }
+            }
 
             if (chap) {
-                titleInput.value = chap.title;
-                contentInput.value = chap.content;
-                updateWordCount(chap.content);
+                document.getElementById('chapter-title-input').value = chap.title;
+                document.getElementById('chapter-note-top').value = chap.noteTop || '';
+                document.getElementById('chapter-note-bottom').value = chap.noteBottom || '';
+                
+                const editor = document.getElementById('chapter-content-editor');
+                editor.innerHTML = chap.content || '';
+                handleEditorInput();
 
+                const soundSelect = document.getElementById('chapter-soundtrack-select');
                 soundSelect.innerHTML = '<option value="">🎵 No Soundtrack Attached</option>' +
                     state.mediaTracks.map(m => `<option value="${m.id}" ${m.id === chap.soundtrackId ? 'selected' : ''}>${m.platform === 'Suno AI' ? '🎵' : '🎬'} ${m.title}</option>`).join('');
             }
         }
-
-        function updateWordCount(text) {
-            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-            document.getElementById('word-count-display').innerText = `${words} Words`;
-        }
-
-        document.getElementById('chapter-content-input').addEventListener('input', (e) => updateWordCount(e.target.value));
 
         function createNewProject() {
             const title = prompt("Enter Work Title:");
@@ -1027,8 +1409,15 @@
                 author: state.userProfile.name || 'Guest Writer',
                 title: title,
                 type: 'Novel',
+                genre: 'Fantasy',
+                status: 'Ongoing',
+                rating: 'Everyone',
+                tags: [],
+                synopsis: '',
+                coverUrl: '',
+                votes: 0,
                 isPublished: false,
-                chapters: [{ id: 'chap_' + Date.now(), title: 'Chapter 1', soundtrackId: '', content: '' }]
+                chapters: [{ id: 'chap_' + Date.now(), title: 'Chapter 1', soundtrackId: '', noteTop: '', noteBottom: '', content: '<p>Write your chapter here...</p>' }]
             };
             state.projects.push(newProj);
             state.currentProjectId = newProj.id;
@@ -1040,7 +1429,7 @@
         function createNewChapter() {
             const proj = state.projects.find(p => p.id === state.currentProjectId);
             if (!proj) return;
-            const newChap = { id: 'chap_' + Date.now(), title: `Chapter ${proj.chapters.length + 1}`, soundtrackId: '', content: '' };
+            const newChap = { id: 'chap_' + Date.now(), title: `Chapter ${proj.chapters.length + 1}`, soundtrackId: '', noteTop: '', noteBottom: '', content: '<p>Write content...</p>' };
             proj.chapters.push(newChap);
             state.currentChapterId = newChap.id;
             saveState();
@@ -1050,9 +1439,22 @@
         function saveCurrentChapter() {
             const proj = state.projects.find(p => p.id === state.currentProjectId);
             const chap = proj?.chapters.find(c => c.id === state.currentChapterId);
+
+            if (proj) {
+                proj.type = document.getElementById('meta-format').value;
+                proj.genre = document.getElementById('meta-genre').value;
+                proj.status = document.getElementById('meta-status').value;
+                proj.rating = document.getElementById('meta-rating').value;
+                proj.tags = document.getElementById('meta-tags').value.split(',').map(t => t.trim()).filter(Boolean);
+                proj.synopsis = document.getElementById('meta-synopsis').value;
+                if (tempCoverBase64) proj.coverUrl = tempCoverBase64;
+            }
+
             if (chap) {
                 chap.title = document.getElementById('chapter-title-input').value;
-                chap.content = document.getElementById('chapter-content-input').value;
+                chap.noteTop = document.getElementById('chapter-note-top').value;
+                chap.noteBottom = document.getElementById('chapter-note-bottom').value;
+                chap.content = document.getElementById('chapter-content-editor').innerHTML;
                 chap.soundtrackId = document.getElementById('chapter-soundtrack-select').value;
                 saveState();
                 alert("Draft saved!");
@@ -1087,30 +1489,6 @@
             switchMainPage('published');
         }
 
-        function renderPublishedWorks() {
-            const grid = document.getElementById('published-grid');
-            const allWorks = [...state.projects, ...state.publicProjects.filter(pub => !state.projects.some(p => p.id === pub.id))];
-
-            grid.innerHTML = allWorks.map(p => `
-                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 shadow-xl flex flex-col justify-between">
-                    <div class="space-y-2">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-900/40 text-indigo-300 border border-indigo-700/40 uppercase tracking-wider">${p.type || 'Novel'}</span>
-                            <span class="text-xs text-slate-500">By ${p.author || 'Author'}</span>
-                        </div>
-                        <h3 class="font-cinzel text-xl font-bold text-white">${p.title}</h3>
-                        <p class="text-xs text-slate-400">${p.chapters.length} Chapters Published</p>
-                    </div>
-
-                    <div class="flex items-center gap-2 pt-4 border-t border-slate-800/80">
-                        <button onclick="openReaderView('${p.id}')" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center gap-1.5 transition">
-                            <i class="fas fa-book-open"></i> Read Book
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
         function openReaderView(projId) {
             const allWorks = [...state.projects, ...state.publicProjects];
             const proj = allWorks.find(p => p.id === projId);
@@ -1124,10 +1502,16 @@
 
             loadReaderChapter(0);
             updateBookmarkButtonState();
+            updateVoteButtonState();
             document.getElementById('reader-view').classList.remove('hidden');
         }
 
         function closeReaderView() { document.getElementById('reader-view').classList.add('hidden'); }
+
+        function setReaderTheme(theme) {
+            const paper = document.getElementById('reader-paper');
+            paper.className = `theme-${theme} border border-slate-800/80 rounded-2xl p-6 md:p-12 space-y-6 shadow-2xl transition-colors duration-300`;
+        }
 
         function loadReaderChapter(index) {
             index = parseInt(index);
@@ -1137,8 +1521,22 @@
 
             document.getElementById('reader-chapter-select').value = index;
             document.getElementById('reader-chapter-title').innerText = chap.title;
-            document.getElementById('reader-chapter-body').innerText = chap.content;
+            document.getElementById('reader-chapter-body').innerHTML = chap.content || '';
 
+            // Author Notes
+            const topNoteBox = document.getElementById('reader-note-top-container');
+            if (chap.noteTop) {
+                document.getElementById('reader-note-top-text').innerText = chap.noteTop;
+                topNoteBox.classList.remove('hidden');
+            } else topNoteBox.classList.add('hidden');
+
+            const btmNoteBox = document.getElementById('reader-note-bottom-container');
+            if (chap.noteBottom) {
+                document.getElementById('reader-note-bottom-text').innerText = chap.noteBottom;
+                btmNoteBox.classList.remove('hidden');
+            } else btmNoteBox.classList.add('hidden');
+
+            // Audio Track Embed
             const audioHeader = document.getElementById('reader-audio-header');
             const embedContainer = document.getElementById('reader-audio-embed-container');
 
@@ -1148,18 +1546,12 @@
                     document.getElementById('reader-audio-title').innerText = track.title;
                     embedContainer.innerHTML = getEmbeddedPlayerHTML(track.url);
                     audioHeader.classList.remove('hidden');
-                } else {
-                    audioHeader.classList.add('hidden');
-                }
-            } else {
-                audioHeader.classList.add('hidden');
-            }
+                } else audioHeader.classList.add('hidden');
+            } else audioHeader.classList.add('hidden');
 
             const isFirst = index === 0;
             const isLast = index === proj.chapters.length - 1;
-            document.getElementById('reader-prev-btn-top').disabled = isFirst;
             document.getElementById('reader-prev-btn-bottom').disabled = isFirst;
-            document.getElementById('reader-next-btn-top').disabled = isLast;
             document.getElementById('reader-next-btn-bottom').disabled = isLast;
 
             renderComments();
@@ -1172,7 +1564,7 @@
             }
         }
 
-        // COMMENT SYSTEM
+        // COMMENTS
         function switchCommentTab(type) {
             state.activeCommentType = type;
             const chapBtn = document.getElementById('cmt-tab-chapter');
