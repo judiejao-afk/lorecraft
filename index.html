@@ -124,7 +124,6 @@
             </nav>
 
             <div class="flex items-center gap-2">
-                <!-- Notifications Bell -->
                 <button onclick="openNotificationsModal()" class="relative p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition text-xs border border-slate-700">
                     <i class="fas fa-bell text-purple-400 text-sm"></i>
                     <span id="notif-badge" class="absolute -top-1 -right-1 bg-pink-600 text-white text-[9px] font-bold px-1.5 py-0.2 rounded-full hidden">0</span>
@@ -155,7 +154,6 @@
                     <p class="text-slate-300 text-sm leading-relaxed">Draft your works, track daily writing goals, organize book series, and monitor character/lore mentions in real-time.</p>
                 </div>
 
-                <!-- WRITER ANALYTICS & DAILY STREAK CARD -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-4 border-t border-slate-800/80 relative z-10">
                     <div class="bg-slate-950/80 p-4 rounded-2xl border border-purple-500/30 space-y-2">
                         <div class="flex items-center justify-between">
@@ -193,7 +191,6 @@
                 </div>
             </div>
 
-            <!-- Dashboard Shortcuts Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div onclick="switchMainPage('writer')" class="bg-slate-900 border border-slate-800 hover:border-purple-500/50 p-6 rounded-2xl space-y-3 cursor-pointer transition shadow-xl group">
                     <div class="w-12 h-12 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
@@ -224,12 +221,10 @@
         <!-- PAGE 2: PROFILE PAGE -->
         <section id="page-profile" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl relative">
-                <!-- Header Banner -->
                 <div id="profile-banner-bg" class="h-48 w-full bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 relative bg-cover bg-center">
                     <div class="absolute inset-0 bg-black/30"></div>
                 </div>
 
-                <!-- Profile Info Header -->
                 <div class="p-6 md:p-8 -mt-16 relative z-10 flex flex-col md:flex-row items-start md:items-end justify-between gap-6">
                     <div class="flex flex-col sm:flex-row items-start sm:items-end gap-5">
                         <div id="profile-avatar-display" class="w-28 h-28 rounded-2xl bg-slate-950 border-4 border-slate-900 overflow-hidden shadow-2xl flex items-center justify-center text-3xl font-bold text-purple-400">
@@ -270,7 +265,6 @@
                     </div>
                 </div>
 
-                <!-- Sub-tabs -->
                 <div class="px-6 md:px-8 border-b border-slate-800 flex items-center gap-6">
                     <button onclick="switchProfileSubTab('bookmarks')" id="prof-subtab-bookmarks" class="text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-3 flex items-center gap-2">
                         <i class="fas fa-bookmark"></i> Reading List / Bookmarks
@@ -302,7 +296,6 @@
                         <div id="written-stories-list" class="space-y-3"></div>
                     </div>
 
-                    <!-- LORE MENTIONS MONITORING TAB -->
                     <div id="prof-sec-lore-monitor" class="hidden space-y-4">
                         <div class="flex items-center justify-between">
                             <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-eye text-purple-400 mr-2"></i> Story Lore & Character Mentions</h3>
@@ -535,7 +528,6 @@
                     </div>
                 </div>
 
-                <!-- RICH TEXT TOOLBAR WITH COPY BUTTON -->
                 <div class="bg-slate-950 border border-slate-800 rounded-xl p-2 flex flex-wrap items-center justify-between gap-1.5 text-xs text-slate-300">
                     <div class="flex flex-wrap items-center gap-1.5">
                         <select onchange="execEditorCommand('fontName', this.value)" class="bg-slate-900 border border-slate-800 text-xs text-slate-200 px-2 py-1 rounded">
@@ -570,10 +562,8 @@
                     </button>
                 </div>
 
-                <!-- WYSIWYG CANVAS -->
                 <div id="chapter-content-editor" contenteditable="true" oninput="handleEditorInput()" class="editor-content w-full min-h-[350px] bg-slate-950 border border-slate-800/80 rounded-xl p-6 text-slate-200 text-base leading-relaxed focus:outline-none focus:border-purple-500/50 resize-y overflow-y-auto" placeholder="Write your chapter content here..."></div>
                 
-                <!-- CHOOSE-YOUR-OWN-PATH BRANCHING CHOICES BUILDER WITH RPG CONDITIONS -->
                 <div class="bg-slate-950 border border-purple-500/30 rounded-xl p-4 space-y-3">
                     <div class="flex items-center justify-between">
                         <span class="text-xs font-bold text-purple-400 uppercase tracking-wider"><i class="fas fa-code-branch mr-1"></i> Interactive Branching Choices (End of Chapter)</span>
@@ -619,14 +609,12 @@
                         <i class="fas fa-arrow-left"></i> Exit Reader
                     </button>
 
-                    <!-- Active Reader Soundtrack Bar -->
                     <div id="reader-soundtrack-player" class="hidden flex items-center gap-2 bg-indigo-950/80 px-3 py-1 rounded-xl border border-indigo-700/50 text-xs text-indigo-300">
                         <i class="fas fa-music animate-pulse"></i>
                         <span id="soundtrack-title-display">Playing...</span>
                         <a id="soundtrack-link-btn" href="#" target="_blank" class="text-indigo-400 hover:underline text-[10px]"><i class="fas fa-external-link-alt"></i></a>
                     </div>
 
-                    <!-- Reading Progress Indicator -->
                     <div class="flex items-center gap-2 bg-slate-950 px-3 py-1 rounded-xl border border-slate-800 text-xs">
                         <span class="text-slate-400 font-medium">Progress:</span>
                         <span id="reader-progress-text" class="text-purple-400 font-bold">0%</span>
@@ -651,13 +639,11 @@
                     </div>
                 </div>
 
-                <!-- CHAPTER READING BODY -->
                 <div id="reader-paper" class="theme-dark border border-slate-800/80 rounded-2xl p-6 md:p-12 space-y-6 shadow-2xl">
                     <h1 id="reader-chapter-title" class="font-cinzel text-3xl md:text-4xl font-bold text-center tracking-wide border-b border-slate-800/80 pb-6">Chapter Title</h1>
                     
                     <div id="reader-chapter-body" class="editor-content text-lg leading-relaxed font-sans space-y-4"></div>
 
-                    <!-- BRANCHING CHOICES CONTAINER IN READER -->
                     <div id="reader-branch-choices" class="hidden pt-6 border-t border-slate-800/80 space-y-3">
                         <h4 class="text-xs font-bold text-purple-400 uppercase tracking-widest text-center">Make Your Choice</h4>
                         <div id="reader-choices-buttons" class="grid grid-cols-1 gap-3"></div>
@@ -740,7 +726,6 @@
                     </div>
                 </div>
 
-                <!-- LOCAL FILE UPLOADS & WEB URLS -->
                 <div class="space-y-4 border-t border-slate-800 pt-3">
                     <span class="text-xs font-bold text-purple-400 uppercase tracking-wider block">Custom Profile Images</span>
                     
@@ -813,7 +798,6 @@
                     <input type="text" id="lore-aliases" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-purple-300 focus:outline-none focus:border-purple-500" placeholder="e.g. Caelen, The Shadow Blade, Cael">
                 </div>
 
-                <!-- NOVELCRAFT DYNAMIC ATTRIBUTES CONTAINER -->
                 <div id="lore-dynamic-attrs" class="bg-slate-950 p-4 rounded-xl border border-slate-800/80 space-y-3"></div>
 
                 <div class="space-y-2 border border-slate-800/80 p-3 rounded-xl bg-slate-950/50">
@@ -1009,7 +993,7 @@
                 { id: 'n1', title: 'Welcome to LoreCraft!', body: 'Start writing your first novel or build world lore.', date: 'Just now', type: 'system', read: false }
             ],
             authorBroadcasts: [],
-            readingProgress: {}, // { projId: index }
+            readingProgress: {},
             bookmarkedProjectIds: [],
             votedProjectIds: [],
             seriesList: [],
@@ -1039,7 +1023,6 @@
             renderUI();
         });
 
-        // ONE-CLICK COPY HELPER FUNCTION
         function copyToClipboard(text, successMsg = "Copied to clipboard!") {
             if (navigator.clipboard && navigator.clipboard.writeText) {
                 navigator.clipboard.writeText(text).then(() => {
@@ -1083,9 +1066,10 @@
 
         function handleEditorInput() {
             const editor = document.getElementById('chapter-content-editor');
-            const text = editor.innerText || editor.textContent || '';
+            const text = editor ? (editor.innerText || editor.textContent || '') : '';
             const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
-            document.getElementById('word-count-display').innerText = `${wordCount.toLocaleString()} Words`;
+            const wcElem = document.getElementById('word-count-display');
+            if (wcElem) wcElem.innerText = `${wordCount.toLocaleString()} Words`;
 
             const todayStr = new Date().toISOString().slice(0, 10);
             if (state.dailyLog.date !== todayStr) {
@@ -1101,12 +1085,14 @@
         function switchMainPage(page) {
             state.currentPage = page;
             ['dashboard', 'profile', 'series', 'published', 'writer'].forEach(p => {
-                document.getElementById(`page-${p}`).classList.add('hidden');
+                const pageElem = document.getElementById(`page-${p}`);
+                if (pageElem) pageElem.classList.add('hidden');
                 const navBtn = document.getElementById(`nav-${p}`);
                 if (navBtn) navBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5";
             });
 
-            document.getElementById(`page-${page}`).classList.remove('hidden');
+            const targetPage = document.getElementById(`page-${page}`);
+            if (targetPage) targetPage.classList.remove('hidden');
             const activeNav = document.getElementById(`nav-${page}`);
             if (activeNav) activeNav.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow";
 
@@ -1116,6 +1102,7 @@
         function loadLocalData() {
             const savedProfile = localStorage.getItem('lorecraft_profile');
             const savedProjects = localStorage.getItem('lorecraft_projects');
+            const savedPublicProjects = localStorage.getItem('lorecraft_public_projects');
             const savedSeries = localStorage.getItem('lorecraft_series');
             const savedLore = localStorage.getItem('lorecraft_lore');
             const savedMedia = localStorage.getItem('lorecraft_media');
@@ -1139,10 +1126,14 @@
             if (savedFollowers) state.followersUserIds = JSON.parse(savedFollowers);
             if (savedProgress) state.readingProgress = JSON.parse(savedProgress);
 
+            if (savedPublicProjects) {
+                state.publicProjects = JSON.parse(savedPublicProjects);
+            }
+
             if (savedProjects) {
                 state.projects = JSON.parse(savedProjects);
             } else {
-                state.projects = [{
+                const defaultProj = {
                     id: 'proj_1',
                     author: 'Community Writer',
                     title: 'Chronicles of Aetheria',
@@ -1158,7 +1149,7 @@
                     chapters: [
                         {
                             id: 'chap_1',
-                            title: 'Chapter 1: The Crossroads',
+                            title: 'Chapter 1: Whispers of the Void',
                             soundtrackId: '',
                             choices: [
                                 { text: 'Enter the Shadow Portal', targetChapterId: 'chap_2', requiredItem: '' },
@@ -1179,7 +1170,13 @@
                             content: '<p>Using the Silver Key, Caelen unlocked the heavy vault door.</p>'
                         }
                     ]
-                }];
+                };
+                state.projects = [defaultProj];
+                
+                // Ensure initial public project seed is available globally
+                if (!state.publicProjects.some(p => p.id === defaultProj.id)) {
+                    state.publicProjects.push(defaultProj);
+                }
             }
 
             if (state.loreEntries.length === 0) {
@@ -1205,6 +1202,7 @@
         function saveState() {
             localStorage.setItem('lorecraft_profile', JSON.stringify(state.userProfile));
             localStorage.setItem('lorecraft_projects', JSON.stringify(state.projects));
+            localStorage.setItem('lorecraft_public_projects', JSON.stringify(state.publicProjects));
             localStorage.setItem('lorecraft_series', JSON.stringify(state.seriesList));
             localStorage.setItem('lorecraft_lore', JSON.stringify(state.loreEntries));
             localStorage.setItem('lorecraft_media', JSON.stringify(state.mediaTracks));
@@ -1226,12 +1224,15 @@
             renderLoreGrid();
             renderMediaGrid();
             renderLoreMentionsTracker();
+            renderBookmarks();
+            renderWrittenStoriesList();
             updateNotificationBadge();
             filterLibrary();
         }
 
         function renderDashboard() {
-            document.getElementById('dash-welcome-text').innerText = `Welcome back, ${state.userProfile.name || 'Author'}!`;
+            const welcomeText = document.getElementById('dash-welcome-text');
+            if (welcomeText) welcomeText.innerText = `Welcome back, ${state.userProfile.name || 'Author'}!`;
             
             let totalWords = 0;
             state.projects.forEach(p => {
@@ -1241,51 +1242,122 @@
                 });
             });
 
-            document.getElementById('stat-works-count').innerText = state.projects.length;
-            document.getElementById('stat-bookmarks-count').innerText = state.bookmarkedProjectIds.length;
-            document.getElementById('stat-lore-count').innerText = state.loreEntries.length;
-            document.getElementById('stat-words-count').innerText = totalWords.toLocaleString();
+            const statWorks = document.getElementById('stat-works-count');
+            if (statWorks) statWorks.innerText = state.projects.length;
+            
+            const statBookmarks = document.getElementById('stat-bookmarks-count');
+            if (statBookmarks) statBookmarks.innerText = state.bookmarkedProjectIds.length;
 
-            document.getElementById('analytics-words-today').innerText = state.dailyLog.wordsWritten.toLocaleString();
+            const statLore = document.getElementById('stat-lore-count');
+            if (statLore) statLore.innerText = state.loreEntries.length;
+
+            const statWords = document.getElementById('stat-words-count');
+            if (statWords) statWords.innerText = totalWords.toLocaleString();
+
+            const analyticsWords = document.getElementById('analytics-words-today');
+            if (analyticsWords) analyticsWords.innerText = state.dailyLog.wordsWritten.toLocaleString();
+
             const pct = Math.min(100, Math.round((state.dailyLog.wordsWritten / state.dailyLog.target) * 100));
-            document.getElementById('analytics-progress-bar').style.width = `${pct}%`;
-            document.getElementById('analytics-streak-badge').innerText = `🔥 ${state.dailyLog.streak} Day Streak`;
+            const progressBar = document.getElementById('analytics-progress-bar');
+            if (progressBar) progressBar.style.width = `${pct}%`;
+
+            const streakBadge = document.getElementById('analytics-streak-badge');
+            if (streakBadge) streakBadge.innerText = `🔥 ${state.dailyLog.streak} Day Streak`;
         }
 
         function renderProfilePage() {
             const p = state.userProfile;
-            document.getElementById('profile-name-display').innerText = p.name || 'New Storyteller';
-            document.getElementById('profile-handle-display').innerText = p.handle || '@new_writer';
-            document.getElementById('profile-bio-display').innerText = p.bio || 'Fantasy Writer & Reader';
-            document.getElementById('profile-followers-count').innerText = state.followersUserIds.length;
-            document.getElementById('profile-following-count').innerText = state.followingUserIds.length;
+            const nameDisp = document.getElementById('profile-name-display');
+            if (nameDisp) nameDisp.innerText = p.name || 'New Storyteller';
 
-            if (p.location) {
-                document.getElementById('profile-location-display').innerHTML = `<i class="fas fa-map-marker-alt text-purple-400 mr-1"></i> ${p.location}`;
+            const handleDisp = document.getElementById('profile-handle-display');
+            if (handleDisp) handleDisp.innerText = p.handle || '@new_writer';
+
+            const bioDisp = document.getElementById('profile-bio-display');
+            if (bioDisp) bioDisp.innerText = p.bio || 'Fantasy Writer & Reader';
+
+            const followersCount = document.getElementById('profile-followers-count');
+            if (followersCount) followersCount.innerText = state.followersUserIds.length;
+
+            const followingCount = document.getElementById('profile-following-count');
+            if (followingCount) followingCount.innerText = state.followingUserIds.length;
+
+            const locationDisp = document.getElementById('profile-location-display');
+            if (locationDisp && p.location) {
+                locationDisp.innerHTML = `<i class="fas fa-map-marker-alt text-purple-400 mr-1"></i> ${p.location}`;
             }
 
             const webDisplay = document.getElementById('profile-website-display');
-            if (p.website) {
-                webDisplay.href = p.website;
-                webDisplay.classList.remove('hidden');
-            } else webDisplay.classList.add('hidden');
+            if (webDisplay) {
+                if (p.website) {
+                    webDisplay.href = p.website;
+                    webDisplay.classList.remove('hidden');
+                } else webDisplay.classList.add('hidden');
+            }
 
             const avatarBox = document.getElementById('profile-avatar-display');
-            if (p.avatar) {
-                avatarBox.innerHTML = `<img src="${p.avatar}" class="w-full h-full object-cover">`;
-            } else {
-                avatarBox.innerHTML = `<i class="fas fa-user-astronaut"></i>`;
+            if (avatarBox) {
+                if (p.avatar) {
+                    avatarBox.innerHTML = `<img src="${p.avatar}" class="w-full h-full object-cover">`;
+                } else {
+                    avatarBox.innerHTML = `<i class="fas fa-user-astronaut"></i>`;
+                }
             }
 
             const bannerBg = document.getElementById('profile-banner-bg');
-            if (p.banner) {
+            if (bannerBg && p.banner) {
                 bannerBg.style.backgroundImage = `url('${p.banner}')`;
             }
 
             renderAuthorBroadcasts();
         }
 
-        // LORE KEYWORD MENTIONS TRACKER ENGINE
+        function renderBookmarks() {
+            const grid = document.getElementById('bookmarks-grid');
+            if (!grid) return;
+
+            const allWorks = [...state.projects, ...state.publicProjects];
+            const bookmarkedWorks = allWorks.filter(p => state.bookmarkedProjectIds.includes(p.id));
+
+            if (bookmarkedWorks.length === 0) {
+                grid.innerHTML = `<p class="text-xs text-slate-500 italic col-span-3">No stories bookmarked in your reading list yet.</p>`;
+                return;
+            }
+
+            grid.innerHTML = bookmarkedWorks.map(p => `
+                <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 space-y-3 flex flex-col justify-between">
+                    <div>
+                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-900/40 text-purple-300 border border-purple-700/40 uppercase">${p.type || 'Novel'}</span>
+                        <h4 class="font-cinzel text-base font-bold text-white mt-1">${p.title}</h4>
+                        <p class="text-xs text-slate-400">By ${p.author || 'Author'}</p>
+                    </div>
+                    <button onclick="openReaderView('${p.id}')" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold">Read Story</button>
+                </div>
+            `).join('');
+        }
+
+        function renderWrittenStoriesList() {
+            const list = document.getElementById('written-stories-list');
+            if (!list) return;
+
+            if (state.projects.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-500 italic">No authored works created yet.</p>`;
+                return;
+            }
+
+            list.innerHTML = state.projects.map(p => `
+                <div class="bg-slate-950 border border-slate-800 p-4 rounded-2xl flex items-center justify-between">
+                    <div>
+                        <h4 class="font-cinzel text-sm font-bold text-white">${p.title}</h4>
+                        <p class="text-xs text-slate-400">${p.chapters ? p.chapters.length : 0} Chapters &bull; ${p.status || 'Ongoing'}</p>
+                    </div>
+                    <button onclick="switchMainPage('writer'); switchProject('${p.id}');" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-purple-300 border border-slate-700 rounded-lg text-xs font-semibold">
+                        Edit in Studio
+                    </button>
+                </div>
+            `).join('');
+        }
+
         function calculateLoreMentions(loreItem) {
             const keywords = [loreItem.title, ...(loreItem.aliases ? loreItem.aliases.split(',') : [])].map(k => k.trim()).filter(Boolean);
             if (keywords.length === 0) return { count: 0, occurrences: [] };
@@ -1362,10 +1434,12 @@
             reader.onload = function(evt) {
                 if (type === 'avatar') {
                     state.tempProfileAvatarBase64 = evt.target.result;
-                    document.getElementById('prof-avatar-url').value = '';
+                    const input = document.getElementById('prof-avatar-url');
+                    if (input) input.value = '';
                 } else if (type === 'banner') {
                     state.tempProfileBannerBase64 = evt.target.result;
-                    document.getElementById('prof-banner-url').value = '';
+                    const input = document.getElementById('prof-banner-url');
+                    if (input) input.value = '';
                 }
             };
             reader.readAsDataURL(file);
@@ -1409,6 +1483,7 @@
 
         function postAuthorBroadcast() {
             const input = document.getElementById('author-broadcast-input');
+            if (!input) return;
             const txt = input.value.trim();
             if (!txt) return;
 
@@ -1447,6 +1522,8 @@
 
         function renderAuthorBroadcasts() {
             const list = document.getElementById('author-broadcasts-list');
+            if (!list) return;
+
             list.innerHTML = state.authorBroadcasts.length === 0 ? `<p class="text-xs text-slate-500 italic">No broadcasts posted yet.</p>` :
                 state.authorBroadcasts.map(b => `
                     <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-3">
@@ -1456,7 +1533,6 @@
                         </div>
                         <p class="text-xs text-slate-300">${b.text}</p>
 
-                        <!-- Comments section -->
                         <div class="space-y-2 pt-2 border-t border-slate-900">
                             ${(b.comments || []).map(c => `
                                 <div class="bg-slate-900/60 p-2 rounded-lg text-xs space-y-0.5">
@@ -1474,12 +1550,13 @@
                 `).join('');
         }
 
-        // BRANCHING GRAPH VISUALIZER
         function openBranchGraphModal() {
             const proj = state.projects.find(p => p.id === state.currentProjectId);
             if (!proj) return;
 
             const container = document.getElementById('branch-graph-container');
+            if (!container) return;
+
             container.innerHTML = proj.chapters.map(c => `
                 <div class="bg-slate-950 border border-slate-800 p-4 rounded-xl space-y-2">
                     <div class="flex items-center justify-between">
@@ -1502,15 +1579,14 @@
 
         function closeBranchGraphModal() { document.getElementById('branch-graph-modal').classList.add('hidden'); }
 
-        // READ PROGRESS CALCULATION
         function updateReadingProgress(projId, chapIndex, totalChapters) {
             const pct = Math.round(((chapIndex + 1) / totalChapters) * 100);
             state.readingProgress[projId] = pct;
             saveState();
-            document.getElementById('reader-progress-text').innerText = `${pct}%`;
+            const progressTxt = document.getElementById('reader-progress-text');
+            if (progressTxt) progressTxt.innerText = `${pct}%`;
         }
 
-        // SHARE FUNCTIONS WITH ONE-CLICK COPY
         function shareUserProfile() {
             copyToClipboard(window.location.href, "Profile link copied to clipboard!");
         }
@@ -1524,34 +1600,36 @@
             const title = document.getElementById('follow-modal-title');
             const list = document.getElementById('follow-users-list');
 
-            title.innerText = type === 'followers' ? 'Followers' : 'Following Users';
+            if (title) title.innerText = type === 'followers' ? 'Followers' : 'Following Users';
             
             const users = type === 'followers' ? 
                 communityUsers.filter(u => state.followersUserIds.includes(u.id)) :
                 communityUsers.filter(u => state.followingUserIds.includes(u.id));
 
-            if (users.length === 0) {
-                list.innerHTML = `<p class="text-xs text-slate-500 italic p-4 text-center">No ${type} yet.</p>`;
-            } else {
-                list.innerHTML = users.map(u => {
-                    const isFollowing = state.followingUserIds.includes(u.id);
-                    return `
-                        <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center justify-between gap-3">
-                            <div class="flex items-center gap-3">
-                                <div class="w-9 h-9 rounded-full bg-purple-900/40 text-purple-300 font-bold flex items-center justify-center text-xs">
-                                    ${u.name[0]}
+            if (list) {
+                if (users.length === 0) {
+                    list.innerHTML = `<p class="text-xs text-slate-500 italic p-4 text-center">No ${type} yet.</p>`;
+                } else {
+                    list.innerHTML = users.map(u => {
+                        const isFollowing = state.followingUserIds.includes(u.id);
+                        return `
+                            <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl flex items-center justify-between gap-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-full bg-purple-900/40 text-purple-300 font-bold flex items-center justify-center text-xs">
+                                        ${u.name[0]}
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-xs text-white">${u.name}</h4>
+                                        <p class="text-[10px] text-purple-400 font-mono">${u.handle}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h4 class="font-bold text-xs text-white">${u.name}</h4>
-                                    <p class="text-[10px] text-purple-400 font-mono">${u.handle}</p>
-                                </div>
+                                <button onclick="toggleFollowUser('${u.id}')" class="px-3 py-1 text-xs rounded-lg font-semibold transition ${isFollowing ? 'bg-slate-800 text-slate-300' : 'bg-purple-600 text-white'}">
+                                    ${isFollowing ? 'Unfollow' : 'Follow'}
+                                </button>
                             </div>
-                            <button onclick="toggleFollowUser('${u.id}')" class="px-3 py-1 text-xs rounded-lg font-semibold transition ${isFollowing ? 'bg-slate-800 text-slate-300' : 'bg-purple-600 text-white'}">
-                                ${isFollowing ? 'Unfollow' : 'Follow'}
-                            </button>
-                        </div>
-                    `;
-                }).join('');
+                        `;
+                    }).join('');
+                }
             }
 
             document.getElementById('follow-list-modal').classList.remove('hidden');
@@ -1575,11 +1653,15 @@
         function switchProfileSubTab(tab) {
             state.profileSubTab = tab;
             ['bookmarks', 'stories', 'lore-monitor', 'updates'].forEach(t => {
-                document.getElementById(`prof-sec-${t}`).classList.add('hidden');
-                document.getElementById(`prof-subtab-${t}`).className = "text-sm font-bold text-slate-400 hover:text-slate-200 pb-3 flex items-center gap-2";
+                const secElem = document.getElementById(`prof-sec-${t}`);
+                if (secElem) secElem.classList.add('hidden');
+                const subtabElem = document.getElementById(`prof-subtab-${t}`);
+                if (subtabElem) subtabElem.className = "text-sm font-bold text-slate-400 hover:text-slate-200 pb-3 flex items-center gap-2";
             });
-            document.getElementById(`prof-sec-${tab}`).classList.remove('hidden');
-            document.getElementById(`prof-subtab-${tab}`).className = "text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-3 flex items-center gap-2";
+            const activeSec = document.getElementById(`prof-sec-${tab}`);
+            if (activeSec) activeSec.classList.remove('hidden');
+            const activeSubtab = document.getElementById(`prof-subtab-${tab}`);
+            if (activeSubtab) activeSubtab.className = "text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-3 flex items-center gap-2";
         }
 
         function addNotification(title, body, type = 'general') {
@@ -1596,10 +1678,12 @@
         function updateNotificationBadge() {
             const unread = state.notifications.filter(n => !n.read).length;
             const badge = document.getElementById('notif-badge');
-            if (unread > 0) {
-                badge.innerText = unread;
-                badge.classList.remove('hidden');
-            } else badge.classList.add('hidden');
+            if (badge) {
+                if (unread > 0) {
+                    badge.innerText = unread;
+                    badge.classList.remove('hidden');
+                } else badge.classList.add('hidden');
+            }
         }
 
         function openNotificationsModal() {
@@ -1608,15 +1692,17 @@
             updateNotificationBadge();
             saveState();
 
-            list.innerHTML = state.notifications.map(n => `
-                <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1">
-                    <div class="flex items-center justify-between">
-                        <span class="font-bold text-xs text-purple-300">${n.title}</span>
-                        <span class="text-[10px] text-slate-500">${n.date}</span>
+            if (list) {
+                list.innerHTML = state.notifications.map(n => `
+                    <div class="bg-slate-950 border border-slate-800 p-3 rounded-xl space-y-1">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-xs text-purple-300">${n.title}</span>
+                            <span class="text-[10px] text-slate-500">${n.date}</span>
+                        </div>
+                        <p class="text-xs text-slate-300">${n.body}</p>
                     </div>
-                    <p class="text-xs text-slate-300">${n.body}</p>
-                </div>
-            `).join('');
+                `).join('');
+            }
 
             document.getElementById('notif-modal').classList.remove('hidden');
         }
@@ -1628,10 +1714,12 @@
             auth.onAuthStateChanged(user => {
                 currentUser = user;
                 const btnText = document.getElementById('auth-btn-text');
-                if (user) {
-                    btnText.innerText = user.email.split('@')[0];
-                } else {
-                    btnText.innerText = 'Sign In';
+                if (btnText) {
+                    if (user) {
+                        btnText.innerText = user.email.split('@')[0];
+                    } else {
+                        btnText.innerText = 'Sign In';
+                    }
                 }
             });
         }
@@ -1654,12 +1742,13 @@
 
         function renderLoreGrid() {
             const grid = document.getElementById('lore-grid');
+            if (!grid) return;
             grid.innerHTML = state.loreEntries.map(l => {
                 const mentions = calculateLoreMentions(l).count;
                 return `
                     <div onclick="openLoreModal('${l.id}')" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between cursor-pointer hover:border-purple-500/50 transition">
                         <div class="flex items-center gap-3">
-                            ${l.imageUrl ? `<img src="${l.imageUrl}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 text-xs font-bold">${l.category[0]}</div>`}
+                            ${l.imageUrl ? `<img src="${l.imageUrl}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 text-xs font-bold">${l.category ? l.category[0] : 'L'}</div>`}
                             <div>
                                 <h4 class="font-cinzel text-xs font-bold text-white">${l.title}</h4>
                                 <p class="text-[10px] text-slate-400">${l.category}</p>
@@ -1675,6 +1764,7 @@
 
         function updateLoreDynamicFields(category, attrs = {}) {
             const container = document.getElementById('lore-dynamic-attrs');
+            if (!container) return;
             if (category === 'Character') {
                 container.innerHTML = `
                     <span class="text-[10px] font-bold text-purple-400 uppercase tracking-widest block mb-2">Character Profile Attributes</span>
@@ -1684,7 +1774,7 @@
                         <input type="text" id="attr-role" value="${attrs.role || ''}" placeholder="Role (Protagonist, Rival, Villain)" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
                         <input type="text" id="attr-traits" value="${attrs.traits || ''}" placeholder="Personality Traits" class="bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
                     </div>
-                    <input type="text" id="attr-physical" value="${attrs.physical || ''}" placeholder="Physical Appearance / Signature Weapons" class="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white">
+                    <input type="text" id="attr-physical" value="${attrs.physical || ''}" placeholder="Physical Appearance / Signature Weapons" class="w-full bg-slate-900 border border-slate-800 rounded px-2.5 py-1.5 text-xs text-white mt-2">
                 `;
             } else if (category === 'Location') {
                 container.innerHTML = `
@@ -1717,9 +1807,13 @@
 
         function openLoreModal(loreId = null) {
             const modal = document.getElementById('lore-modal');
+            const titleElem = document.getElementById('lore-modal-title');
+            const delBtn = document.getElementById('delete-lore-btn');
+
             if (loreId) {
                 const l = state.loreEntries.find(entry => entry.id === loreId);
                 if (l) {
+                    if (titleElem) titleElem.innerText = "Edit Lore Entry";
                     document.getElementById('lore-id').value = l.id;
                     document.getElementById('lore-title').value = l.title || '';
                     document.getElementById('lore-category').value = l.category || 'Character';
@@ -1727,19 +1821,27 @@
                     document.getElementById('lore-description').value = l.description || '';
                     updateLoreDynamicFields(l.category, l.attributes || {});
                     previewImageURL(l.imageUrl || '');
-                    document.getElementById('delete-lore-btn').classList.remove('hidden');
+                    if (delBtn) delBtn.classList.remove('hidden');
                 }
             } else {
-                document.getElementById('lore-form').reset();
+                if (titleElem) titleElem.innerText = "Add Lore Entry";
                 document.getElementById('lore-id').value = '';
+                document.getElementById('lore-title').value = '';
+                document.getElementById('lore-category').value = 'Character';
+                document.getElementById('lore-aliases').value = '';
+                document.getElementById('lore-description').value = '';
+                document.getElementById('lore-image-url').value = '';
                 updateLoreDynamicFields('Character');
                 previewImageURL(null);
-                document.getElementById('delete-lore-btn').classList.add('hidden');
+                if (delBtn) delBtn.classList.add('hidden');
             }
-            modal.classList.remove('hidden');
+            if (modal) modal.classList.remove('hidden');
         }
 
-        function closeLoreModal() { document.getElementById('lore-modal').classList.add('hidden'); }
+        function closeLoreModal() { 
+            const modal = document.getElementById('lore-modal');
+            if (modal) modal.classList.add('hidden'); 
+        }
 
         function handleLocalImageUpload(e) {
             const file = e.target.files[0];
@@ -1755,21 +1857,22 @@
         function previewImageURL(url) {
             const previewBox = document.getElementById('image-preview-box');
             const previewImg = document.getElementById('preview-img-element');
-            if (url) {
-                previewImg.src = url;
-                previewBox.classList.remove('hidden');
-            } else previewBox.classList.add('hidden');
+            if (previewBox && previewImg) {
+                if (url) {
+                    previewImg.src = url;
+                    previewBox.classList.remove('hidden');
+                } else previewBox.classList.add('hidden');
+            }
         }
 
-        // FIXED LORE SAVE ENTRY FUNCTION WITH SAFE OPTIONAL DOM CHECKING
         function saveLoreEntry(e) {
             e.preventDefault();
-            const id = document.getElementById('lore-id').value;
-            const title = document.getElementById('lore-title').value;
-            const category = document.getElementById('lore-category').value;
-            const aliases = document.getElementById('lore-aliases').value;
-            const imageUrl = tempBase64Image || document.getElementById('lore-image-url').value;
-            const description = document.getElementById('lore-description').value;
+            const id = document.getElementById('lore-id')?.value;
+            const title = document.getElementById('lore-title')?.value || 'Untitled Lore';
+            const category = document.getElementById('lore-category')?.value || 'Character';
+            const aliases = document.getElementById('lore-aliases')?.value || '';
+            const imageUrl = tempBase64Image || document.getElementById('lore-image-url')?.value || '';
+            const description = document.getElementById('lore-description')?.value || '';
 
             const attributes = {};
             if (category === 'Character') {
@@ -1793,7 +1896,10 @@
                 const l = state.loreEntries.find(entry => entry.id === id);
                 if (l) Object.assign(l, { title, category, aliases, attributes, imageUrl, description });
             } else {
-                state.loreEntries.push({ id: 'lore_' + Date.now(), title, category, aliases, attributes, imageUrl, description });
+                state.loreEntries.push({ 
+                    id: 'lore_' + Date.now(), 
+                    title, category, aliases, attributes, imageUrl, description 
+                });
             }
 
             tempBase64Image = null;
@@ -1804,9 +1910,8 @@
             renderDashboard();
         }
 
-        // FIXED LORE DELETE ENTRY FUNCTION
         function deleteLoreEntry() {
-            const id = document.getElementById('lore-id').value;
+            const id = document.getElementById('lore-id')?.value;
             if (id && confirm("Are you sure you want to delete this lore entry?")) {
                 state.loreEntries = state.loreEntries.filter(l => l.id !== id);
                 saveState();
@@ -1819,6 +1924,7 @@
 
         function renderMediaGrid() {
             const grid = document.getElementById('media-grid');
+            if (!grid) return;
             grid.innerHTML = state.mediaTracks.map(m => `
                 <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
                     <div onclick="openMediaModal('${m.id}')" class="cursor-pointer">
@@ -1828,31 +1934,39 @@
                 </div>
             `).join('');
 
-            // Soundtracks dropdown in chapter editor
             const soundtrackSelect = document.getElementById('chapter-soundtrack-select');
-            soundtrackSelect.innerHTML = `<option value="">🎵 No Soundtrack Attached</option>` +
-                state.mediaTracks.map(m => `<option value="${m.id}">🎵 ${m.title} (${m.platform})</option>`).join('');
+            if (soundtrackSelect) {
+                soundtrackSelect.innerHTML = `<option value="">🎵 No Soundtrack Attached</option>` +
+                    state.mediaTracks.map(m => `<option value="${m.id}">🎵 ${m.title} (${m.platform})</option>`).join('');
+            }
         }
 
         function openMediaModal(mediaId = null) {
             const modal = document.getElementById('media-modal');
+            const delBtn = document.getElementById('delete-media-btn');
             if (mediaId) {
                 const m = state.mediaTracks.find(track => track.id === mediaId);
-                document.getElementById('media-id').value = m.id;
-                document.getElementById('media-title').value = m.title;
-                document.getElementById('media-platform').value = m.platform;
-                document.getElementById('media-genre').value = m.genre || '';
-                document.getElementById('media-url').value = m.url;
-                document.getElementById('delete-media-btn').classList.remove('hidden');
+                if (m) {
+                    document.getElementById('media-id').value = m.id;
+                    document.getElementById('media-title').value = m.title;
+                    document.getElementById('media-platform').value = m.platform;
+                    document.getElementById('media-genre').value = m.genre || '';
+                    document.getElementById('media-url').value = m.url;
+                    if (delBtn) delBtn.classList.remove('hidden');
+                }
             } else {
-                document.getElementById('media-form').reset();
+                const form = document.getElementById('media-form');
+                if (form) form.reset();
                 document.getElementById('media-id').value = '';
-                document.getElementById('delete-media-btn').classList.add('hidden');
+                if (delBtn) delBtn.classList.add('hidden');
             }
-            modal.classList.remove('hidden');
+            if (modal) modal.classList.remove('hidden');
         }
 
-        function closeMediaModal() { document.getElementById('media-modal').classList.add('hidden'); }
+        function closeMediaModal() { 
+            const modal = document.getElementById('media-modal');
+            if (modal) modal.classList.add('hidden'); 
+        }
 
         function saveMediaTrack(e) {
             e.preventDefault();
@@ -1893,6 +2007,7 @@
 
         function renderSeriesPage() {
             const container = document.getElementById('series-list-container');
+            if (!container) return;
             if (state.seriesList.length === 0) {
                 container.innerHTML = `<p class="text-xs text-slate-500 italic">No book series created yet. Click "Create New Series" above!</p>`;
                 return;
@@ -1940,6 +2055,7 @@
 
         function addBranchChoiceRow(text = '', targetId = '', requiredItem = '') {
             const container = document.getElementById('branch-choices-list');
+            if (!container) return;
             const proj = state.projects.find(p => p.id === state.currentProjectId);
             const chapOptions = proj ? proj.chapters.map(c => `<option value="${c.id}" ${c.id === targetId ? 'selected' : ''}>${c.title}</option>`).join('') : '';
 
@@ -1961,9 +2077,13 @@
             const rows = document.querySelectorAll('.choice-row-item');
             const choices = [];
             rows.forEach(r => {
-                const txt = r.querySelector('.choice-text-input').value.trim();
-                const tgt = r.querySelector('.choice-target-select').value;
-                const req = r.querySelector('.choice-req-input').value.trim();
+                const txtInput = r.querySelector('.choice-text-input');
+                const tgtSelect = r.querySelector('.choice-target-select');
+                const reqInput = r.querySelector('.choice-req-input');
+
+                const txt = txtInput ? txtInput.value.trim() : '';
+                const tgt = tgtSelect ? tgtSelect.value : '';
+                const req = reqInput ? reqInput.value.trim() : '';
                 if (txt && tgt) choices.push({ text: txt, targetChapterId: tgt, requiredItem: req });
             });
             return choices;
@@ -1990,7 +2110,8 @@
 
         function renderPublishedWorks(works = null) {
             const grid = document.getElementById('published-grid');
-            const allWorks = works || state.projects;
+            if (!grid) return;
+            const allWorks = works || state.publicProjects;
 
             grid.innerHTML = allWorks.map(p => {
                 const prog = state.readingProgress[p.id] || 0;
@@ -2023,12 +2144,15 @@
         function renderProjectPicker() {
             const pSelect = document.getElementById('project-select');
             const cSelect = document.getElementById('chapter-select');
+            if (!pSelect || !cSelect) return;
 
             pSelect.innerHTML = state.projects.map(p => `<option value="${p.id}" ${p.id === state.currentProjectId ? 'selected' : ''}>${p.title}</option>`).join('');
             
             const currentProj = state.projects.find(p => p.id === state.currentProjectId);
-            if (currentProj) {
+            if (currentProj && currentProj.chapters) {
                 cSelect.innerHTML = currentProj.chapters.map(c => `<option value="${c.id}" ${c.id === state.currentChapterId ? 'selected' : ''}>${c.title}</option>`).join('');
+            } else {
+                cSelect.innerHTML = `<option value="">No Chapters Available</option>`;
             }
         }
 
@@ -2047,26 +2171,36 @@
 
         function renderChapterEditor() {
             const proj = state.projects.find(p => p.id === state.currentProjectId);
-            const chap = proj?.chapters.find(c => c.id === state.currentChapterId);
+            const chap = proj?.chapters?.find(c => c.id === state.currentChapterId);
+
+            const titleInput = document.getElementById('chapter-title-input');
+            const soundtrackSelect = document.getElementById('chapter-soundtrack-select');
+            const editor = document.getElementById('chapter-content-editor');
+            const choiceList = document.getElementById('branch-choices-list');
 
             if (chap) {
-                document.getElementById('chapter-title-input').value = chap.title;
-                document.getElementById('chapter-soundtrack-select').value = chap.soundtrackId || '';
-                const editor = document.getElementById('chapter-content-editor');
-                editor.innerHTML = chap.content || '';
+                if (titleInput) titleInput.value = chap.title || '';
+                if (soundtrackSelect) soundtrackSelect.value = chap.soundtrackId || '';
+                if (editor) editor.innerHTML = chap.content || '';
                 handleEditorInput();
 
-                const choiceList = document.getElementById('branch-choices-list');
-                choiceList.innerHTML = '';
-                if (chap.choices && chap.choices.length > 0) {
-                    chap.choices.forEach(c => addBranchChoiceRow(c.text, c.targetChapterId, c.requiredItem));
+                if (choiceList) {
+                    choiceList.innerHTML = '';
+                    if (chap.choices && chap.choices.length > 0) {
+                        chap.choices.forEach(c => addBranchChoiceRow(c.text, c.targetChapterId, c.requiredItem));
+                    }
                 }
+            } else {
+                if (titleInput) titleInput.value = '';
+                if (editor) editor.innerHTML = '';
+                if (choiceList) choiceList.innerHTML = '';
+                handleEditorInput();
             }
         }
 
         function saveCurrentChapter() {
             const proj = state.projects.find(p => p.id === state.currentProjectId);
-            const chap = proj?.chapters.find(c => c.id === state.currentChapterId);
+            const chap = proj?.chapters?.find(c => c.id === state.currentChapterId);
 
             if (chap) {
                 chap.title = document.getElementById('chapter-title-input').value;
@@ -2080,6 +2214,104 @@
                 renderLoreMentionsTracker();
                 alert("Draft saved!");
                 renderProjectPicker();
+            } else {
+                alert("No active story chapter selected to save.");
+            }
+        }
+
+        function publishProject() {
+            const proj = state.projects.find(p => p.id === state.currentProjectId);
+            if (!proj) return alert("No active story selected to publish.");
+
+            proj.isPublished = true;
+            
+            // Add/update to global public registry so it displays across accounts
+            const pubIdx = state.publicProjects.findIndex(p => p.id === proj.id);
+            if (pubIdx > -1) {
+                state.publicProjects[pubIdx] = proj;
+            } else {
+                state.publicProjects.push(proj);
+            }
+
+            addNotification("Work Published", `"${proj.title}" is now available in the Public Library!`, "publish");
+
+            saveState();
+            filterLibrary();
+            alert(`"${proj.title}" has been published to the Public Library!`);
+        }
+
+        function toggleVoteCurrentBook() {
+            const proj = state.activeReaderProject;
+            if (!proj) return;
+
+            const idx = state.votedProjectIds.indexOf(proj.id);
+            if (idx > -1) {
+                state.votedProjectIds.splice(idx, 1);
+                proj.votes = Math.max(0, (proj.votes || 1) - 1);
+            } else {
+                state.votedProjectIds.push(proj.id);
+                proj.votes = (proj.votes || 0) + 1;
+            }
+
+            saveState();
+            updateReaderVoteState();
+            filterLibrary();
+        }
+
+        function toggleBookmarkCurrentBook() {
+            const proj = state.activeReaderProject;
+            if (!proj) return;
+
+            const idx = state.bookmarkedProjectIds.indexOf(proj.id);
+            if (idx > -1) {
+                state.bookmarkedProjectIds.splice(idx, 1);
+            } else {
+                state.bookmarkedProjectIds.push(proj.id);
+            }
+
+            saveState();
+            updateReaderBookmarkState();
+            renderBookmarks();
+            renderDashboard();
+        }
+
+        function updateReaderVoteState() {
+            const proj = state.activeReaderProject;
+            const voteBtnText = document.getElementById('vote-btn-text');
+            if (proj && voteBtnText) {
+                const hasVoted = state.votedProjectIds.includes(proj.id);
+                voteBtnText.innerText = `${hasVoted ? 'Voted' : 'Vote'} (${proj.votes || 0})`;
+            }
+        }
+
+        function updateReaderBookmarkState() {
+            const proj = state.activeReaderProject;
+            const bookmarkBtnText = document.getElementById('bookmark-btn-text');
+            if (proj && bookmarkBtnText) {
+                const isBookmarked = state.bookmarkedProjectIds.includes(proj.id);
+                bookmarkBtnText.innerText = isBookmarked ? 'Bookmarked' : 'Bookmark';
+            }
+        }
+
+        function deleteCurrentProject() {
+            const proj = state.projects.find(p => p.id === state.currentProjectId);
+            if (!proj) return alert("No active work selected to delete.");
+
+            if (confirm(`Are you sure you want to delete "${proj.title}"? This action cannot be undone.`)) {
+                state.projects = state.projects.filter(p => p.id !== proj.id);
+                state.publicProjects = state.publicProjects.filter(p => p.id !== proj.id);
+                
+                if (state.projects.length > 0) {
+                    state.currentProjectId = state.projects[0].id;
+                    state.currentChapterId = state.projects[0].chapters[0]?.id || null;
+                } else {
+                    state.currentProjectId = null;
+                    state.currentChapterId = null;
+                }
+
+                saveState();
+                renderUI();
+                alert("Work deleted successfully.");
             }
         }
 
@@ -2107,7 +2339,7 @@
 
         function createNewChapter() {
             const proj = state.projects.find(p => p.id === state.currentProjectId);
-            if (!proj) return;
+            if (!proj) return alert("Please select or create a work first.");
             const newChap = { id: 'chap_' + Date.now(), title: `Chapter ${proj.chapters.length + 1}`, choices: [], content: '<p>Write content...</p>' };
             proj.chapters.push(newChap);
             state.currentChapterId = newChap.id;
@@ -2118,14 +2350,18 @@
         function openReaderView(projId) {
             const allWorks = [...state.projects, ...state.publicProjects];
             const proj = allWorks.find(p => p.id === projId);
-            if (!proj || proj.chapters.length === 0) return alert("No chapters found.");
+            if (!proj || !proj.chapters || proj.chapters.length === 0) return alert("No chapters found.");
 
             state.activeReaderProject = proj;
             state.activeReaderChapterIndex = 0;
 
             const cSelect = document.getElementById('reader-chapter-select');
-            cSelect.innerHTML = proj.chapters.map((c, i) => `<option value="${i}">${c.title}</option>`).join('');
+            if (cSelect) {
+                cSelect.innerHTML = proj.chapters.map((c, i) => `<option value="${i}">${c.title}</option>`).join('');
+            }
 
+            updateReaderVoteState();
+            updateReaderBookmarkState();
             loadReaderChapter(0);
             document.getElementById('reader-view').classList.remove('hidden');
         }
@@ -2136,23 +2372,28 @@
             index = parseInt(index);
             state.activeReaderChapterIndex = index;
             const proj = state.activeReaderProject;
+            if (!proj || !proj.chapters) return;
             const chap = proj.chapters[index];
 
             updateReadingProgress(proj.id, index, proj.chapters.length);
 
-            document.getElementById('reader-chapter-select').value = index;
-            document.getElementById('reader-chapter-title').innerText = chap.title;
+            const selectElem = document.getElementById('reader-chapter-select');
+            if (selectElem) selectElem.value = index;
 
-            // Soundtrack player bar
+            const titleElem = document.getElementById('reader-chapter-title');
+            if (titleElem) titleElem.innerText = chap.title;
+
             const stPlayer = document.getElementById('reader-soundtrack-player');
-            if (chap.soundtrackId) {
-                const track = state.mediaTracks.find(t => t.id === chap.soundtrackId);
-                if (track) {
-                    document.getElementById('soundtrack-title-display').innerText = track.title;
-                    document.getElementById('soundtrack-link-btn').href = track.url;
-                    stPlayer.classList.remove('hidden');
+            if (stPlayer) {
+                if (chap.soundtrackId) {
+                    const track = state.mediaTracks.find(t => t.id === chap.soundtrackId);
+                    if (track) {
+                        document.getElementById('soundtrack-title-display').innerText = track.title;
+                        document.getElementById('soundtrack-link-btn').href = track.url;
+                        stPlayer.classList.remove('hidden');
+                    } else stPlayer.classList.add('hidden');
                 } else stPlayer.classList.add('hidden');
-            } else stPlayer.classList.add('hidden');
+            }
 
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = chap.content || '';
@@ -2170,29 +2411,32 @@
                 p.appendChild(badge);
             });
 
-            document.getElementById('reader-chapter-body').innerHTML = tempDiv.innerHTML;
+            const bodyElem = document.getElementById('reader-chapter-body');
+            if (bodyElem) bodyElem.innerHTML = tempDiv.innerHTML;
 
-            // Choice Buttons with RPG Item/Lock Verification
             const choicesContainer = document.getElementById('reader-branch-choices');
             const choicesButtons = document.getElementById('reader-choices-buttons');
-            if (chap.choices && chap.choices.length > 0) {
-                choicesButtons.innerHTML = chap.choices.map(c => {
-                    const isLocked = c.requiredItem && !state.readerInventory.includes(c.requiredItem);
-                    return `
-                        <button ${isLocked ? 'disabled' : `onclick="jumpToBranchChapter('${c.targetChapterId}')"`} class="w-full py-3 ${isLocked ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed' : 'bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 text-white shadow-lg'} rounded-xl text-xs font-bold transition flex items-center justify-between px-4">
-                            <span>${c.text}</span>
-                            ${c.requiredItem ? `<span class="${isLocked ? 'text-red-400' : 'text-amber-300'} text-[10px]"><i class="fas ${isLocked ? 'fa-lock' : 'fa-key'} mr-1"></i>Req: ${c.requiredItem}</span>` : `<i class="fas fa-arrow-right"></i>`}
-                        </button>
-                    `;
-                }).join('');
-                choicesContainer.classList.remove('hidden');
-            } else {
-                choicesContainer.classList.add('hidden');
+            if (choicesContainer && choicesButtons) {
+                if (chap.choices && chap.choices.length > 0) {
+                    choicesButtons.innerHTML = chap.choices.map(c => {
+                        const isLocked = c.requiredItem && !state.readerInventory.includes(c.requiredItem);
+                        return `
+                            <button ${isLocked ? 'disabled' : `onclick="jumpToBranchChapter('${c.targetChapterId}')"`} class="w-full py-3 ${isLocked ? 'bg-slate-800 text-slate-500 border border-slate-700 cursor-not-allowed' : 'bg-gradient-to-r from-purple-700 to-indigo-700 hover:from-purple-600 hover:to-indigo-600 text-white shadow-lg'} rounded-xl text-xs font-bold transition flex items-center justify-between px-4">
+                                <span>${c.text}</span>
+                                ${c.requiredItem ? `<span class="${isLocked ? 'text-red-400' : 'text-amber-300'} text-[10px]"><i class="fas ${isLocked ? 'fa-lock' : 'fa-key'} mr-1"></i>Req: ${c.requiredItem}</span>` : `<i class="fas fa-arrow-right"></i>`}
+                            </button>
+                        `;
+                    }).join('');
+                    choicesContainer.classList.remove('hidden');
+                } else {
+                    choicesContainer.classList.add('hidden');
+                }
             }
         }
 
         function jumpToBranchChapter(targetChapId) {
             const proj = state.activeReaderProject;
+            if (!proj) return;
             const idx = proj.chapters.findIndex(c => c.id === targetChapId);
             if (idx > -1) loadReaderChapter(idx);
         }
@@ -2202,13 +2446,15 @@
             const list = document.getElementById('para-comments-list');
             const cmts = state.paraComments[paraId] || [];
 
-            list.innerHTML = cmts.length === 0 ? `<p class="text-xs text-slate-500 italic">No reactions on this paragraph yet.</p>` :
-                cmts.map(c => `
-                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1">
-                        <span class="text-xs font-bold text-purple-300 block">${c.author}</span>
-                        <p class="text-xs text-slate-300">${c.text}</p>
-                    </div>
-                `).join('');
+            if (list) {
+                list.innerHTML = cmts.length === 0 ? `<p class="text-xs text-slate-500 italic">No reactions on this paragraph yet.</p>` :
+                    cmts.map(c => `
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1">
+                            <span class="text-xs font-bold text-purple-300 block">${c.author}</span>
+                            <p class="text-xs text-slate-300">${c.text}</p>
+                        </div>
+                    `).join('');
+            }
 
             document.getElementById('para-comments-panel').classList.remove('hidden');
         }
@@ -2217,7 +2463,7 @@
 
         function postParagraphComment() {
             const input = document.getElementById('para-comment-input');
-            const text = input.value.trim();
+            const text = input ? input.value.trim() : '';
             if (!text || !state.activeParaId) return;
 
             if (!state.paraComments[state.activeParaId]) state.paraComments[state.activeParaId] = [];
@@ -2227,7 +2473,7 @@
                 date: new Date().toLocaleDateString()
             });
 
-            input.value = '';
+            if (input) input.value = '';
             saveState();
             openParaCommentsPanel(state.activeParaId);
             loadReaderChapter(state.activeReaderChapterIndex);
@@ -2243,7 +2489,8 @@
             const reader = new FileReader();
             reader.onload = function(evt) {
                 const tempCoverBase64 = evt.target.result;
-                document.getElementById('metadata-cover-preview').innerHTML = `<img src="${tempCoverBase64}" class="w-full h-full object-cover">`;
+                const preview = document.getElementById('metadata-cover-preview');
+                if (preview) preview.innerHTML = `<img src="${tempCoverBase64}" class="w-full h-full object-cover">`;
             };
             reader.readAsDataURL(file);
         }
