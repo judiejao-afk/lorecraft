@@ -150,7 +150,7 @@
                 </div>
 
                 <!-- WRITER ANALYTICS & DAILY STREAK CARD -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-800/80 relative z-10">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-4 border-t border-slate-800/80 relative z-10">
                     <div class="bg-slate-950/80 p-4 rounded-2xl border border-purple-500/30 space-y-2">
                         <div class="flex items-center justify-between">
                             <span class="text-xs font-bold text-slate-400 uppercase">Daily Goal Progress</span>
@@ -163,6 +163,12 @@
                         <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-slate-800">
                             <div id="analytics-progress-bar" class="h-full bg-gradient-to-r from-purple-500 to-pink-500 w-0 transition-all duration-500"></div>
                         </div>
+                    </div>
+
+                    <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-2">
+                        <span class="text-xs font-bold text-slate-400 uppercase">Lore Vault Entries</span>
+                        <h3 id="stat-lore-count" class="font-cinzel text-2xl font-bold text-indigo-400">0</h3>
+                        <p class="text-[11px] text-slate-500">Characters, Factions, Locations & Magic.</p>
                     </div>
 
                     <div class="bg-slate-950/80 p-4 rounded-2xl border border-slate-800 space-y-2">
@@ -188,7 +194,7 @@
                         <i class="fas fa-feather-alt"></i>
                     </div>
                     <h3 class="font-cinzel text-xl font-bold text-white group-hover:text-purple-300">Writer Studio</h3>
-                    <p class="text-xs text-slate-400">Write chapters, format text, and configure branching story paths.</p>
+                    <p class="text-xs text-slate-400">Write chapters, format text, and configure lore & branching paths.</p>
                 </div>
 
                 <div onclick="switchMainPage('series')" class="bg-slate-900 border border-slate-800 hover:border-indigo-500/50 p-6 rounded-2xl space-y-3 cursor-pointer transition shadow-xl group">
@@ -339,7 +345,7 @@
             <div id="published-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- PAGE 5: WRITER STUDIO WITH RICH TEXT & CHOICE BRANCHING -->
+        <!-- PAGE 5: WRITER STUDIO WITH LORE VAULT & RICH TEXT -->
         <section id="page-writer" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900/80 p-4 rounded-xl border border-slate-800">
                 <div class="flex flex-wrap items-center gap-3">
@@ -506,6 +512,25 @@
                     </button>
                 </div>
             </div>
+
+            <!-- WORLD LORE VAULT & AUDIO TRACKS VAULT -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-mask text-purple-400 mr-2"></i> World Lore Vault</h3>
+                        <button onclick="openLoreModal()" class="px-3 py-1 bg-purple-600 text-white rounded-lg text-xs font-semibold">+ Add Lore</button>
+                    </div>
+                    <div id="lore-grid" class="grid grid-cols-1 gap-3 max-h-60 overflow-y-auto"></div>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-music text-indigo-400 mr-2"></i> Audio Tracks Vault</h3>
+                        <button onclick="openMediaModal()" class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-xs font-semibold">+ Add Track</button>
+                    </div>
+                    <div id="media-grid" class="grid grid-cols-1 gap-3 max-h-60 overflow-y-auto"></div>
+                </div>
+            </div>
         </section>
 
         <!-- READER OVERLAY VIEW WITH PARAGRAPH-LEVEL COMMENTS -->
@@ -547,6 +572,117 @@
         </div>
 
     </main>
+
+    <!-- WORLD LORE ENTRY MODAL -->
+    <div id="lore-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 id="lore-modal-title" class="font-cinzel text-xl font-bold text-white">Add Lore Entry</h3>
+                <button onclick="closeLoreModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
+
+            <form id="lore-form" onsubmit="saveLoreEntry(event)" class="space-y-4">
+                <input type="hidden" id="lore-id">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Title / Character Name *</label>
+                        <input type="text" id="lore-title" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Category *</label>
+                        <select id="lore-category" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                            <option value="Character">Character</option>
+                            <option value="Faction">Faction</option>
+                            <option value="Location">Location</option>
+                            <option value="Magic System">Magic System</option>
+                            <option value="Note">Note / Plot Idea</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Short Tagline / Role</label>
+                    <input type="text" id="lore-summary" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500">
+                </div>
+
+                <div class="space-y-2 border border-slate-800/80 p-3 rounded-xl bg-slate-950/50">
+                    <label class="text-xs text-purple-400 font-semibold block"><i class="fas fa-image mr-1"></i> Character / Location Photo</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 items-center">
+                        <div>
+                            <span class="text-[11px] text-slate-400 block mb-1">Upload File:</span>
+                            <input type="file" id="lore-file-input" accept="image/*" onchange="handleLocalImageUpload(event)" class="text-xs text-slate-400 file:mr-2 file:py-1 file:px-2 file:rounded-md file:border-0 file:text-xs file:bg-purple-600/20 file:text-purple-300">
+                        </div>
+                        <div>
+                            <span class="text-[11px] text-slate-400 block mb-1">Or Web Image URL:</span>
+                            <input type="url" id="lore-image-url" oninput="previewImageURL(this.value)" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-purple-500">
+                        </div>
+                    </div>
+                    <div id="image-preview-box" class="hidden mt-2 border border-slate-800 rounded-lg p-2 flex items-center gap-3 bg-slate-900">
+                        <img id="preview-img-element" src="" class="w-12 h-12 rounded-lg object-cover">
+                        <span class="text-xs text-emerald-400"><i class="fas fa-check-circle"></i> Image Attached</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Full Lore Description & Backstory</label>
+                    <textarea id="lore-description" rows="5" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-white focus:outline-none focus:border-purple-500"></textarea>
+                </div>
+
+                <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                    <button type="button" id="delete-lore-btn" onclick="deleteLoreEntry()" class="hidden px-3 py-1.5 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-lg text-xs font-semibold">Delete Entry</button>
+                    <div class="flex items-center gap-2 ml-auto">
+                        <button type="button" onclick="closeLoreModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold shadow">Save Lore</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MEDIA TRACK MODAL -->
+    <div id="media-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-cinzel text-xl font-bold text-white">Add Media Track</h3>
+                <button onclick="closeMediaModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
+
+            <form id="media-form" onsubmit="saveMediaTrack(event)" class="space-y-4">
+                <input type="hidden" id="media-id">
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Track Title *</label>
+                    <input type="text" id="media-title" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Platform *</label>
+                        <select id="media-platform" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                            <option value="Suno AI">Suno AI Song</option>
+                            <option value="YouTube">YouTube Video</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-xs text-slate-400 block mb-1">Genre</label>
+                        <input type="text" id="media-genre" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Media Link URL *</label>
+                    <input type="url" id="media-url" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" placeholder="https://suno.com/song/... or https://youtube.com/watch?v=...">
+                </div>
+
+                <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+                    <button type="button" id="delete-media-btn" onclick="deleteMediaTrack()" class="hidden px-3 py-1.5 bg-red-900/30 text-red-400 hover:bg-red-900/50 rounded-lg text-xs font-semibold">Delete Track</button>
+                    <div class="flex items-center gap-2 ml-auto">
+                        <button type="button" onclick="closeMediaModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-semibold shadow">Save Media</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- PARAGRAPH COMMENTS SLIDE-OUT PANEL -->
     <div id="para-comments-panel" class="hidden fixed inset-y-0 right-0 z-50 w-full sm:w-96 bg-slate-900 border-l border-slate-800 p-6 space-y-4 shadow-2xl overflow-y-auto">
@@ -613,6 +749,36 @@
         </div>
     </div>
 
+    <!-- CLOUD ACCOUNT AUTH MODAL -->
+    <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-cinzel text-lg font-bold text-white">Cloud Account Sign In</h3>
+                <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
+            
+            <form onsubmit="handleCloudAuth(event)" class="space-y-3">
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Email Address</label>
+                    <input type="email" id="auth-email" required autocapitalize="none" autocorrect="off" spellcheck="false" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="you@example.com">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Password</label>
+                    <input type="password" id="auth-password" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="••••••••">
+                </div>
+                
+                <div class="flex gap-2 pt-2">
+                    <button type="submit" onclick="authAction='signin'" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg shadow">Sign In</button>
+                    <button type="submit" onclick="authAction='signup'" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold rounded-lg">Create Account</button>
+                </div>
+            </form>
+
+            <div class="text-center pt-2 border-t border-slate-800">
+                <button onclick="closeAuthModal()" class="text-xs text-slate-400 hover:text-purple-300">Continue as Guest (Read Only / Local)</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT APPLICATION CORE -->
     <script>
         const firebaseConfig = {
@@ -643,7 +809,9 @@
             seriesList: [],
             projects: [],
             publicProjects: [],
-            paraComments: {}, // { paraId: [comments] }
+            loreEntries: [],
+            mediaTracks: [],
+            paraComments: {},
             activeParaId: null,
             dailyLog: { date: new Date().toISOString().slice(0, 10), wordsWritten: 0, target: 1000, streak: 1 },
             currentProjectId: null,
@@ -653,6 +821,8 @@
         };
 
         let currentUser = null;
+        let authAction = 'signin';
+        let tempBase64Image = null;
         let tempCoverBase64 = null;
 
         window.addEventListener('DOMContentLoaded', () => {
@@ -703,6 +873,8 @@
             const savedProfile = localStorage.getItem('lorecraft_profile');
             const savedProjects = localStorage.getItem('lorecraft_projects');
             const savedSeries = localStorage.getItem('lorecraft_series');
+            const savedLore = localStorage.getItem('lorecraft_lore');
+            const savedMedia = localStorage.getItem('lorecraft_media');
             const savedBookmarks = localStorage.getItem('lorecraft_bookmarks');
             const savedVotes = localStorage.getItem('lorecraft_votes');
             const savedParaCmts = localStorage.getItem('lorecraft_para_comments');
@@ -711,6 +883,8 @@
             if (savedBookmarks) state.bookmarkedProjectIds = JSON.parse(savedBookmarks);
             if (savedVotes) state.votedProjectIds = JSON.parse(savedVotes);
             if (savedSeries) state.seriesList = JSON.parse(savedSeries);
+            if (savedLore) state.loreEntries = JSON.parse(savedLore);
+            if (savedMedia) state.mediaTracks = JSON.parse(savedMedia);
             if (savedParaCmts) state.paraComments = JSON.parse(savedParaCmts);
 
             if (savedProjects) {
@@ -751,9 +925,22 @@
             localStorage.setItem('lorecraft_profile', JSON.stringify(state.userProfile));
             localStorage.setItem('lorecraft_projects', JSON.stringify(state.projects));
             localStorage.setItem('lorecraft_series', JSON.stringify(state.seriesList));
+            localStorage.setItem('lorecraft_lore', JSON.stringify(state.loreEntries));
+            localStorage.setItem('lorecraft_media', JSON.stringify(state.mediaTracks));
             localStorage.setItem('lorecraft_bookmarks', JSON.stringify(state.bookmarkedProjectIds));
             localStorage.setItem('lorecraft_votes', JSON.stringify(state.votedProjectIds));
             localStorage.setItem('lorecraft_para_comments', JSON.stringify(state.paraComments));
+
+            if (currentUser && db) {
+                db.collection('users').doc(currentUser.uid).set({
+                    profile: state.userProfile,
+                    projects: state.projects,
+                    seriesList: state.seriesList,
+                    loreEntries: state.loreEntries,
+                    mediaTracks: state.mediaTracks,
+                    bookmarks: state.bookmarkedProjectIds
+                }, { merge: true });
+            }
         }
 
         function renderUI() {
@@ -762,6 +949,8 @@
             renderSeriesPage();
             renderProjectPicker();
             renderChapterEditor();
+            renderLoreGrid();
+            renderMediaGrid();
             filterLibrary();
         }
 
@@ -778,6 +967,7 @@
 
             document.getElementById('stat-works-count').innerText = state.projects.length;
             document.getElementById('stat-bookmarks-count').innerText = state.bookmarkedProjectIds.length;
+            document.getElementById('stat-lore-count').innerText = state.loreEntries.length;
             document.getElementById('stat-words-count').innerText = totalWords.toLocaleString();
 
             // Daily Analytics
@@ -790,6 +980,187 @@
         function renderProfilePage() {
             document.getElementById('profile-name-display').innerText = state.userProfile.name || 'Guest Storyteller';
             document.getElementById('profile-bio-display').innerText = state.userProfile.bio || 'Fantasy Writer & Reader';
+        }
+
+        // AUTHENTICATION LOGIC
+        function initAuthListener() {
+            if (!auth) return;
+            auth.onAuthStateChanged(user => {
+                currentUser = user;
+                const btnText = document.getElementById('auth-btn-text');
+                if (user) {
+                    btnText.innerText = user.email.split('@')[0];
+                } else {
+                    btnText.innerText = 'Sign In';
+                }
+            });
+        }
+
+        function handleCloudAuth(e) {
+            e.preventDefault();
+            if (!auth) return;
+            const email = document.getElementById('auth-email').value.trim().toLowerCase();
+            const password = document.getElementById('auth-password').value.trim();
+
+            if (authAction === 'signup') {
+                auth.createUserWithEmailAndPassword(email, password).then(() => closeAuthModal()).catch(err => alert(err.message));
+            } else {
+                auth.signInWithEmailAndPassword(email, password).then(() => closeAuthModal()).catch(err => alert(err.message));
+            }
+        }
+
+        function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
+        function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
+
+        // LORE VAULT FUNCTIONS
+        function renderLoreGrid() {
+            const grid = document.getElementById('lore-grid');
+            grid.innerHTML = state.loreEntries.map(l => `
+                <div onclick="openLoreModal('${l.id}')" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center gap-3 cursor-pointer hover:border-purple-500/50 transition">
+                    ${l.imageUrl ? `<img src="${l.imageUrl}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 text-xs font-bold">${l.category[0]}</div>`}
+                    <div>
+                        <h4 class="font-cinzel text-xs font-bold text-white">${l.title}</h4>
+                        <p class="text-[10px] text-slate-400">${l.category}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openLoreModal(loreId = null) {
+            const modal = document.getElementById('lore-modal');
+            if (loreId) {
+                const l = state.loreEntries.find(entry => entry.id === loreId);
+                document.getElementById('lore-id').value = l.id;
+                document.getElementById('lore-title').value = l.title;
+                document.getElementById('lore-category').value = l.category;
+                document.getElementById('lore-summary').value = l.summary || '';
+                document.getElementById('lore-description').value = l.description || '';
+                previewImageURL(l.imageUrl);
+                document.getElementById('delete-lore-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('lore-form').reset();
+                document.getElementById('lore-id').value = '';
+                previewImageURL(null);
+                document.getElementById('delete-lore-btn').classList.add('hidden');
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeLoreModal() { document.getElementById('lore-modal').classList.add('hidden'); }
+
+        function handleLocalImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+                tempBase64Image = evt.target.result;
+                previewImageURL(tempBase64Image);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function previewImageURL(url) {
+            const previewBox = document.getElementById('image-preview-box');
+            const previewImg = document.getElementById('preview-img-element');
+            if (url) {
+                previewImg.src = url;
+                previewBox.classList.remove('hidden');
+            } else previewBox.classList.add('hidden');
+        }
+
+        function saveLoreEntry(e) {
+            e.preventDefault();
+            const id = document.getElementById('lore-id').value;
+            const title = document.getElementById('lore-title').value;
+            const category = document.getElementById('lore-category').value;
+            const summary = document.getElementById('lore-summary').value;
+            const imageUrl = tempBase64Image || document.getElementById('lore-image-url').value;
+            const description = document.getElementById('lore-description').value;
+
+            if (id) {
+                const l = state.loreEntries.find(entry => entry.id === id);
+                if (l) Object.assign(l, { title, category, summary, imageUrl, description });
+            } else {
+                state.loreEntries.push({ id: 'lore_' + Date.now(), title, category, summary, imageUrl, description });
+            }
+            tempBase64Image = null;
+            saveState();
+            closeLoreModal();
+            renderLoreGrid();
+            renderDashboard();
+        }
+
+        function deleteLoreEntry() {
+            const id = document.getElementById('lore-id').value;
+            if (id && confirm("Delete entry?")) {
+                state.loreEntries = state.loreEntries.filter(l => l.id !== id);
+                saveState();
+                closeLoreModal();
+                renderLoreGrid();
+                renderDashboard();
+            }
+        }
+
+        // MEDIA TRACK FUNCTIONS
+        function renderMediaGrid() {
+            const grid = document.getElementById('media-grid');
+            grid.innerHTML = state.mediaTracks.map(m => `
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+                    <div onclick="openMediaModal('${m.id}')" class="cursor-pointer">
+                        <h4 class="font-cinzel text-xs font-bold text-white">${m.title}</h4>
+                        <p class="text-[10px] text-indigo-400">${m.platform}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openMediaModal(mediaId = null) {
+            const modal = document.getElementById('media-modal');
+            if (mediaId) {
+                const m = state.mediaTracks.find(track => track.id === mediaId);
+                document.getElementById('media-id').value = m.id;
+                document.getElementById('media-title').value = m.title;
+                document.getElementById('media-platform').value = m.platform;
+                document.getElementById('media-genre').value = m.genre || '';
+                document.getElementById('media-url').value = m.url;
+                document.getElementById('delete-media-btn').classList.remove('hidden');
+            } else {
+                document.getElementById('media-form').reset();
+                document.getElementById('media-id').value = '';
+                document.getElementById('delete-media-btn').classList.add('hidden');
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeMediaModal() { document.getElementById('media-modal').classList.add('hidden'); }
+
+        function saveMediaTrack(e) {
+            e.preventDefault();
+            const id = document.getElementById('media-id').value;
+            const title = document.getElementById('media-title').value;
+            const platform = document.getElementById('media-platform').value;
+            const genre = document.getElementById('media-genre').value;
+            const url = document.getElementById('media-url').value;
+
+            if (id) {
+                const m = state.mediaTracks.find(track => track.id === id);
+                if (m) Object.assign(m, { title, platform, genre, url });
+            } else {
+                state.mediaTracks.push({ id: 'med_' + Date.now(), title, platform, genre, url });
+            }
+            saveState();
+            closeMediaModal();
+            renderMediaGrid();
+        }
+
+        function deleteMediaTrack() {
+            const id = document.getElementById('media-id').value;
+            if (id && confirm("Delete track?")) {
+                state.mediaTracks = state.mediaTracks.filter(m => m.id !== id);
+                saveState();
+                closeMediaModal();
+                renderMediaGrid();
+            }
         }
 
         // SERIES MANAGER
@@ -851,7 +1222,6 @@
         // BRANCHING CHOICES BUILDER
         function addBranchChoiceRow(text = '', targetId = '') {
             const container = document.getElementById('branch-choices-list');
-            const rowId = 'choice_' + Date.now();
             const proj = state.projects.find(p => p.id === state.currentProjectId);
             const chapOptions = proj ? proj.chapters.map(c => `<option value="${c.id}" ${c.id === targetId ? 'selected' : ''}>${c.title}</option>`).join('') : '';
 
