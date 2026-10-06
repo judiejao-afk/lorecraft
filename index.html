@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoreCraft Studio - Storyteller & Visual World Studio</title>
-    <!-- Favicon Logo for Browser Tab -->
+    <!-- Favicon Logo -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='f' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%239333ea'/><stop offset='50%' stop-color='%234f46e5'/><stop offset='100%' stop-color='%23ec4899'/></linearGradient></defs><rect width='100' height='100' rx='24' fill='%230f172a'/><rect width='92' height='92' x='4' y='4' rx='20' fill='none' stroke='url(%23f)' stroke-width='3'/><path d='M30 75 C 35 45, 55 25, 75 20 C 70 40, 55 55, 30 75 Z' fill='url(%23f)'/><path d='M30 75 L 42 62 M 45 52 L 57 40' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/></svg>">
     
     <!-- Tailwind CSS -->
@@ -52,7 +52,7 @@
             
             <!-- Brand Logo -->
             <div class="flex items-center gap-3">
-                <div class="relative group cursor-pointer" onclick="setMode('reader')">
+                <div class="relative group cursor-pointer" onclick="switchMainPage('dashboard')">
                     <div class="absolute -inset-0.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 rounded-xl blur opacity-50 group-hover:opacity-100 transition duration-300"></div>
                     <svg class="relative w-10 h-10 rounded-xl bg-slate-950 p-1.5 border border-purple-500/30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
@@ -76,43 +76,27 @@
                 </div>
             </div>
 
-            <!-- Role Selector -->
-            <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center">
-                <button onclick="setMode('reader')" id="mode-btn-reader" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow">
-                    <i class="fas fa-book-reader"></i> Reader Mode
+            <!-- Navigation Links -->
+            <nav class="hidden md:flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80">
+                <button onclick="switchMainPage('dashboard')" id="nav-dashboard" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow">
+                    <i class="fas fa-chart-line"></i> Dashboard
                 </button>
-                <button onclick="setMode('writer')" id="mode-btn-writer" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+                <button onclick="switchMainPage('published')" id="nav-published" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+                    <i class="fas fa-globe"></i> Library
+                </button>
+                <button onclick="switchMainPage('writer')" id="nav-writer" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
                     <i class="fas fa-pen-nib"></i> Writer Studio
                 </button>
-            </div>
-
-            <!-- Writer Tabs -->
-            <nav id="writer-nav-tabs" class="hidden md:flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80">
-                <button onclick="switchTab('studio')" id="tab-studio" class="px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-purple-600 text-white shadow">
-                    <i class="fas fa-edit"></i> Write Story
-                </button>
-                <button onclick="switchTab('library')" id="tab-library" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
-                    <i class="fas fa-book-bookmark"></i> World Lore
-                </button>
-                <button onclick="switchTab('media')" id="tab-media" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
-                    <i class="fas fa-compact-disc"></i> Soundtracks
-                </button>
-                <button onclick="switchTab('published')" id="tab-published" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
-                    <i class="fas fa-scroll"></i> Public Showcase
+                <button onclick="switchMainPage('profile')" id="nav-profile" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+                    <i class="fas fa-user-circle"></i> Profile & Reading List
                 </button>
             </nav>
 
-            <!-- User Auth & Profile Controls -->
+            <!-- User Auth & Controls -->
             <div class="flex items-center gap-2">
                 <button onclick="openBackupModal()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition text-xs flex items-center gap-1.5 border border-slate-700" title="Backup & Restore">
                     <i class="fas fa-database text-purple-400"></i>
                     <span class="hidden sm:inline">Backup</span>
-                </button>
-
-                <!-- Profile Management Button -->
-                <button id="profile-btn" onclick="openProfileModal()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-purple-300 transition text-xs flex items-center gap-1.5 border border-slate-700">
-                    <i class="fas fa-user-gear"></i>
-                    <span class="hidden sm:inline">Profile</span>
                 </button>
 
                 <button id="auth-btn" onclick="openAuthModal()" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold shadow flex items-center gap-1.5 transition">
@@ -126,20 +110,126 @@
     <!-- Main Workspace Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
 
-        <!-- PUBLIC SHOWCASE -->
-        <section id="sec-published" class="space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
-                <div>
-                    <h2 class="font-cinzel text-2xl font-bold text-white"><i class="fas fa-globe text-purple-400 mr-2"></i> Public Library & Published Works</h2>
-                    <p class="text-xs text-slate-400">Browse and read books, novels, and series published by creators across the world.</p>
+        <!-- PAGE 1: WELCOME OVERVIEW DASHBOARD -->
+        <section id="page-dashboard" class="space-y-6">
+            <!-- Welcome Banner -->
+            <div class="bg-gradient-to-r from-purple-900/50 via-slate-900 to-indigo-900/40 border border-purple-500/30 rounded-3xl p-6 md:p-8 space-y-4 shadow-2xl relative overflow-hidden">
+                <div class="max-w-2xl space-y-2 relative z-10">
+                    <span class="text-xs font-bold text-purple-400 uppercase tracking-widest bg-purple-950/80 border border-purple-800/80 px-3 py-1 rounded-full">Storyteller Workspace</span>
+                    <h2 id="dash-welcome-text" class="font-cinzel text-3xl md:text-4xl font-bold text-white">Welcome back, Writer!</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed">Organize your lore, write your chapters, attach soundtracks, and publish your works to the world.</p>
+                </div>
+                <!-- Stats Row -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t border-slate-800/80 relative z-10">
+                    <div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block">Total Works</span>
+                        <span id="stat-works-count" class="font-cinzel text-2xl font-bold text-purple-400">0</span>
+                    </div>
+                    <div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block">Bookmarked Books</span>
+                        <span id="stat-bookmarks-count" class="font-cinzel text-2xl font-bold text-pink-400">0</span>
+                    </div>
+                    <div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block">Lore Entries</span>
+                        <span id="stat-lore-count" class="font-cinzel text-2xl font-bold text-indigo-400">0</span>
+                    </div>
+                    <div class="bg-slate-950/60 p-3 rounded-2xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block">Total Words</span>
+                        <span id="stat-words-count" class="font-cinzel text-2xl font-bold text-emerald-400">0</span>
+                    </div>
                 </div>
             </div>
 
+            <!-- Dashboard Shortcuts Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div onclick="switchMainPage('writer')" class="bg-slate-900 border border-slate-800 hover:border-purple-500/50 p-6 rounded-2xl space-y-3 cursor-pointer transition shadow-xl group">
+                    <div class="w-12 h-12 rounded-xl bg-purple-600/20 text-purple-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                        <i class="fas fa-feather-alt"></i>
+                    </div>
+                    <h3 class="font-cinzel text-xl font-bold text-white group-hover:text-purple-300">Writer Studio</h3>
+                    <p class="text-xs text-slate-400">Write chapters, edit drafts, and attach Suno audio themes.</p>
+                </div>
+
+                <div onclick="switchMainPage('published')" class="bg-slate-900 border border-slate-800 hover:border-indigo-500/50 p-6 rounded-2xl space-y-3 cursor-pointer transition shadow-xl group">
+                    <div class="w-12 h-12 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 class="font-cinzel text-xl font-bold text-white group-hover:text-indigo-300">Public Library</h3>
+                    <p class="text-xs text-slate-400">Browse and read novel series published by community authors.</p>
+                </div>
+
+                <div onclick="switchMainPage('profile')" class="bg-slate-900 border border-slate-800 hover:border-pink-500/50 p-6 rounded-2xl space-y-3 cursor-pointer transition shadow-xl group">
+                    <div class="w-12 h-12 rounded-xl bg-pink-600/20 text-pink-400 flex items-center justify-center text-xl group-hover:scale-110 transition">
+                        <i class="fas fa-bookmark"></i>
+                    </div>
+                    <h3 class="font-cinzel text-xl font-bold text-white group-hover:text-pink-300">Profile & Reading List</h3>
+                    <p class="text-xs text-slate-400">View your saved bookmarks, manage profile, and inspect written stories.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 2: PROFILE PAGE (Settings, Bookmarks / Reading List, Written Stories) -->
+        <section id="page-profile" class="hidden space-y-6">
+            <!-- Profile Card & Settings Header -->
+            <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 space-y-6 shadow-2xl">
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 border-b border-slate-800 pb-6">
+                    <div class="flex items-center gap-4">
+                        <div id="profile-avatar-display" class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg overflow-hidden border border-purple-500/30">
+                            <i class="fas fa-user-astronaut"></i>
+                        </div>
+                        <div>
+                            <h2 id="profile-name-display" class="font-cinzel text-2xl font-bold text-white">Guest Storyteller</h2>
+                            <p id="profile-bio-display" class="text-xs text-slate-400">Fantasy Writer & Reader</p>
+                        </div>
+                    </div>
+                    <button onclick="openProfileEditModal()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center gap-2 transition">
+                        <i class="fas fa-user-gear"></i> Edit Profile Settings
+                    </button>
+                </div>
+
+                <!-- Profile Sub-Tabs -->
+                <div class="flex items-center gap-4 border-b border-slate-800/80 pb-2">
+                    <button onclick="switchProfileSubTab('bookmarks')" id="prof-subtab-bookmarks" class="text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-2 flex items-center gap-2">
+                        <i class="fas fa-bookmark"></i> Reading List / Bookmarks
+                    </button>
+                    <button onclick="switchProfileSubTab('stories')" id="prof-subtab-stories" class="text-sm font-bold text-slate-400 hover:text-slate-200 pb-2 flex items-center gap-2">
+                        <i class="fas fa-scroll"></i> Written Stories (Published & Drafts)
+                    </button>
+                </div>
+
+                <!-- Sub-Tab 1: Saved Reading List / Bookmarks -->
+                <div id="prof-sec-bookmarks" class="space-y-4">
+                    <h3 class="font-cinzel text-lg font-bold text-white">My Bookmarked Stories</h3>
+                    <div id="bookmarks-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+
+                <!-- Sub-Tab 2: Written Stories List (Published or Draft) -->
+                <div id="prof-sec-stories" class="hidden space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-cinzel text-lg font-bold text-white">My Author Projects</h3>
+                        <button onclick="switchMainPage('writer'); createNewProject();" class="px-3 py-1.5 bg-purple-600 text-white rounded-lg text-xs font-semibold">
+                            + Create New Work
+                        </button>
+                    </div>
+                    <div id="written-stories-list" class="space-y-3"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 3: PUBLIC LIBRARY -->
+        <section id="page-published" class="hidden space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
+                <div>
+                    <h2 class="font-cinzel text-2xl font-bold text-white"><i class="fas fa-globe text-purple-400 mr-2"></i> Public Library</h2>
+                    <p class="text-xs text-slate-400">Browse and read books published by creators.</p>
+                </div>
+            </div>
             <div id="published-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- WRITER TAB 1: STORY STUDIO -->
-        <section id="sec-studio" class="hidden space-y-6">
+        <!-- PAGE 4: WRITER STUDIO -->
+        <section id="page-writer" class="hidden space-y-6">
+            <!-- Studio Secondary Bar -->
             <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
                 <div class="flex flex-wrap items-center gap-3">
                     <div>
@@ -170,6 +260,7 @@
                 </div>
             </div>
 
+            <!-- Chapter Editor Area -->
             <div class="bg-slate-900/80 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
                 <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between border-b border-slate-800 pb-4">
                     <input type="text" id="chapter-title-input" class="bg-slate-950 border border-slate-800 text-xl font-cinzel font-bold text-white px-4 py-2 rounded-xl w-full sm:w-2/3 focus:outline-none focus:border-purple-500" placeholder="Chapter Title">
@@ -189,43 +280,39 @@
                     </button>
                 </div>
             </div>
-        </section>
 
-        <!-- WRITER TAB 2: LORE VAULT -->
-        <section id="sec-library" class="hidden space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                    <h2 class="font-cinzel text-2xl font-bold text-white">World Library & Lore Vault</h2>
-                    <p class="text-xs text-slate-400">Manage characters, factions, locations, magic systems, and world notes.</p>
+            <!-- Lore & Soundtracks Section inside Studio -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-cinzel text-lg font-bold text-white">World Lore Vault</h3>
+                        <button onclick="openLoreModal()" class="px-3 py-1 bg-purple-600 text-white rounded-lg text-xs font-semibold">+ Add Lore</button>
+                    </div>
+                    <div id="lore-grid" class="grid grid-cols-1 gap-3 max-h-60 overflow-y-auto"></div>
                 </div>
-                <button onclick="openLoreModal()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-sm font-semibold shadow flex items-center gap-2 transition">
-                    <i class="fas fa-plus"></i> Add New Lore Entry
-                </button>
-            </div>
-            <div id="lore-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-        </section>
 
-        <!-- WRITER TAB 3: MEDIA -->
-        <section id="sec-media" class="hidden space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                    <h2 class="font-cinzel text-2xl font-bold text-white">Suno & YouTube Soundtracks</h2>
-                    <p class="text-xs text-slate-400">Attach audio tracks and video themes to your chapters.</p>
+                <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="font-cinzel text-lg font-bold text-white">Audio Tracks</h3>
+                        <button onclick="openMediaModal()" class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-xs font-semibold">+ Add Track</button>
+                    </div>
+                    <div id="media-grid" class="grid grid-cols-1 gap-3 max-h-60 overflow-y-auto"></div>
                 </div>
-                <button onclick="openMediaModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl text-sm font-semibold shadow flex items-center gap-2 transition">
-                    <i class="fas fa-plus"></i> Add Media Track
-                </button>
             </div>
-            <div id="media-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- READER PERSPECTIVE MODE SCREEN WITH COMMENTS -->
+        <!-- READER PERSPECTIVE OVERLAY VIEW WITH BOOKMARK BUTTON -->
         <div id="reader-view" class="hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur overflow-y-auto p-4 md:p-8">
             <div class="max-w-4xl mx-auto space-y-6">
                 
                 <div class="flex items-center justify-between bg-slate-900/90 border border-slate-800 p-4 rounded-2xl sticky top-0 z-10 shadow-2xl">
                     <button onclick="closeReaderView()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
                         <i class="fas fa-arrow-left"></i> Exit Reader View
+                    </button>
+
+                    <!-- Bookmark Button -->
+                    <button id="reader-bookmark-btn" onclick="toggleBookmarkCurrentBook()" class="px-3 py-1.5 bg-pink-900/30 hover:bg-pink-900/50 text-pink-300 border border-pink-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
+                        <i class="fas fa-bookmark"></i> <span id="bookmark-btn-text">Bookmark Book</span>
                     </button>
 
                     <div class="flex items-center gap-2">
@@ -268,14 +355,13 @@
                     </button>
                 </div>
 
-                <!-- COMMENT SECTIONS (NOVEL & CHAPTER) -->
+                <!-- COMMENT SECTIONS -->
                 <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-6">
                     <div class="flex items-center gap-4 border-b border-slate-800 pb-3">
                         <button onclick="switchCommentTab('chapter')" id="cmt-tab-chapter" class="text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-2">Chapter Comments</button>
                         <button onclick="switchCommentTab('novel')" id="cmt-tab-novel" class="text-sm font-bold text-slate-400 hover:text-slate-200 pb-2">Novel Discussion</button>
                     </div>
 
-                    <!-- Post Comment Input -->
                     <div class="space-y-3">
                         <textarea id="comment-input" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Share your thoughts or feedback..."></textarea>
                         <div class="flex justify-end">
@@ -285,7 +371,6 @@
                         </div>
                     </div>
 
-                    <!-- Comment Feed -->
                     <div id="comment-list" class="space-y-4 pt-2"></div>
                 </div>
 
@@ -294,12 +379,14 @@
 
     </main>
 
-    <!-- USER PROFILE MANAGEMENT MODAL -->
+    <!-- MODALS -->
+
+    <!-- PROFILE EDIT MODAL -->
     <div id="profile-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
                 <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-user-circle text-purple-400 mr-2"></i> User Profile Settings</h3>
-                <button onclick="closeProfileModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+                <button onclick="closeProfileEditModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
             </div>
 
             <form onsubmit="saveUserProfile(event)" class="space-y-4">
@@ -317,15 +404,14 @@
                 </div>
 
                 <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
-                    <button type="button" onclick="closeProfileModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
+                    <button type="button" onclick="closeProfileEditModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
                     <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold shadow">Save Profile</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODALS (Lore, Media, Auth, Backup) -->
-
+    <!-- LORE ENTRY MODAL -->
     <div id="lore-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -391,6 +477,7 @@
         </div>
     </div>
 
+    <!-- MEDIA MODAL -->
     <div id="media-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -435,6 +522,7 @@
         </div>
     </div>
 
+    <!-- BACKUP MODAL -->
     <div id="backup-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -457,6 +545,7 @@
         </div>
     </div>
 
+    <!-- AUTH MODAL -->
     <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -508,11 +597,13 @@
         }
 
         let state = {
-            mode: 'reader',
-            userProfile: { name: 'Guest Storyteller', bio: 'Worldbuilder & Writer', avatar: '' },
+            currentPage: 'dashboard', // dashboard, profile, published, writer
+            profileSubTab: 'bookmarks', // bookmarks, stories
+            userProfile: { name: 'Guest Storyteller', bio: 'Fantasy Writer & Reader', avatar: '' },
+            bookmarkedProjectIds: [],
             projects: [],
             publicProjects: [],
-            comments: [], // { id, targetType: 'novel'|'chapter', targetId, author, avatar, text, date }
+            comments: [],
             activeCommentType: 'chapter',
             currentProjectId: null,
             currentChapterId: null,
@@ -533,23 +624,39 @@
             renderUI();
         });
 
-        function setMode(mode) {
-            state.mode = mode;
-            const rBtn = document.getElementById('mode-btn-reader');
-            const wBtn = document.getElementById('mode-btn-writer');
-            const wNav = document.getElementById('writer-nav-tabs');
+        // PAGE NAVIGATION SWITCHER
+        function switchMainPage(page) {
+            state.currentPage = page;
+            ['dashboard', 'profile', 'published', 'writer'].forEach(p => {
+                document.getElementById(`page-${p}`).classList.add('hidden');
+                const navBtn = document.getElementById(`nav-${p}`);
+                if (navBtn) navBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5";
+            });
 
-            if (mode === 'reader') {
-                rBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow";
-                wBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5";
-                wNav.classList.add('hidden');
-                switchTab('published');
+            document.getElementById(`page-${page}`).classList.remove('hidden');
+            const activeNav = document.getElementById(`nav-${page}`);
+            if (activeNav) activeNav.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow";
+
+            renderUI();
+        }
+
+        function switchProfileSubTab(sub) {
+            state.profileSubTab = sub;
+            const bBtn = document.getElementById('prof-subtab-bookmarks');
+            const sBtn = document.getElementById('prof-subtab-stories');
+
+            if (sub === 'bookmarks') {
+                bBtn.className = "text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-2 flex items-center gap-2";
+                sBtn.className = "text-sm font-bold text-slate-400 hover:text-slate-200 pb-2 flex items-center gap-2";
+                document.getElementById('prof-sec-bookmarks').classList.remove('hidden');
+                document.getElementById('prof-sec-stories').classList.add('hidden');
             } else {
-                wBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow";
-                rBtn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5";
-                wNav.classList.remove('hidden');
-                switchTab('studio');
+                sBtn.className = "text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-2 flex items-center gap-2";
+                bBtn.className = "text-sm font-bold text-slate-400 hover:text-slate-200 pb-2 flex items-center gap-2";
+                document.getElementById('prof-sec-stories').classList.remove('hidden');
+                document.getElementById('prof-sec-bookmarks').classList.add('hidden');
             }
+            renderProfilePage();
         }
 
         function loadLocalData() {
@@ -558,9 +665,11 @@
             const savedLore = localStorage.getItem('lorecraft_lore');
             const savedMedia = localStorage.getItem('lorecraft_media');
             const savedComments = localStorage.getItem('lorecraft_comments');
+            const savedBookmarks = localStorage.getItem('lorecraft_bookmarks');
 
             if (savedProfile) state.userProfile = JSON.parse(savedProfile);
             if (savedComments) state.comments = JSON.parse(savedComments);
+            if (savedBookmarks) state.bookmarkedProjectIds = JSON.parse(savedBookmarks);
 
             if (savedProjects) {
                 state.projects = JSON.parse(savedProjects);
@@ -570,6 +679,7 @@
                     author: 'Community Writer',
                     title: 'Chronicles of Aetheria',
                     type: 'Novel',
+                    isPublished: true,
                     chapters: [{
                         id: 'chap_1',
                         title: 'Chapter 1: Whispers of the Void',
@@ -594,6 +704,7 @@
             localStorage.setItem('lorecraft_lore', JSON.stringify(state.loreEntries));
             localStorage.setItem('lorecraft_media', JSON.stringify(state.mediaTracks));
             localStorage.setItem('lorecraft_comments', JSON.stringify(state.comments));
+            localStorage.setItem('lorecraft_bookmarks', JSON.stringify(state.bookmarkedProjectIds));
 
             if (currentUser && db) {
                 db.collection('users').doc(currentUser.uid).set({
@@ -601,19 +712,130 @@
                     projects: state.projects,
                     loreEntries: state.loreEntries,
                     mediaTracks: state.mediaTracks,
-                    comments: state.comments
+                    comments: state.comments,
+                    bookmarks: state.bookmarkedProjectIds
                 }, { merge: true });
             }
         }
 
-        function openProfileModal() {
+        function renderUI() {
+            renderDashboard();
+            renderProfilePage();
+            renderProjectPicker();
+            renderChapterEditor();
+            renderLoreGrid();
+            renderMediaGrid();
+            renderPublishedWorks();
+        }
+
+        function renderDashboard() {
+            document.getElementById('dash-welcome-text').innerText = `Welcome back, ${state.userProfile.name || 'Writer'}!`;
+            
+            // Total words calculate
+            let totalWords = 0;
+            state.projects.forEach(p => {
+                p.chapters.forEach(c => {
+                    totalWords += c.content.trim() ? c.content.trim().split(/\s+/).length : 0;
+                });
+            });
+
+            document.getElementById('stat-works-count').innerText = state.projects.length;
+            document.getElementById('stat-bookmarks-count').innerText = state.bookmarkedProjectIds.length;
+            document.getElementById('stat-lore-count').innerText = state.loreEntries.length;
+            document.getElementById('stat-words-count').innerText = totalWords.toLocaleString();
+        }
+
+        function renderProfilePage() {
+            document.getElementById('profile-name-display').innerText = state.userProfile.name || 'Guest Storyteller';
+            document.getElementById('profile-bio-display').innerText = state.userProfile.bio || 'Fantasy Writer & Reader';
+
+            const avatarContainer = document.getElementById('profile-avatar-display');
+            if (state.userProfile.avatar) {
+                avatarContainer.innerHTML = `<img src="${state.userProfile.avatar}" class="w-full h-full object-cover">`;
+            } else {
+                avatarContainer.innerHTML = `<i class="fas fa-user-astronaut"></i>`;
+            }
+
+            // Render Bookmarked List
+            const bGrid = document.getElementById('bookmarks-grid');
+            const allWorks = [...state.projects, ...state.publicProjects];
+            const bookmarkedWorks = allWorks.filter(w => state.bookmarkedProjectIds.includes(w.id));
+
+            if (bookmarkedWorks.length === 0) {
+                bGrid.innerHTML = `<p class="text-xs text-slate-500 italic col-span-3">No bookmarked stories yet. Browse the public library and click "Bookmark Book" while reading!</p>`;
+            } else {
+                bGrid.innerHTML = bookmarkedWorks.map(p => `
+                    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 space-y-3 shadow-lg flex flex-col justify-between">
+                        <div class="space-y-1">
+                            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-900/40 text-pink-300 border border-pink-700/40 uppercase">${p.type || 'Novel'}</span>
+                            <h4 class="font-cinzel text-lg font-bold text-white">${p.title}</h4>
+                            <p class="text-xs text-slate-400">By ${p.author || 'Author'}</p>
+                        </div>
+                        <div class="flex items-center gap-2 pt-2">
+                            <button onclick="openReaderView('${p.id}')" class="flex-1 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">Read Now</button>
+                            <button onclick="removeBookmark('${p.id}')" class="px-2.5 py-1.5 bg-red-900/30 text-red-400 rounded-lg text-xs"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Render Written Stories
+            const sList = document.getElementById('written-stories-list');
+            sList.innerHTML = state.projects.map(p => `
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h4 class="font-cinzel text-base font-bold text-white">${p.title}</h4>
+                            <span class="text-[10px] px-2 py-0.5 rounded ${p.isPublished ? 'bg-emerald-900/40 text-emerald-300 border border-emerald-800/40' : 'bg-amber-900/40 text-amber-300 border border-amber-800/40'}">${p.isPublished ? 'Published' : 'Draft'}</span>
+                        </div>
+                        <p class="text-xs text-slate-400">${p.chapters.length} Chapters</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="switchMainPage('writer'); switchProject('${p.id}');" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">Edit in Studio</button>
+                        <button onclick="deleteCurrentProject('${p.id}')" class="px-2.5 py-1.5 bg-red-900/30 text-red-400 rounded-lg text-xs"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleBookmarkCurrentBook() {
+            const proj = state.activeReaderProject;
+            if (!proj) return;
+
+            const idx = state.bookmarkedProjectIds.indexOf(proj.id);
+            if (idx > -1) {
+                state.bookmarkedProjectIds.splice(idx, 1);
+                alert("Removed from Reading List.");
+            } else {
+                state.bookmarkedProjectIds.push(proj.id);
+                alert("Bookmarked to your Profile Reading List!");
+            }
+            saveState();
+            updateBookmarkButtonState();
+            renderProfilePage();
+        }
+
+        function removeBookmark(id) {
+            state.bookmarkedProjectIds = state.bookmarkedProjectIds.filter(bId => bId !== id);
+            saveState();
+            renderProfilePage();
+        }
+
+        function updateBookmarkButtonState() {
+            const proj = state.activeReaderProject;
+            if (!proj) return;
+            const isBookmarked = state.bookmarkedProjectIds.includes(proj.id);
+            document.getElementById('bookmark-btn-text').innerText = isBookmarked ? 'Bookmarked' : 'Bookmark Book';
+        }
+
+        function openProfileEditModal() {
             document.getElementById('prof-name').value = state.userProfile.name || '';
             document.getElementById('prof-bio').value = state.userProfile.bio || '';
             document.getElementById('prof-avatar').value = state.userProfile.avatar || '';
             document.getElementById('profile-modal').classList.remove('hidden');
         }
 
-        function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); }
+        function closeProfileEditModal() { document.getElementById('profile-modal').classList.add('hidden'); }
 
         function saveUserProfile(e) {
             e.preventDefault();
@@ -621,7 +843,8 @@
             state.userProfile.bio = document.getElementById('prof-bio').value;
             state.userProfile.avatar = document.getElementById('prof-avatar').value;
             saveState();
-            closeProfileModal();
+            closeProfileEditModal();
+            renderUI();
             alert("Profile updated!");
         }
 
@@ -665,30 +888,6 @@
 
         function openAuthModal() { document.getElementById('auth-modal').classList.remove('hidden'); }
         function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
-
-        function switchTab(tab) {
-            ['studio', 'library', 'media', 'published'].forEach(t => {
-                document.getElementById(`sec-${t}`).classList.add('hidden');
-                const tabEl = document.getElementById(`tab-${t}`);
-                if (tabEl) tabEl.className = "px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5";
-            });
-
-            document.getElementById(`sec-${tab}`).classList.remove('hidden');
-            const activeTabEl = document.getElementById(`tab-${tab}`);
-            if (activeTabEl) activeTabEl.className = "px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-purple-600 text-white shadow";
-
-            if (tab === 'published') renderPublishedWorks();
-            if (tab === 'library') renderLoreGrid();
-            if (tab === 'media') renderMediaGrid();
-        }
-
-        function renderUI() {
-            renderProjectPicker();
-            renderChapterEditor();
-            renderLoreGrid();
-            renderMediaGrid();
-            renderPublishedWorks();
-        }
 
         function renderProjectPicker() {
             const pSelect = document.getElementById('project-select');
@@ -748,6 +947,7 @@
                 author: state.userProfile.name || 'Guest Writer',
                 title: title,
                 type: 'Novel',
+                isPublished: false,
                 chapters: [{ id: 'chap_' + Date.now(), title: 'Chapter 1', soundtrackId: '', content: '' }]
             };
             state.projects.push(newProj);
@@ -780,10 +980,11 @@
             }
         }
 
-        function deleteCurrentProject() {
-            const proj = state.projects.find(p => p.id === state.currentProjectId);
+        function deleteCurrentProject(id = null) {
+            const targetId = id || state.currentProjectId;
+            const proj = state.projects.find(p => p.id === targetId);
             if (proj && confirm(`Delete "${proj.title}"?`)) {
-                state.projects = state.projects.filter(p => p.id !== state.currentProjectId);
+                state.projects = state.projects.filter(p => p.id !== targetId);
                 state.currentProjectId = state.projects[0]?.id || null;
                 state.currentChapterId = state.projects[0]?.chapters[0]?.id || null;
                 saveState();
@@ -794,13 +995,16 @@
         function publishProject() {
             saveCurrentChapter();
             const proj = state.projects.find(p => p.id === state.currentProjectId);
-            if (proj && db) {
-                db.collection('public_works').doc(proj.id).set(proj).then(() => {
-                    alert("Published to Global Public Library!");
-                    loadPublicWorksFromCloud();
-                }).catch(() => alert("Saved locally!"));
+            if (proj) {
+                proj.isPublished = true;
+                if (db) {
+                    db.collection('public_works').doc(proj.id).set(proj).then(() => {
+                        alert("Published to Public Library!");
+                        loadPublicWorksFromCloud();
+                    }).catch(() => alert("Saved locally!"));
+                }
             }
-            setMode('reader');
+            switchMainPage('published');
         }
 
         function renderPublishedWorks() {
@@ -822,22 +1026,9 @@
                         <button onclick="openReaderView('${p.id}')" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold shadow flex items-center justify-center gap-1.5 transition">
                             <i class="fas fa-book-open"></i> Read Book
                         </button>
-                        ${state.mode === 'writer' ? `
-                            <button onclick="deletePublishedWork('${p.id}')" class="px-3 py-2 bg-red-900/20 hover:bg-red-900/40 text-red-400 border border-red-800/40 rounded-xl text-xs font-semibold">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        ` : ''}
                     </div>
                 </div>
             `).join('');
-        }
-
-        function deletePublishedWork(projId) {
-            if (confirm("Delete this work?")) {
-                state.projects = state.projects.filter(p => p.id !== projId);
-                saveState();
-                renderUI();
-            }
         }
 
         function openReaderView(projId) {
@@ -852,6 +1043,7 @@
             cSelect.innerHTML = proj.chapters.map((c, i) => `<option value="${i}">${c.title}</option>`).join('');
 
             loadReaderChapter(0);
+            updateBookmarkButtonState();
             document.getElementById('reader-view').classList.remove('hidden');
         }
 
@@ -963,7 +1155,7 @@
             `).join('');
         }
 
-        // IMAGE & LORE
+        // LORE & MEDIA
         function handleLocalImageUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -987,10 +1179,12 @@
         function renderLoreGrid() {
             const grid = document.getElementById('lore-grid');
             grid.innerHTML = state.loreEntries.map(l => `
-                <div onclick="openLoreModal('${l.id}')" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3 cursor-pointer">
-                    ${l.imageUrl ? `<img src="${l.imageUrl}" class="w-full h-40 rounded-xl object-cover">` : ''}
-                    <h3 class="font-cinzel text-lg font-bold text-white">${l.title}</h3>
-                    <p class="text-xs text-slate-400 line-clamp-2">${l.summary || l.description}</p>
+                <div onclick="openLoreModal('${l.id}')" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center gap-3 cursor-pointer">
+                    ${l.imageUrl ? `<img src="${l.imageUrl}" class="w-10 h-10 rounded-lg object-cover">` : `<div class="w-10 h-10 rounded-lg bg-purple-900/40 flex items-center justify-center text-purple-400 text-xs font-bold">${l.category[0]}</div>`}
+                    <div>
+                        <h4 class="font-cinzel text-xs font-bold text-white">${l.title}</h4>
+                        <p class="text-[10px] text-slate-400">${l.category}</p>
+                    </div>
                 </div>
             `).join('');
         }
@@ -1045,13 +1239,15 @@
             }
         }
 
-        // MEDIA TRACKS
         function renderMediaGrid() {
             const grid = document.getElementById('media-grid');
             grid.innerHTML = state.mediaTracks.map(m => `
-                <div onclick="openMediaModal('${m.id}')" class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-2 cursor-pointer">
-                    <h3 class="font-cinzel text-base font-bold text-white">${m.title}</h3>
-                    <p class="text-xs text-indigo-400">${m.platform} • ${m.genre || 'Soundtrack'}</p>
+                <div onclick="openMediaModal('${m.id}')" class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between cursor-pointer">
+                    <div>
+                        <h4 class="font-cinzel text-xs font-bold text-white">${m.title}</h4>
+                        <p class="text-[10px] text-indigo-400">${m.platform}</p>
+                    </div>
+                    <i class="fas fa-play-circle text-indigo-400 text-sm"></i>
                 </div>
             `).join('');
         }
