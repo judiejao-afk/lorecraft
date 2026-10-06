@@ -54,6 +54,17 @@
         .theme-dark { background-color: #0b0f19; color: #e2e8f0; }
         .theme-sepia { background-color: #fbf0d9; color: #3f2a1d; }
         .theme-night { background-color: #000000; color: #94a3b8; }
+        .theme-light { background-color: #ffffff; color: #1f2937; }
+        .theme-sepia .editor-content h1, .theme-sepia .editor-content h2, .theme-sepia .editor-content h3,
+        .theme-light .editor-content h1, .theme-light .editor-content h2, .theme-light .editor-content h3 { color: inherit; }
+        .theme-sepia .editor-content blockquote { color: #5b4636; }
+        .theme-light .editor-content blockquote { color: #4b5563; }
+        .theme-sepia, .theme-light { border-color: #e5e7eb !important; }
+        .theme-sepia #reader-chapter-title, .theme-light #reader-chapter-title { border-color: rgba(0,0,0,0.12); }
+        .reader-pill { padding: 4px 10px; border-radius: 8px; border: 1px solid #334155; font-size: 11px; font-weight: 600; color: #cbd5e1; }
+        .reader-pill.active { background: #9333ea; border-color: #9333ea; color: #fff; }
+        .shelf { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; scroll-snap-type: x mandatory; }
+        .shelf > * { scroll-snap-align: start; flex: 0 0 auto; }
 
         /* Inline Paragraph Hover Effect */
         .reader-para {
@@ -408,6 +419,9 @@
 
             <div id="cloud-status" class="hidden text-xs rounded-xl border px-4 py-3"></div>
 
+            <div id="library-sections" class="space-y-6"></div>
+
+            <h3 id="all-stories-heading" class="font-cinzel text-lg font-bold text-white">All Stories</h3>
             <div id="published-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
@@ -650,10 +664,51 @@
                         <button onclick="shareActiveStory()" class="px-3 py-1.5 bg-purple-900/30 hover:bg-purple-900/50 text-purple-300 border border-purple-700/50 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
                             <i class="fas fa-copy"></i> Copy Link
                         </button>
+
+                        <button onclick="toggleReaderSettings()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg text-xs font-bold flex items-center gap-1.5 transition" title="Reading display settings">
+                            <span class="font-lora">Aa</span> Display
+                        </button>
                     </div>
 
                     <div class="flex items-center gap-2">
                         <select id="reader-chapter-select" onchange="loadReaderChapter(this.value)" class="bg-slate-950 border border-slate-700 text-purple-300 rounded-lg px-2.5 py-1 text-xs font-semibold focus:outline-none"></select>
+                    </div>
+                </div>
+
+                <!-- READER DISPLAY SETTINGS -->
+                <div id="reader-settings" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                    <div class="space-y-1.5">
+                        <span class="text-[10px] text-slate-400 uppercase font-bold block">Text Size</span>
+                        <div class="flex flex-wrap gap-1.5" data-pref="size">
+                            <button class="reader-pill" data-val="sm" onclick="setReaderPref('size','sm')">Small</button>
+                            <button class="reader-pill" data-val="md" onclick="setReaderPref('size','md')">Medium</button>
+                            <button class="reader-pill" data-val="lg" onclick="setReaderPref('size','lg')">Large</button>
+                            <button class="reader-pill" data-val="xl" onclick="setReaderPref('size','xl')">Extra Large</button>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[10px] text-slate-400 uppercase font-bold block">Font</span>
+                        <div class="flex flex-wrap gap-1.5" data-pref="font">
+                            <button class="reader-pill" data-val="sans" onclick="setReaderPref('font','sans')">Sans</button>
+                            <button class="reader-pill font-lora" data-val="serif" onclick="setReaderPref('font','serif')">Serif</button>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[10px] text-slate-400 uppercase font-bold block">Line Spacing</span>
+                        <div class="flex flex-wrap gap-1.5" data-pref="spacing">
+                            <button class="reader-pill" data-val="tight" onclick="setReaderPref('spacing','tight')">Compact</button>
+                            <button class="reader-pill" data-val="normal" onclick="setReaderPref('spacing','normal')">Normal</button>
+                            <button class="reader-pill" data-val="loose" onclick="setReaderPref('spacing','loose')">Relaxed</button>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[10px] text-slate-400 uppercase font-bold block">Page Color</span>
+                        <div class="flex flex-wrap gap-1.5" data-pref="theme">
+                            <button class="reader-pill" data-val="dark" onclick="setReaderPref('theme','dark')">Dark</button>
+                            <button class="reader-pill" data-val="night" onclick="setReaderPref('theme','night')">Night</button>
+                            <button class="reader-pill" data-val="sepia" onclick="setReaderPref('theme','sepia')">Sepia</button>
+                            <button class="reader-pill" data-val="light" onclick="setReaderPref('theme','light')">Light</button>
+                        </div>
                     </div>
                 </div>
 
@@ -960,6 +1015,8 @@
             
             <div id="auth-signed-in" class="hidden space-y-3 text-center">
                 <p class="text-xs text-slate-300">Signed in as <strong id="auth-user-email" class="text-purple-300"></strong></p>
+                <p id="auth-sync-info" class="text-[11px] text-slate-400"></p>
+                <button onclick="syncNow(true)" class="w-full py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg"><i class="fas fa-rotate mr-1"></i> Sync My Drafts Now</button>
                 <button onclick="signOutUser()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold rounded-lg">Sign Out</button>
             </div>
 
@@ -973,6 +1030,11 @@
                     <input type="password" id="auth-password" required minlength="6" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="••••••••">
                 </div>
                 
+                <div class="text-right -mt-1">
+                    <button type="button" onclick="sendPasswordReset()" class="text-[11px] text-purple-300 hover:underline">Forgot password?</button>
+                </div>
+                <p class="text-[11px] text-slate-500">Signing in also saves your drafts, lore and reading list to your account, so you can write on any device.</p>
+
                 <div class="flex gap-2 pt-2">
                     <button type="submit" onclick="authAction='signin'" class="flex-1 py-2 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-lg shadow">Sign In</button>
                     <button type="submit" onclick="authAction='signup'" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold rounded-lg">Create Account</button>
@@ -1374,6 +1436,7 @@
             state.readingProgress = readJSON('lorecraft_progress', {});
             state.readingPosition = readJSON('lorecraft_position', {});
             state.seenWorkVersions = readJSON('lorecraft_seen_versions', {});
+            state.deletedProjectIds = readJSON('lorecraft_deleted_projects', []);
             state.authorBroadcasts = readJSON('lorecraft_broadcasts', []);
             state.dailyLog = Object.assign(d.dailyLog, readJSON('lorecraft_daily_log', {}));
             state.publicProjects = readJSON('lorecraft_public_projects', []);
@@ -1463,11 +1526,13 @@
                 lorecraft_progress: state.readingProgress,
                 lorecraft_position: state.readingPosition || {},
                 lorecraft_seen_versions: state.seenWorkVersions || {},
+                lorecraft_deleted_projects: state.deletedProjectIds || [],
                 lorecraft_broadcasts: state.authorBroadcasts,
                 lorecraft_daily_log: state.dailyLog
             };
             try {
                 Object.entries(data).forEach(([k, v]) => localStorage.setItem(k, JSON.stringify(v)));
+                if (typeof scheduleCloudSync === 'function') scheduleCloudSync();
                 return true;
             } catch (e) {
                 alert("Couldn't save: your browser storage is full (usually from large images). Remove some images or export a backup, then try again.");
@@ -2469,6 +2534,209 @@
             if (changed) saveState();
         }
 
+
+        /* ================= ACCOUNT SYNC: DRAFTS, LORE & READING LIST ================= */
+        // Each work is stored as users/{uid}/projects/{projectId}; everything else
+        // (profile, lore, audio tracks, series, bookmarks, progress) in users/{uid}/data/workspace.
+        // Changes are detected by comparing a fingerprint of the data with the last synced copy.
+
+        const WORKSPACE_KEYS = ['userProfile', 'loreEntries', 'mediaTracks', 'seriesList', 'bookmarkedProjectIds',
+            'votedProjectIds', 'readingProgress', 'readingPosition', 'authorBroadcasts', 'dailyLog', 'paraComments', 'deletedProjectIds'];
+        const sync = { timer: null, busy: false, status: 'idle', lastSynced: null, warnedSize: false };
+
+        function fingerprint(str) {
+            let h = 2166136261;
+            for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); }
+            return (h >>> 0).toString(36) + ':' + str.length;
+        }
+        function projectJSON(p) { const c = { ...p }; delete c.updatedAt; return JSON.stringify(c); }
+        function workspaceJSON() {
+            const ws = {};
+            WORKSPACE_KEYS.forEach(k => ws[k] = state[k] ?? null);
+            return JSON.stringify(ws);
+        }
+        function getSyncMeta() { return readJSON('lorecraft_sync_meta', { uid: null, projects: {}, workspace: null, syncedAt: null }); }
+        function setSyncMeta(meta) { try { localStorage.setItem('lorecraft_sync_meta', JSON.stringify(meta)); } catch (e) { } }
+        function userRef() { return db.collection('users').doc(currentUser.uid); }
+
+        function setSyncStatus(status) {
+            sync.status = status;
+            const el = document.getElementById('autosave-status');
+            if (el && currentUser) {
+                el.innerText = status === 'syncing' ? 'Syncing to your account…'
+                    : status === 'synced' ? 'Saved to your account ✓'
+                    : status === 'error' ? 'Saved on this device (account sync failed)'
+                    : el.innerText;
+            }
+            renderSyncInfo();
+        }
+
+        function renderSyncInfo() {
+            const el = document.getElementById('auth-sync-info');
+            if (!el) return;
+            const meta = getSyncMeta();
+            el.innerText = sync.status === 'syncing' ? 'Syncing your drafts…'
+                : sync.status === 'error' ? "Last sync failed. Your work is still saved on this device."
+                : meta.syncedAt ? `Drafts, lore and reading list saved to this account · last synced ${fmtDate(meta.syncedAt)}`
+                : 'Your drafts will be saved to this account.';
+        }
+
+        // Called after every local save: push changes a few seconds later
+        function scheduleCloudSync() {
+            if (!cloudOn() || !currentUser || sync.busy === 'merging') return;
+            clearTimeout(sync.timer);
+            sync.timer = setTimeout(() => syncNow(false), 3000);
+        }
+
+        async function syncNow(manual) {
+            if (!cloudOn() || !currentUser) return manual && openAuthModal();
+            if (sync.busy) { if (manual) scheduleCloudSync(); return; }
+            const meta = getSyncMeta();
+            if (meta.uid !== currentUser.uid) return; // first merge not done yet
+            sync.busy = true;
+            setSyncStatus('syncing');
+            try {
+                const batch = db.batch();
+                let writes = 0;
+                const now = Date.now();
+                const seen = new Set();
+                for (const p of state.projects) {
+                    seen.add(p.id);
+                    const json = projectJSON(p);
+                    const fp = fingerprint(json);
+                    if (meta.projects[p.id] === fp) continue;
+                    if (json.length > MAX_WORK_BYTES) {
+                        if (manual) alert(`"${p.title}" is too large to save to your account (over ~900 KB). Try a smaller cover image.`);
+                        continue;
+                    }
+                    p.updatedAt = now;
+                    batch.set(userRef().collection('projects').doc(p.id), { json, updatedAt: now });
+                    meta.projects[p.id] = fp;
+                    writes++;
+                }
+                for (const id of Object.keys(meta.projects)) {
+                    if (!seen.has(id)) { batch.delete(userRef().collection('projects').doc(id)); delete meta.projects[id]; writes++; }
+                }
+                const wsJson = workspaceJSON();
+                const wsFp = fingerprint(wsJson);
+                if (meta.workspace !== wsFp) {
+                    if (wsJson.length > MAX_WORK_BYTES) {
+                        if (!sync.warnedSize) { sync.warnedSize = true; alert("Your lore, profile images and reading list are too large to save to your account (over ~900 KB). Remove some large images. Your work is still saved on this device."); }
+                    } else {
+                        batch.set(userRef().collection('data').doc('workspace'), { json: wsJson, updatedAt: now });
+                        meta.workspace = wsFp;
+                        writes++;
+                    }
+                }
+                if (writes) await batch.commit();
+                meta.syncedAt = new Date().toISOString();
+                setSyncMeta(meta);
+                try { localStorage.setItem('lorecraft_projects', JSON.stringify(state.projects)); } catch (e) { }
+                setSyncStatus('synced');
+            } catch (err) {
+                console.warn('Account sync failed:', err);
+                setSyncStatus('error');
+                if (manual) alert(`Couldn't sync: ${err.message}`);
+            } finally {
+                sync.busy = false;
+            }
+        }
+
+        // On sign-in: combine what's on this device with what's in the account.
+        async function mergeWithAccount() {
+            if (!cloudOn() || !currentUser) return;
+            sync.busy = 'merging';
+            setSyncStatus('syncing');
+            try {
+                const meta = getSyncMeta();
+                const [projSnap, wsDoc] = await Promise.all([
+                    userRef().collection('projects').get(),
+                    userRef().collection('data').doc('workspace').get()
+                ]);
+                const cloudProjects = {};
+                projSnap.docs.forEach(d => {
+                    try { cloudProjects[d.id] = { ...JSON.parse(d.data().json), updatedAt: d.data().updatedAt || 0 }; } catch (e) { }
+                });
+                const cloudWs = wsDoc.exists ? (() => { try { return { data: JSON.parse(wsDoc.data().json), updatedAt: wsDoc.data().updatedAt || 0 }; } catch (e) { return null; } })() : null;
+                const accountHasData = projSnap.size > 0 || !!cloudWs;
+
+                // Work on this device that belongs to a different account
+                if (meta.uid && meta.uid !== currentUser.uid && accountHasData) {
+                    const keep = confirm("This browser has work from a different account.\n\nOK = also add it to this account\nCancel = show only this account's work (the other account's work stays saved in that account)");
+                    if (!keep) { state.projects = []; meta.projects = {}; }
+                }
+                const sameAccount = meta.uid === currentUser.uid;
+                const deleted = new Set([...(state.deletedProjectIds || []), ...((cloudWs?.data?.deletedProjectIds) || [])]);
+                let deletedFromCloud = [];
+
+                // Projects: newer copy wins; local edits made while signed out count as newest
+                const merged = new Map();
+                for (const p of state.projects) {
+                    if (deleted.has(p.id)) continue;
+                    const changedOffline = !sameAccount || meta.projects[p.id] !== fingerprint(projectJSON(p));
+                    merged.set(p.id, { ...p, updatedAt: changedOffline ? Date.now() : (p.updatedAt || 0) });
+                }
+                for (const [id, cp] of Object.entries(cloudProjects)) {
+                    if (deleted.has(id)) continue;
+                    const local = merged.get(id);
+                    // First sign-in on this device: the account's copy wins any clash
+                    if (!local || !sameAccount || (cp.updatedAt || 0) > (local.updatedAt || 0)) merged.set(id, cp);
+                }
+                // A brand-new device only has the sample story; don't duplicate it into a real account
+                if (!sameAccount && accountHasData && merged.has('proj_1') && !cloudProjects['proj_1']) {
+                    const sample = merged.get('proj_1');
+                    if (sample.author === 'Community Writer') merged.delete('proj_1');
+                }
+                state.projects = [...merged.values()];
+
+                // Everything else: whichever side changed most recently
+                if (cloudWs) {
+                    const c = cloudWs.data;
+                    const localChanged = meta.workspace !== fingerprint(workspaceJSON());
+                    if (sameAccount && localChanged) {
+                        // Edited on this device while signed out: keep this device's version (uploaded next)
+                    } else if (sameAccount) {
+                        WORKSPACE_KEYS.forEach(k => { if (c[k] !== undefined && c[k] !== null) state[k] = c[k]; });
+                    } else {
+                        // First sign-in on this device: combine both, the account's copy wins clashes
+                        const unionById = (a, b) => { const m = new Map(); [...(a || []), ...(b || [])].forEach(x => x && m.set(x.id, x)); return [...m.values()]; };
+                        const union = (a, b) => [...new Set([...(a || []), ...(b || [])])];
+                        const localLore = (state.loreEntries || []).filter(l => l.id !== 'lore_1');
+                        state.loreEntries = unionById(c.loreEntries || [], localLore);
+                        state.mediaTracks = unionById(c.mediaTracks, state.mediaTracks);
+                        state.seriesList = unionById(c.seriesList, state.seriesList);
+                        state.authorBroadcasts = unionById(c.authorBroadcasts, state.authorBroadcasts);
+                        state.bookmarkedProjectIds = union(c.bookmarkedProjectIds, state.bookmarkedProjectIds);
+                        state.votedProjectIds = union(c.votedProjectIds, state.votedProjectIds);
+                        state.readingProgress = { ...(state.readingProgress || {}), ...(c.readingProgress || {}) };
+                        state.readingPosition = { ...(state.readingPosition || {}), ...(c.readingPosition || {}) };
+                        state.paraComments = { ...(state.paraComments || {}), ...(c.paraComments || {}) };
+                        if (c.userProfile) state.userProfile = c.userProfile;
+                        if (c.dailyLog) state.dailyLog = c.dailyLog;
+                        deletedFromCloud = c.deletedProjectIds || [];
+                    }
+                }
+                state.deletedProjectIds = [...new Set([...deleted, ...deletedFromCloud])].slice(-500);
+
+                if (!state.projects.some(p => p.id === state.currentProjectId)) {
+                    state.currentProjectId = state.projects[0]?.id || null;
+                    state.currentChapterId = state.projects[0]?.chapters?.[0]?.id || null;
+                }
+                // Start a fresh baseline so everything that differs gets uploaded
+                setSyncMeta({ uid: currentUser.uid, projects: Object.fromEntries(Object.entries(cloudProjects).map(([id, cp]) => {
+                    const c = { ...cp }; delete c.updatedAt; return [id, fingerprint(JSON.stringify(c))];
+                })), workspace: cloudWs ? fingerprint(JSON.stringify(Object.fromEntries(WORKSPACE_KEYS.map(k => [k, cloudWs.data[k] ?? null])))) : null, syncedAt: getSyncMeta().syncedAt });
+                sync.busy = false;
+                saveState();
+                renderUI();
+                await syncNow(false);
+            } catch (err) {
+                console.warn('Account merge failed:', err);
+                sync.busy = false;
+                setSyncStatus('error');
+            }
+        }
+
         /* ================= FIREBASE ACCOUNT SIGN-IN ================= */
 
         function renderAuthButton() {
@@ -2486,6 +2754,7 @@
                 renderCloudStatus();
                 startFollowSync();
                 renderStoryOverview();
+                if (user) mergeWithAccount(); else setSyncStatus('idle');
                 if (state.activeReaderProject?.isCloud) loadMyVote(state.activeReaderProject.id);
             });
         }
@@ -2501,13 +2770,37 @@
                 closeAuthModal();
                 addNotification(authAction === 'signup' ? "Account Created" : "Signed In", `Welcome, ${email.split('@')[0]}!`, "account");
             };
-            const fail = (err) => alert(err.message);
+            const fail = (err) => alert(friendlyAuthError(err));
 
             if (authAction === 'signup') {
                 auth.createUserWithEmailAndPassword(email, password).then(done).catch(fail);
             } else {
                 auth.signInWithEmailAndPassword(email, password).then(done).catch(fail);
             }
+        }
+
+        function friendlyAuthError(err) {
+            const map = {
+                'auth/wrong-password': 'That password is incorrect. Try again, or use "Forgot password?".',
+                'auth/invalid-credential': 'The email or password is incorrect. Try again, or use "Forgot password?".',
+                'auth/invalid-login-credentials': 'The email or password is incorrect. Try again, or use "Forgot password?".',
+                'auth/user-not-found': 'No account uses that email yet. Click "Create Account" to make one.',
+                'auth/email-already-in-use': 'An account with that email already exists. Click "Sign In" instead.',
+                'auth/weak-password': 'Please use a password with at least 6 characters.',
+                'auth/invalid-email': 'That email address doesn\'t look right.',
+                'auth/too-many-requests': 'Too many attempts. Please wait a few minutes and try again, or reset your password.',
+                'auth/network-request-failed': 'Network problem. Check your internet connection and try again.'
+            };
+            return map[err?.code] || err?.message || 'Something went wrong. Please try again.';
+        }
+
+        function sendPasswordReset() {
+            if (!auth) return alert("Online accounts are unavailable right now.");
+            const email = document.getElementById('auth-email').value.trim().toLowerCase();
+            if (!email) return alert('Type your email address in the box above first, then click "Forgot password?" again.');
+            auth.sendPasswordResetEmail(email)
+                .then(() => alert(`If an account exists for ${email}, a password reset link is on its way. Check your inbox (and spam folder).`))
+                .catch(err => alert(friendlyAuthError(err)));
         }
 
         function signOutUser() {
@@ -2523,6 +2816,7 @@
             if (emailEl) emailEl.innerText = currentUser?.email || '';
             const titleEl = document.getElementById('auth-modal-title');
             if (titleEl) titleEl.innerText = signedIn ? 'Your Account' : 'Cloud Account Sign In';
+            renderSyncInfo();
             document.getElementById('auth-guest-row')?.classList.toggle('hidden', signedIn);
             document.getElementById('auth-modal').classList.remove('hidden');
         }
@@ -2918,6 +3212,60 @@
 
             renderPublishedWorks(filtered);
             renderCloudStatus();
+            const filtersActive = !!query || fmt !== 'All' || gnr !== 'All' || sts !== 'All' || rtg !== 'All';
+            renderLibrarySections(filtersActive);
+        }
+
+        function shelfCard(p, note = '') {
+            const cover = safeImg(p.coverUrl);
+            return `
+                <button onclick="openStoryOverview(${jsArg(p.id)})" class="w-40 sm:w-44 text-left bg-slate-900 border border-slate-800 hover:border-purple-500/60 rounded-xl overflow-hidden transition">
+                    ${cover ? `<img src="${esc(cover)}" class="w-full h-28 object-cover">`
+                            : `<div class="w-full h-28 bg-gradient-to-br from-purple-900 via-indigo-900 to-slate-900 flex items-center justify-center p-2"><span class="font-cinzel text-xs font-bold text-white/80 text-center line-clamp-3">${esc(p.title)}</span></div>`}
+                    <div class="p-2.5 space-y-0.5">
+                        <p class="font-cinzel text-xs font-bold text-white line-clamp-1">${esc(p.title)}</p>
+                        <p class="text-[10px] text-slate-400 line-clamp-1">${esc(p.author || 'Author')}</p>
+                        ${note ? `<p class="text-[10px] text-purple-300 font-semibold">${note}</p>` : ''}
+                    </div>
+                </button>`;
+        }
+
+        function renderLibrarySections(filtersActive) {
+            const box = document.getElementById('library-sections');
+            const heading = document.getElementById('all-stories-heading');
+            if (!box) return;
+            const works = state.publicProjects;
+            if (filtersActive || works.length < 2) {
+                box.innerHTML = '';
+                if (heading) heading.classList.toggle('hidden', filtersActive || works.length === 0);
+                return;
+            }
+            if (heading) heading.classList.remove('hidden');
+            const time = w => Date.parse(w.publishedAt || 0) || 0;
+            const updated = w => Date.parse(w.updatedAt || w.publishedAt || 0) || 0;
+            const week = Date.now() - 7 * 86400000;
+
+            const continueReading = works.filter(w => (state.readingProgress[w.id] || 0) > 0 && (state.readingProgress[w.id] || 0) < 100)
+                .sort((a, b) => (state.readingProgress[b.id] || 0) - (state.readingProgress[a.id] || 0));
+            const trending = [...works].sort((a, b) => (b.votes || 0) - (a.votes || 0) || updated(b) - updated(a)).filter(w => (w.votes || 0) > 0);
+            const fresh = [...works].sort((a, b) => time(b) - time(a));
+            const recentlyUpdated = [...works].filter(w => w.updatedAt && updated(w) - time(w) > 60000).sort((a, b) => updated(b) - updated(a));
+            const following = (typeof cloud !== 'undefined' && cloud.following && cloud.following.size)
+                ? works.filter(w => cloud.following.has(w.ownerUid)).sort((a, b) => updated(b) - updated(a)) : [];
+
+            const shelf = (title, icon, list, noteFn) => list.length ? `
+                <div class="space-y-2">
+                    <h3 class="font-cinzel text-base font-bold text-white"><i class="fas ${icon} text-purple-400 mr-2"></i>${title}</h3>
+                    <div class="shelf">${list.slice(0, 12).map(w => shelfCard(w, noteFn ? noteFn(w) : '')).join('')}</div>
+                </div>` : '';
+
+            box.innerHTML = [
+                shelf('Continue Reading', 'fa-bookmark', continueReading, w => `${state.readingProgress[w.id]}% read`),
+                shelf('From Authors You Follow', 'fa-user-check', following, w => updated(w) > week ? 'Updated this week' : ''),
+                shelf('Trending', 'fa-fire', trending, w => `★ ${w.votes || 0} votes`),
+                shelf('New Releases', 'fa-bolt', fresh, w => time(w) > week ? 'New this week' : ''),
+                shelf('Recently Updated', 'fa-rotate', recentlyUpdated, w => w.updatedAt ? `Updated ${fmtDate(w.updatedAt)}` : '')
+            ].join('');
         }
 
         function renderPublishedWorks(works = null) {
@@ -3207,6 +3555,7 @@
                     worksRef().doc(proj.cloudId).delete().catch(err => alert(`The online copy couldn't be removed: ${err.message}`));
                 }
                 state.projects = state.projects.filter(p => p.id !== proj.id);
+                state.deletedProjectIds = [...(state.deletedProjectIds || []), proj.id].slice(-500);
                 state.publicProjects = state.publicProjects.filter(p => p.id !== proj.id && p.id !== proj.cloudId);
                 state.seriesList.forEach(s => s.bookIds = s.bookIds.filter(id => id !== proj.id));
                 state.bookmarkedProjectIds = state.bookmarkedProjectIds.filter(id => id !== proj.id);
@@ -3377,6 +3726,7 @@
                 }
             }
 
+            applyReaderPrefs();
             document.getElementById('reader-view')?.scrollTo(0, 0);
         }
 
@@ -3385,6 +3735,39 @@
             document.querySelectorAll('#reader-chapter-body .para-cmt-badge').forEach(b => {
                 b.innerHTML = `<i class="fas fa-comment"></i> ${getParaComments(b.dataset.paraId).length}`;
             });
+        }
+
+        const READER_DEFAULTS = { size: 'md', font: 'sans', spacing: 'normal', theme: 'dark' };
+        function getReaderPrefs() { return Object.assign({}, READER_DEFAULTS, readJSON('lorecraft_reader_prefs', {})); }
+
+        function applyReaderPrefs() {
+            const prefs = getReaderPrefs();
+            const paper = document.getElementById('reader-paper');
+            const body = document.getElementById('reader-chapter-body');
+            if (paper) {
+                paper.classList.remove('theme-dark', 'theme-night', 'theme-sepia', 'theme-light');
+                paper.classList.add('theme-' + prefs.theme);
+            }
+            if (body) {
+                body.style.fontSize = { sm: '1rem', md: '1.125rem', lg: '1.3rem', xl: '1.5rem' }[prefs.size];
+                body.style.lineHeight = { tight: '1.5', normal: '1.8', loose: '2.15' }[prefs.spacing];
+                body.style.fontFamily = prefs.font === 'serif' ? "'Lora', serif" : "'Inter', sans-serif";
+            }
+            document.querySelectorAll('#reader-settings [data-pref]').forEach(group => {
+                group.querySelectorAll('.reader-pill').forEach(btn => btn.classList.toggle('active', btn.dataset.val === prefs[group.dataset.pref]));
+            });
+        }
+
+        function setReaderPref(key, value) {
+            const prefs = getReaderPrefs();
+            prefs[key] = value;
+            try { localStorage.setItem('lorecraft_reader_prefs', JSON.stringify(prefs)); } catch (e) { }
+            applyReaderPrefs();
+        }
+
+        function toggleReaderSettings() {
+            document.getElementById('reader-settings').classList.toggle('hidden');
+            applyReaderPrefs();
         }
 
         function jumpToBranchChapter(targetChapId) {
