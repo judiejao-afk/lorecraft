@@ -135,6 +135,9 @@
                 <button onclick="switchMainPage('series')" id="nav-series" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
                     <i class="fas fa-layer-group"></i> Series Manager
                 </button>
+                <button onclick="switchMainPage('moderation')" id="nav-moderation" class="hidden px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
+                    <i class="fas fa-shield-halved"></i> Moderation <span id="mod-badge" class="hidden bg-pink-600 text-white text-[9px] font-bold px-1.5 rounded-full">0</span>
+                </button>
                 <button onclick="switchMainPage('profile')" id="nav-profile" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-slate-400 hover:text-slate-200 transition flex items-center gap-1.5">
                     <i class="fas fa-user-circle"></i> Profile & Reading List
                 </button>
@@ -335,6 +338,22 @@
         </section>
 
         <!-- PAGE 3: BOOK SERIES MANAGER -->
+        <!-- MODERATION (admins only) -->
+        <section id="page-moderation" class="hidden space-y-6">
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-2 shadow-xl">
+                <h2 class="font-cinzel text-2xl font-bold text-white flex items-center gap-2"><i class="fas fa-shield-halved text-purple-400"></i> Moderation</h2>
+                <p class="text-xs text-slate-400">Review reports from readers. Hidden stories disappear from the library for everyone except their author and admins.</p>
+            </div>
+            <div class="space-y-3">
+                <h3 class="font-cinzel text-lg font-bold text-white">Open Reports</h3>
+                <div id="mod-reports-list" class="space-y-3"></div>
+            </div>
+            <div class="space-y-3">
+                <h3 class="font-cinzel text-lg font-bold text-white">Hidden Stories</h3>
+                <div id="mod-hidden-list" class="space-y-3"></div>
+            </div>
+        </section>
+
         <section id="page-series" class="hidden space-y-6">
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 shadow-xl">
                 <div class="flex items-center justify-between border-b border-slate-800 pb-4">
@@ -533,6 +552,20 @@
                         </div>
 
                         <div>
+                            <label class="text-xs text-slate-400 block mb-1">Content Warnings <span class="text-slate-500">(shown to readers before they start)</span></label>
+                            <div id="meta-warnings" class="flex flex-wrap gap-2">
+                                <label class="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 cursor-pointer"><input type="checkbox" class="meta-warning accent-amber-500" value="Violence"> Violence</label>
+                                <label class="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 cursor-pointer"><input type="checkbox" class="meta-warning accent-amber-500" value="Gore"> Gore</label>
+                                <label class="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 cursor-pointer"><input type="checkbox" class="meta-warning accent-amber-500" value="Strong Language"> Strong Language</label>
+                                <label class="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 cursor-pointer"><input type="checkbox" class="meta-warning accent-amber-500" value="Sexual Content"> Sexual Content</label>
+                                <label class="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 cursor-pointer"><input type="checkbox" class="meta-warning accent-amber-500" value="Self-Harm"> Self-Harm</label>
+                                <label class="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 cursor-pointer"><input type="checkbox" class="meta-warning accent-amber-500" value="Substance Use"> Substance Use</label>
+                                <label class="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 cursor-pointer"><input type="checkbox" class="meta-warning accent-amber-500" value="Abuse"> Abuse</label>
+                                <label class="flex items-center gap-1.5 text-xs text-slate-300 bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 cursor-pointer"><input type="checkbox" class="meta-warning accent-amber-500" value="Death / Grief"> Death / Grief</label>
+                            </div>
+                        </div>
+
+                        <div>
                             <label class="text-xs text-slate-400 block mb-1">Story Synopsis / Blurb</label>
                             <textarea id="meta-synopsis" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Write a compelling blurb for readers..."></textarea>
                         </div>
@@ -720,6 +753,17 @@
                     <div id="reader-branch-choices" class="hidden pt-6 border-t border-slate-800/80 space-y-3">
                         <h4 class="text-xs font-bold text-purple-400 uppercase tracking-widest text-center">Make Your Choice</h4>
                         <div id="reader-choices-buttons" class="grid grid-cols-1 gap-3"></div>
+                    </div>
+
+                    <!-- CHAPTER DISCUSSION -->
+                    <div id="reader-chapter-discussion" class="pt-6 border-t border-slate-800/80 space-y-3 font-sans text-base">
+                        <h4 class="text-sm font-bold text-purple-400 uppercase tracking-widest"><i class="fas fa-comments mr-1"></i> Chapter Discussion <span id="chapter-comment-count" class="text-slate-500"></span></h4>
+                        <div id="chapter-reply-indicator"></div>
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <textarea id="chapter-comment-input" rows="2" maxlength="1000" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Share your thoughts on this chapter..."></textarea>
+                            <button onclick="postChapterComment()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-xl text-xs font-semibold self-end">Post</button>
+                        </div>
+                        <div id="chapter-comments-list" class="space-y-3"></div>
                     </div>
                 </div>
 
@@ -961,6 +1005,43 @@
         </div>
     </div>
 
+    <!-- REPORT MODAL -->
+    <div id="report-modal" class="hidden fixed inset-0 z-[70] bg-black/80 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-flag text-red-400 mr-2"></i> <span id="report-modal-title">Report</span></h3>
+                <button onclick="closeReportModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button>
+            </div>
+            <p id="report-preview" class="text-xs text-slate-400 italic bg-slate-950 border border-slate-800 rounded-lg p-2 line-clamp-3"></p>
+            <div>
+                <label class="text-xs text-slate-400 block mb-1">Reason *</label>
+                <select id="report-reason" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white">
+                    <option value="Spam or advertising">Spam or advertising</option>
+                    <option value="Harassment, bullying or hate">Harassment, bullying or hate</option>
+                    <option value="Sexual content involving minors">Sexual content involving minors</option>
+                    <option value="Promotes violence or self-harm">Promotes violence or self-harm</option>
+                    <option value="Missing content warning or wrong rating">Missing content warning or wrong rating</option>
+                    <option value="Plagiarism or copyright">Plagiarism or copyright</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div>
+                <label class="text-xs text-slate-400 block mb-1">Details (optional)</label>
+                <textarea id="report-details" rows="3" maxlength="1000" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-3 text-xs text-white" placeholder="Anything that helps the moderator understand the problem"></textarea>
+            </div>
+            <p class="text-[11px] text-slate-500">Reports are private. Only LoreCraft moderators can see them.</p>
+            <div class="flex justify-end gap-2">
+                <button onclick="closeReportModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
+                <button onclick="submitReport()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white rounded-lg text-xs font-semibold">Send Report</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PUBLIC AUTHOR PAGE -->
+    <div id="author-view" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur overflow-y-auto p-4 md:p-8">
+        <div id="author-view-card" class="max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden"></div>
+    </div>
+
     <!-- STORY OVERVIEW (synopsis, author & chapters before reading) -->
     <div id="story-overview" class="hidden fixed inset-0 z-50 bg-black/85 backdrop-blur overflow-y-auto p-4 md:p-8">
         <div id="story-overview-card" class="max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl overflow-hidden"></div>
@@ -974,6 +1055,7 @@
         </div>
 
         <div class="space-y-3">
+            <div id="para-reply-indicator"></div>
             <textarea id="para-comment-input" rows="2" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500" placeholder="Comment on this paragraph..."></textarea>
             <div class="flex justify-end">
                 <button onclick="postParagraphComment()" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold">Post Reaction</button>
@@ -1239,13 +1321,13 @@
 
             document.addEventListener('keydown', (e) => {
                 if (e.key !== 'Escape') return;
-                ['lore-modal', 'media-modal', 'notif-modal', 'backup-modal', 'auth-modal', 'profile-modal', 'follow-list-modal', 'branch-graph-modal', 'story-overview']
+                ['lore-modal', 'media-modal', 'notif-modal', 'backup-modal', 'auth-modal', 'profile-modal', 'follow-list-modal', 'branch-graph-modal', 'story-overview', 'report-modal', 'author-view']
                     .forEach(id => document.getElementById(id)?.classList.add('hidden'));
                 closeParaCommentsPanel();
             });
 
             // Close a modal when clicking the dark backdrop
-            document.querySelectorAll('#lore-modal, #media-modal, #notif-modal, #backup-modal, #auth-modal, #profile-modal, #follow-list-modal, #branch-graph-modal, #story-overview')
+            document.querySelectorAll('#lore-modal, #media-modal, #notif-modal, #backup-modal, #auth-modal, #profile-modal, #follow-list-modal, #branch-graph-modal, #story-overview, #report-modal, #author-view')
                 .forEach(m => m.addEventListener('click', (e) => { if (e.target === m) m.classList.add('hidden'); }));
         });
 
@@ -1409,10 +1491,12 @@
         function switchMainPage(page) {
             flushAutosave();
             state.currentPage = page;
-            ['dashboard', 'profile', 'series', 'published', 'writer'].forEach(p => {
+            if (page === 'moderation' && !cloud.isAdmin) page = 'dashboard';
+            state.currentPage = page;
+            ['dashboard', 'profile', 'series', 'published', 'writer', 'moderation'].forEach(p => {
                 document.getElementById(`page-${p}`)?.classList.toggle('hidden', p !== page);
                 const navBtn = document.getElementById(`nav-${p}`);
-                if (navBtn) navBtn.className = p === page ? NAV_ACTIVE : NAV_IDLE;
+                if (navBtn) navBtn.className = (p === page ? NAV_ACTIVE : NAV_IDLE) + (p === 'moderation' && !cloud.isAdmin ? ' hidden' : '');
                 document.getElementById(`mnav-${p}`)?.classList.toggle('mnav-active', p === page);
             });
             renderUI();
@@ -1437,6 +1521,7 @@
             state.readingPosition = readJSON('lorecraft_position', {});
             state.seenWorkVersions = readJSON('lorecraft_seen_versions', {});
             state.deletedProjectIds = readJSON('lorecraft_deleted_projects', []);
+            state.ackWarnings = readJSON('lorecraft_ack_warnings', {});
             state.authorBroadcasts = readJSON('lorecraft_broadcasts', []);
             state.dailyLog = Object.assign(d.dailyLog, readJSON('lorecraft_daily_log', {}));
             state.publicProjects = readJSON('lorecraft_public_projects', []);
@@ -1554,6 +1639,7 @@
             updateNotificationBadge();
             renderAuthButton();
             filterLibrary();
+            if (state.currentPage === 'moderation') renderModeration();
         }
 
         /* ================= DASHBOARD ================= */
@@ -1818,6 +1904,7 @@
             saveState();
             closeProfileEditModal();
             renderUI();
+            publishPublicProfile();
         }
 
         /* ================= AUTHOR BROADCASTS ================= */
@@ -1841,6 +1928,7 @@
             input.value = '';
             saveState();
             renderAuthorBroadcasts();
+            publishPublicProfile();
         }
 
         function addBroadcastComment(bcId) {
@@ -1862,6 +1950,7 @@
             state.authorBroadcasts = state.authorBroadcasts.filter(b => b.id !== bcId);
             saveState();
             renderAuthorBroadcasts();
+            publishPublicProfile();
         }
 
         function renderAuthorBroadcasts() {
@@ -1945,16 +2034,21 @@
         function baseUrl() { return window.location.href.split('#')[0]; }
 
         function shareUserProfile() {
-            copyToClipboard(baseUrl(), "Profile link copied to clipboard!");
+            if (cloudOn() && currentUser) {
+                publishPublicProfile();
+                return copyToClipboard(`${baseUrl()}#author=${encodeURIComponent(currentUser.uid)}`, "Your public author page link was copied!");
+            }
+            copyToClipboard(baseUrl(), "Sign in to get a link to your public author page. (Copied the site link instead.)");
         }
 
-        // Copies a link that opens this story directly
         function shareActiveStory() {
             if (!state.activeReaderProject) return;
             copyToClipboard(`${baseUrl()}#read=${encodeURIComponent(state.activeReaderProject.id)}`, `Link for "${state.activeReaderProject.title}" copied to clipboard!`);
         }
 
         function openStoryFromLink() {
+            const a = window.location.hash.match(/^#author=(.+)$/);
+            if (a) return openAuthorPage(decodeURIComponent(a[1]));
             const m = window.location.hash.match(/^#read=(.+)$/);
             if (!m) return;
             const id = decodeURIComponent(m[1]);
@@ -2029,7 +2123,7 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                ${storyCount ? `<button onclick="showAuthorInLibrary(${jsArg(u.name)})" class="px-2.5 py-1 text-xs rounded-lg bg-slate-800 text-purple-300 border border-slate-700">Stories</button>` : ''}
+                                <button onclick="openAuthorPage(${jsArg(u.uid)}, ${jsArg(u.name)})" class="px-2.5 py-1 text-xs rounded-lg bg-slate-800 text-purple-300 border border-slate-700">Profile</button>
                                 <button onclick="toggleFollowAuthor(${jsArg(u.uid)}, ${jsArg(u.name)})" class="px-3 py-1 text-xs rounded-lg font-semibold transition ${youFollow ? 'bg-slate-800 text-slate-300' : 'bg-purple-600 text-white'}">${youFollow ? 'Unfollow' : 'Follow back'}</button>
                             </div>
                         </div>`;
@@ -2155,6 +2249,8 @@
                 if (cloud.pendingLinkOpen) { cloud.pendingLinkOpen = false; openStoryFromLink(); }
                 renderStoryOverview();
                 checkFollowedAuthorUpdates();
+                if (state.authorPageUid) renderAuthorPage();
+                if (state.currentPage === 'moderation') renderModeration();
             }, err => {
                 console.warn('Library sync failed:', err);
                 cloud.error = err.message;
@@ -2261,11 +2357,7 @@
                     (map[c.paraId] = map[c.paraId] || []).push({ ...c, docId: d.id, date: tsToIso(c.createdAt) || new Date().toISOString() });
                 });
                 cloud.comments = map;
-                if (state.activeReaderProject?.id === workId) {
-                    refreshReaderBadges();
-                    const panelOpen = !document.getElementById('para-comments-panel').classList.contains('hidden');
-                    if (panelOpen && state.activeParaId) renderParaCommentsList(state.activeParaId);
-                }
+                if (state.activeReaderProject?.id === workId) refreshCommentViews();
             }, err => console.warn('Comment sync failed:', err));
         }
 
@@ -2296,7 +2388,7 @@
         }
 
         function worksByAuthor(work) {
-            return state.publicProjects.filter(p => p.id !== work.id &&
+            return visibleWorks().filter(p => p.id !== work.id &&
                 (work.ownerUid ? p.ownerUid === work.ownerUid : (p.author || '') === (work.author || '')));
         }
 
@@ -2304,6 +2396,7 @@
             flushAutosave();
             const work = findWork(id);
             if (!work) return alert("This story couldn't be found. It may have been unpublished.");
+            if (work.hidden && !canSeeHidden(work)) return alert("This story isn't available right now.");
             state.overviewWorkId = id;
             renderStoryOverview();
             document.getElementById('story-overview').classList.remove('hidden');
@@ -2374,12 +2467,21 @@
                             <div class="w-11 h-11 rounded-full bg-purple-900/50 text-purple-200 font-bold flex items-center justify-center">${esc(authorName[0] || 'A')}</div>
                             <div>
                                 <p class="text-[10px] text-slate-500 uppercase font-bold">Written by</p>
-                                <p class="text-sm font-bold text-white">${esc(authorName)}</p>
+                                ${work.ownerUid ? `<button onclick="openAuthorPage(${jsArg(work.ownerUid)}, ${jsArg(authorName)})" class="text-sm font-bold text-white hover:text-purple-300 hover:underline">${esc(authorName)}</button>` : `<p class="text-sm font-bold text-white">${esc(authorName)}</p>`}
                                 ${followers != null ? `<p class="text-[11px] text-slate-400">${followers} follower${followers === 1 ? '' : 's'}</p>` : ''}
                             </div>
                         </div>
                         ${followBtn}
                     </div>
+
+                    ${work.hidden ? `<div class="bg-red-950/40 border border-red-800/50 rounded-2xl p-4 text-xs text-red-200"><i class="fas fa-eye-slash mr-1"></i> This story is hidden from the Public Library by a moderator${work.hiddenReason ? ': ' + esc(work.hiddenReason) : ''}. Only you${isOwn ? '' : ' (as an admin)'} and moderators can see it.</div>` : ''}
+
+                    ${((work.warnings || []).length || work.rating === 'Mature 18+') ? `
+                    <div class="bg-amber-950/40 border border-amber-700/50 rounded-2xl p-4 space-y-1.5">
+                        <p class="text-xs font-bold text-amber-300 uppercase tracking-wider"><i class="fas fa-triangle-exclamation mr-1"></i> Content Warnings</p>
+                        ${work.rating === 'Mature 18+' ? `<p class="text-xs text-amber-100">Rated <strong>Mature 18+</strong>. Intended for adult readers.</p>` : ''}
+                        ${(work.warnings || []).length ? `<div class="flex flex-wrap gap-1.5">${work.warnings.map(w => `<span class="text-[11px] font-semibold text-amber-200 bg-amber-900/40 border border-amber-700/40 px-2 py-0.5 rounded">${esc(w)}</span>`).join('')}</div>` : ''}
+                    </div>` : ''}
 
                     <!-- Stats -->
                     <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
@@ -2423,6 +2525,8 @@
                         </div>
                     </div>
 
+                    ${!isOwn && work.isCloud ? `<div class="text-right"><button onclick="openReportModal({ type: 'work', workId: ${jsArg(work.id)}, preview: ${jsArg(work.title)} })" class="text-[11px] text-slate-500 hover:text-red-300"><i class="fas fa-flag mr-1"></i>Report this story</button></div>` : ''}
+
                     ${more.length ? `
                     <div class="space-y-2">
                         <h3 class="font-cinzel text-lg font-bold text-white">More by ${esc(authorName)}</h3>
@@ -2439,6 +2543,15 @@
         }
 
         function startReadingFromOverview(id, chapterIndex) {
+            const work = findWork(id);
+            const needsAck = work && ((work.warnings || []).length || work.rating === 'Mature 18+');
+            const isOwn = work && (work.ownerUid ? currentUser?.uid === work.ownerUid : state.projects.some(p => p.id === work.id));
+            if (needsAck && !isOwn && !(state.ackWarnings || {})[id]) {
+                const list = [work.rating === 'Mature 18+' ? 'Mature 18+' : null, ...(work.warnings || [])].filter(Boolean).join(', ');
+                if (!confirm(`This story contains: ${list}.\n\nDo you want to continue reading?`)) return;
+                state.ackWarnings = { ...(state.ackWarnings || {}), [id]: true };
+                try { localStorage.setItem('lorecraft_ack_warnings', JSON.stringify(state.ackWarnings)); } catch (e) { }
+            }
             closeStoryOverview();
             openReaderView(id);
             if (chapterIndex > 0) loadReaderChapter(chapterIndex);
@@ -2486,7 +2599,7 @@
 
         function loadFollowerCount(authorUid) {
             db.collection('follows').where('authorUid', '==', authorUid).get()
-                .then(snap => { cloud.followerCounts[authorUid] = snap.size; renderStoryOverview(); })
+                .then(snap => { cloud.followerCounts[authorUid] = snap.size; renderStoryOverview(); if (state.authorPageUid === authorUid) renderAuthorPage(); })
                 .catch(() => { });
         }
 
@@ -2737,6 +2850,443 @@
             }
         }
 
+
+        /* ================= COMMENT THREADS (replies, likes, reports) ================= */
+
+        state.replyTarget = null; // { scope: 'para' | 'chapter', docId, author }
+
+        // Local (offline) comments get an id so replies and likes work the same way
+        function ensureLocalIds(list) {
+            (list || []).forEach(c => { if (!c.docId) c.docId = c.id || ('l' + Math.random().toString(36).slice(2, 10)); if (!c.likedBy) c.likedBy = []; });
+            return list;
+        }
+
+        function renderCommentThread(comments, paraId, scope) {
+            const proj = state.activeReaderProject;
+            if (!proj?.isCloud) ensureLocalIds(comments);
+            const all = (comments || []).filter(Boolean);
+            if (all.length === 0) return '';
+            const top = all.filter(c => !c.parentId);
+            const repliesOf = id => all.filter(c => c.parentId === id);
+            const isWorkOwner = proj?.isCloud ? (currentUser && proj.ownerUid === currentUser.uid) : true;
+            const me = currentUser?.uid || 'local';
+
+            const one = (c, isReply) => {
+                const likes = (c.likedBy || []).length;
+                const liked = (c.likedBy || []).includes(me);
+                const canDelete = proj?.isCloud ? (currentUser && (c.uid === currentUser.uid || isWorkOwner || cloud.isAdmin)) : true;
+                const isAuthor = proj?.isCloud && c.uid && c.uid === proj.ownerUid;
+                return `
+                    <div class="${isReply ? 'ml-6 border-l-2 border-purple-800/50 pl-3' : ''}">
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="text-xs font-bold text-purple-300">${esc(c.author)}${isAuthor ? ' <span class="text-[9px] font-bold bg-purple-700 text-white px-1.5 py-0.5 rounded ml-1">AUTHOR</span>' : ''}</span>
+                                <span class="text-[10px] text-slate-500">${esc(fmtDate(c.date))}</span>
+                            </div>
+                            <p class="text-xs text-slate-300 whitespace-pre-wrap">${esc(c.text)}</p>
+                            <div class="flex items-center gap-4 text-[11px] text-slate-500 pt-0.5">
+                                <button onclick="toggleCommentLike(${jsArg(c.docId)}, ${jsArg(paraId)})" class="${liked ? 'text-pink-400' : 'hover:text-pink-300'}"><i class="${liked ? 'fas' : 'far'} fa-heart mr-1"></i>${likes || ''}</button>
+                                ${!isReply ? `<button onclick="startReply(${jsArg(scope)}, ${jsArg(c.docId)}, ${jsArg(c.author)})" class="hover:text-purple-300"><i class="fas fa-reply mr-1"></i>Reply</button>` : ''}
+                                ${proj?.isCloud && c.uid !== currentUser?.uid ? `<button onclick="openReportModal({ type: 'comment', workId: ${jsArg(proj.id)}, commentId: ${jsArg(c.docId)}, preview: ${jsArg(c.text)} })" class="hover:text-red-300" title="Report comment"><i class="fas fa-flag"></i></button>` : ''}
+                                ${canDelete ? `<button onclick="deleteComment(${jsArg(c.docId)}, ${jsArg(paraId)})" class="hover:text-red-300 ml-auto" title="Delete comment"><i class="fas fa-trash"></i></button>` : ''}
+                            </div>
+                        </div>
+                    </div>`;
+            };
+            return top.map(c => `<div class="space-y-2">${one(c, false)}${repliesOf(c.docId).map(r => one(r, true)).join('')}</div>`).join('');
+        }
+
+        function startReply(scope, docId, author) {
+            state.replyTarget = { scope, docId, author };
+            renderReplyIndicator(scope);
+            document.getElementById(scope === 'para' ? 'para-comment-input' : 'chapter-comment-input')?.focus();
+        }
+
+        function cancelReply() {
+            const scope = state.replyTarget?.scope;
+            state.replyTarget = null;
+            if (scope) renderReplyIndicator(scope);
+        }
+
+        function renderReplyIndicator(scope) {
+            const el = document.getElementById(scope === 'para' ? 'para-reply-indicator' : 'chapter-reply-indicator');
+            if (!el) return;
+            const t = state.replyTarget;
+            el.innerHTML = t && t.scope === scope
+                ? `<div class="text-[11px] text-purple-200 bg-purple-950/50 border border-purple-800/50 rounded-lg px-3 py-1.5 flex items-center justify-between mb-1"><span><i class="fas fa-reply mr-1"></i>Replying to <strong>${esc(t.author)}</strong></span><button onclick="cancelReply()" class="text-slate-400 hover:text-white"><i class="fas fa-times"></i></button></div>`
+                : '';
+        }
+
+        function chapterKey() {
+            const chap = state.activeReaderProject?.chapters?.[state.activeReaderChapterIndex];
+            return chap ? `${chap.id}__chapter` : null;
+        }
+
+        function renderChapterDiscussion() {
+            const key = chapterKey();
+            const list = document.getElementById('chapter-comments-list');
+            if (!key || !list) return;
+            const comments = getParaComments(key);
+            const count = document.getElementById('chapter-comment-count');
+            if (count) count.innerText = comments.length ? `(${comments.length})` : '';
+            list.innerHTML = renderCommentThread(comments, key, 'chapter') ||
+                `<p class="text-xs text-slate-500 italic">No comments on this chapter yet. Be the first!</p>`;
+            const input = document.getElementById('chapter-comment-input');
+            if (input) input.placeholder = (state.activeReaderProject?.isCloud && !currentUser) ? 'Sign in to join the discussion...' : 'Share your thoughts on this chapter...';
+            renderReplyIndicator('chapter');
+        }
+
+        function postChapterComment() {
+            const key = chapterKey();
+            if (key) postComment(key, document.getElementById('chapter-comment-input'), 'chapter');
+        }
+
+        // Shared by paragraph comments and chapter discussion
+        async function postComment(paraId, input, scope) {
+            const text = input ? input.value.trim() : '';
+            if (!text || !paraId) return;
+            if (text.length > 1000) return alert("Comments can be up to 1,000 characters.");
+            const proj = state.activeReaderProject;
+            const parentId = state.replyTarget?.scope === scope ? state.replyTarget.docId : null;
+
+            if (proj?.isCloud) {
+                if (!currentUser) { alert("Sign in to comment."); return openAuthModal(); }
+                const data = {
+                    paraId, text, likedBy: [],
+                    author: (state.userProfile.name || (currentUser.email || 'Reader').split('@')[0]).slice(0, 100),
+                    uid: currentUser.uid,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+                if (parentId) data.parentId = parentId;
+                try {
+                    await worksRef().doc(proj.id).collection('comments').add(data);
+                    if (input) input.value = '';
+                    cancelReply();
+                } catch (err) { alert(`Couldn't post your comment: ${err.message}`); }
+                return; // the live listener refreshes everything
+            }
+
+            if (!state.paraComments[paraId]) state.paraComments[paraId] = [];
+            const c = { docId: 'l' + Math.random().toString(36).slice(2, 10), author: state.userProfile.name || 'Reader', text, date: new Date().toISOString(), likedBy: [] };
+            if (parentId) c.parentId = parentId;
+            state.paraComments[paraId].push(c);
+            if (input) input.value = '';
+            cancelReply();
+            saveState();
+            refreshCommentViews();
+        }
+
+        async function toggleCommentLike(docId, paraId) {
+            const proj = state.activeReaderProject;
+            const list = getParaComments(paraId);
+            const c = list.find(x => x.docId === docId);
+            if (!c) return;
+            if (proj?.isCloud) {
+                if (!currentUser) { alert("Sign in to like comments."); return openAuthModal(); }
+                const liked = (c.likedBy || []).includes(currentUser.uid);
+                const FV = firebase.firestore.FieldValue;
+                try {
+                    await worksRef().doc(proj.id).collection('comments').doc(docId).update({ likedBy: liked ? FV.arrayRemove(currentUser.uid) : FV.arrayUnion(currentUser.uid) });
+                } catch (err) { alert(`Couldn't save your like: ${err.message}`); }
+                return;
+            }
+            c.likedBy = (c.likedBy || []).includes('local') ? c.likedBy.filter(x => x !== 'local') : [...(c.likedBy || []), 'local'];
+            saveState();
+            refreshCommentViews();
+        }
+
+        function deleteComment(docId, paraId) {
+            const proj = state.activeReaderProject;
+            if (!confirm('Delete this comment?')) return;
+            if (proj?.isCloud) {
+                worksRef().doc(proj.id).collection('comments').doc(docId).delete().catch(err => alert(err.message));
+                // also remove its replies the user is allowed to delete (best effort)
+                getParaComments(paraId).filter(r => r.parentId === docId).forEach(r =>
+                    worksRef().doc(proj.id).collection('comments').doc(r.docId).delete().catch(() => { }));
+                return;
+            }
+            state.paraComments[paraId] = (state.paraComments[paraId] || []).filter(c => c.docId !== docId && c.parentId !== docId);
+            saveState();
+            refreshCommentViews();
+        }
+
+        function refreshCommentViews() {
+            refreshReaderBadges();
+            renderChapterDiscussion();
+            const panelOpen = !document.getElementById('para-comments-panel').classList.contains('hidden');
+            if (panelOpen && state.activeParaId) renderParaCommentsList(state.activeParaId);
+        }
+
+        /* ================= REPORTS ================= */
+
+        let pendingReport = null;
+
+        function openReportModal(target) {
+            if (!cloudOn()) return alert("Reporting needs the online library, which isn't available right now.");
+            if (!currentUser) { alert("Please sign in to send a report."); return openAuthModal(); }
+            pendingReport = target;
+            document.getElementById('report-modal-title').innerText = target.type === 'work' ? 'Report Story' : 'Report Comment';
+            document.getElementById('report-preview').innerText = `"${String(target.preview || '').slice(0, 300)}"`;
+            document.getElementById('report-reason').selectedIndex = 0;
+            document.getElementById('report-details').value = '';
+            document.getElementById('report-modal').classList.remove('hidden');
+        }
+
+        function closeReportModal() { document.getElementById('report-modal').classList.add('hidden'); pendingReport = null; }
+
+        async function submitReport() {
+            if (!pendingReport || !currentUser) return;
+            const data = {
+                type: pendingReport.type,
+                workId: String(pendingReport.workId || ''),
+                commentId: String(pendingReport.commentId || ''),
+                preview: String(pendingReport.preview || '').slice(0, 500),
+                reason: document.getElementById('report-reason').value,
+                details: document.getElementById('report-details').value.trim().slice(0, 1000),
+                reporterUid: currentUser.uid,
+                reporterName: (state.userProfile.name || (currentUser.email || 'Reader').split('@')[0]).slice(0, 100),
+                status: 'open',
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            try {
+                await db.collection('reports').add(data);
+                closeReportModal();
+                alert("Thanks. Your report was sent to the moderators.");
+            } catch (err) { alert(`Couldn't send the report: ${err.message}`); }
+        }
+
+        /* ================= MODERATION (admins) ================= */
+        // An account is an admin when a document admins/{uid} exists (created in the Firebase console).
+
+        cloud.isAdmin = false;
+        cloud.reports = [];
+        cloud.reportsUnsub = null;
+
+        function canSeeHidden(work) {
+            return cloud.isAdmin || (currentUser && work.ownerUid === currentUser.uid);
+        }
+
+        function visibleWorks() {
+            return state.publicProjects.filter(w => !w.hidden || canSeeHidden(w));
+        }
+
+        function checkAdmin() {
+            if (cloud.reportsUnsub) { cloud.reportsUnsub(); cloud.reportsUnsub = null; }
+            cloud.isAdmin = false;
+            cloud.reports = [];
+            updateModerationNav();
+            if (!cloudOn() || !currentUser) return;
+            db.collection('admins').doc(currentUser.uid).get().then(d => {
+                cloud.isAdmin = d.exists;
+                updateModerationNav();
+                if (!cloud.isAdmin) return;
+                cloud.reportsUnsub = db.collection('reports').where('status', '==', 'open').onSnapshot(snap => {
+                    cloud.reports = snap.docs.map(x => ({ ...x.data(), id: x.id, createdAt: tsToIso(x.data().createdAt) }))
+                        .sort((a, b) => (Date.parse(b.createdAt) || 0) - (Date.parse(a.createdAt) || 0));
+                    updateModerationNav();
+                    if (state.currentPage === 'moderation') renderModeration();
+                }, err => console.warn('Reports sync failed:', err));
+                filterLibrary();
+            }).catch(() => { });
+        }
+
+        function updateModerationNav() {
+            document.getElementById('nav-moderation')?.classList.toggle('hidden', !cloud.isAdmin);
+            const badge = document.getElementById('mod-badge');
+            if (badge) {
+                badge.innerText = cloud.reports.length;
+                badge.classList.toggle('hidden', !cloud.reports.length);
+            }
+            if (!cloud.isAdmin && state.currentPage === 'moderation') switchMainPage('dashboard');
+        }
+
+        function renderModeration() {
+            const list = document.getElementById('mod-reports-list');
+            const hiddenList = document.getElementById('mod-hidden-list');
+            if (!list || !hiddenList) return;
+            list.innerHTML = cloud.reports.length === 0 ? `<p class="text-xs text-slate-500 italic">No open reports. 🎉</p>` :
+                cloud.reports.map(r => {
+                    const work = state.publicProjects.find(w => w.id === r.workId);
+                    return `
+                    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-xs font-bold ${r.type === 'work' ? 'text-indigo-300' : 'text-purple-300'} uppercase">${r.type === 'work' ? 'Story' : 'Comment'} · ${esc(r.reason)}</span>
+                            <span class="text-[10px] text-slate-500">Reported by ${esc(r.reporterName)} · ${esc(fmtDate(r.createdAt))}</span>
+                        </div>
+                        <p class="text-xs text-slate-300 bg-slate-950 border border-slate-800 rounded-lg p-2 whitespace-pre-wrap">${esc(r.preview)}</p>
+                        ${r.details ? `<p class="text-xs text-slate-400"><strong>Details:</strong> ${esc(r.details)}</p>` : ''}
+                        <p class="text-[11px] text-slate-500">Story: ${work ? esc(work.title) + ' by ' + esc(work.author || 'Author') : '(no longer published)'}${work?.hidden ? ' · <span class="text-red-300">hidden</span>' : ''}</p>
+                        <div class="flex flex-wrap gap-2 pt-1">
+                            ${work ? `<button onclick="openStoryOverview(${jsArg(work.id)})" class="px-3 py-1 bg-slate-800 text-slate-200 rounded-lg text-xs">View Story</button>` : ''}
+                            ${work && !work.hidden ? `<button onclick="setWorkHidden(${jsArg(work.id)}, true, ${jsArg(r.reason)})" class="px-3 py-1 bg-red-700 hover:bg-red-600 text-white rounded-lg text-xs font-semibold">Hide Story</button>` : ''}
+                            ${r.type === 'comment' && r.commentId ? `<button onclick="modDeleteComment(${jsArg(r.workId)}, ${jsArg(r.commentId)}, ${jsArg(r.id)})" class="px-3 py-1 bg-red-700 hover:bg-red-600 text-white rounded-lg text-xs font-semibold">Delete Comment</button>` : ''}
+                            <button onclick="resolveReport(${jsArg(r.id)}, 'dismissed')" class="px-3 py-1 bg-slate-800 text-slate-300 rounded-lg text-xs">Dismiss</button>
+                            <button onclick="resolveReport(${jsArg(r.id)}, 'resolved')" class="px-3 py-1 bg-emerald-700 hover:bg-emerald-600 text-white rounded-lg text-xs font-semibold">Mark Resolved</button>
+                        </div>
+                    </div>`;
+                }).join('');
+
+            const hidden = state.publicProjects.filter(w => w.hidden);
+            hiddenList.innerHTML = hidden.length === 0 ? `<p class="text-xs text-slate-500 italic">No hidden stories.</p>` :
+                hidden.map(w => `
+                    <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex items-center justify-between gap-3">
+                        <div>
+                            <p class="font-cinzel text-sm font-bold text-white">${esc(w.title)}</p>
+                            <p class="text-[11px] text-slate-400">By ${esc(w.author || 'Author')}${w.hiddenReason ? ' · ' + esc(w.hiddenReason) : ''}</p>
+                        </div>
+                        <button onclick="setWorkHidden(${jsArg(w.id)}, false)" class="px-3 py-1 bg-slate-800 text-slate-200 rounded-lg text-xs font-semibold">Unhide</button>
+                    </div>`).join('');
+        }
+
+        async function setWorkHidden(workId, hidden, reason = '') {
+            if (!cloud.isAdmin) return;
+            if (hidden && !confirm('Hide this story from the Public Library? The author will still see it, marked as hidden.')) return;
+            try {
+                await worksRef().doc(workId).update({ hidden, hiddenReason: hidden ? String(reason || '').slice(0, 200) : '' });
+            } catch (err) { alert(`Couldn't update: ${err.message}`); }
+        }
+
+        async function modDeleteComment(workId, commentId, reportId) {
+            if (!cloud.isAdmin || !confirm('Delete this comment for everyone?')) return;
+            try {
+                await worksRef().doc(workId).collection('comments').doc(commentId).delete();
+                await resolveReport(reportId, 'resolved');
+            } catch (err) { alert(`Couldn't delete: ${err.message}`); }
+        }
+
+        async function resolveReport(reportId, status) {
+            try {
+                await db.collection('reports').doc(reportId).update({ status, resolvedBy: currentUser.uid, resolvedAt: firebase.firestore.FieldValue.serverTimestamp() });
+            } catch (err) { alert(`Couldn't update the report: ${err.message}`); }
+        }
+
+        /* ================= PUBLIC AUTHOR PAGES ================= */
+        // publicProfiles/{uid}: name, handle, bio, location, website, avatar and recent broadcasts.
+
+        cloud.profiles = {};
+
+        function publicProfileData() {
+            const p = state.userProfile;
+            const avatar = safeImg(p.avatar);
+            return {
+                name: String(p.name || 'Storyteller').slice(0, 100),
+                handle: String(p.handle || '').slice(0, 60),
+                bio: String(p.bio || '').slice(0, 500),
+                location: String(p.location || '').slice(0, 100),
+                website: safeUrl(p.website).slice(0, 300),
+                avatar: avatar.length <= 150000 ? avatar : '',
+                broadcasts: (state.authorBroadcasts || []).slice(0, 10).map(b => ({ id: String(b.id), text: String(b.text).slice(0, 1000), date: String(b.date) }))
+            };
+        }
+
+        let lastPublishedProfile = null;
+        function publishPublicProfile() {
+            if (!cloudOn() || !currentUser) return;
+            const data = publicProfileData();
+            const json = JSON.stringify(data);
+            if (json === lastPublishedProfile) return;
+            lastPublishedProfile = json;
+            db.collection('publicProfiles').doc(currentUser.uid)
+                .set({ ...data, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
+                .catch(err => { lastPublishedProfile = null; console.warn('Profile publish failed:', err); });
+        }
+
+        async function openAuthorPage(authorUid, fallbackName = 'Author') {
+            if (!authorUid) return;
+            closeStoryOverview();
+            closeFollowListModal();
+            state.authorPageUid = authorUid;
+            renderAuthorPage(fallbackName);
+            document.getElementById('author-view').classList.remove('hidden');
+            document.getElementById('author-view').scrollTo(0, 0);
+            document.body.style.overflow = 'hidden';
+            if (cloudOn()) {
+                try {
+                    const d = await db.collection('publicProfiles').doc(authorUid).get();
+                    if (d.exists) cloud.profiles[authorUid] = d.data();
+                } catch (e) { }
+                loadFollowerCount(authorUid);
+                if (state.authorPageUid === authorUid) renderAuthorPage(fallbackName);
+            }
+        }
+
+        function closeAuthorPage() {
+            document.getElementById('author-view').classList.add('hidden');
+            document.body.style.overflow = '';
+            state.authorPageUid = null;
+            if (window.location.hash.startsWith('#author=')) history.replaceState(null, '', baseUrl());
+        }
+
+        function renderAuthorPage(fallbackName) {
+            const uidA = state.authorPageUid;
+            const card = document.getElementById('author-view-card');
+            if (!uidA || !card) return;
+            const prof = cloud.profiles[uidA] || {};
+            const works = visibleWorks().filter(w => w.ownerUid === uidA);
+            const name = prof.name || works[0]?.author || fallbackName || 'Author';
+            const avatar = safeImg(prof.avatar);
+            const site = safeUrl(prof.website);
+            const followers = cloud.followerCounts[uidA];
+            const isMe = currentUser?.uid === uidA;
+            const following = cloud.following?.has(uidA);
+            const totalVotes = works.reduce((n, w) => n + (w.votes || 0), 0);
+
+            card.innerHTML = `
+                <div class="relative h-32 md:h-40 bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900">
+                    <button onclick="closeAuthorPage()" class="absolute top-3 right-3 w-9 h-9 rounded-full bg-black/60 hover:bg-black/80 text-white" title="Close"><i class="fas fa-times"></i></button>
+                </div>
+                <div class="px-6 md:px-8 -mt-12 pb-8 space-y-6">
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                        <div class="flex items-end gap-4">
+                            <div class="w-24 h-24 rounded-2xl bg-slate-950 border-4 border-slate-900 overflow-hidden flex items-center justify-center text-3xl font-bold text-purple-300 shadow-xl">
+                                ${avatar ? `<img src="${esc(avatar)}" class="w-full h-full object-cover">` : esc(name[0] || 'A')}
+                            </div>
+                            <div class="pb-1">
+                                <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-white">${esc(name)}</h2>
+                                ${prof.handle ? `<p class="text-xs text-purple-400 font-mono">${esc(prof.handle)}</p>` : ''}
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            ${isMe ? `<span class="text-[11px] text-slate-500 italic">This is your public page</span>`
+                                : `<button onclick="toggleFollowAuthor(${jsArg(uidA)}, ${jsArg(name)}).then(() => renderAuthorPage())" class="px-4 py-2 rounded-xl text-xs font-semibold ${following ? 'bg-slate-800 text-slate-200 border border-slate-700' : 'bg-purple-600 hover:bg-purple-500 text-white'}"><i class="fas ${following ? 'fa-user-check' : 'fa-user-plus'} mr-1"></i>${following ? 'Following' : 'Follow'}</button>`}
+                            <button onclick="copyToClipboard(baseUrl() + '#author=' + encodeURIComponent(${jsArg(uidA)}), 'Author page link copied!')" class="px-3 py-2 rounded-xl text-xs bg-slate-800 text-slate-200 border border-slate-700" title="Copy link"><i class="fas fa-link"></i></button>
+                        </div>
+                    </div>
+
+                    ${prof.bio ? `<p class="text-sm text-slate-300 whitespace-pre-wrap">${esc(prof.bio)}</p>` : ''}
+                    <div class="flex flex-wrap gap-4 text-xs text-slate-400">
+                        ${prof.location ? `<span><i class="fas fa-map-marker-alt text-purple-400 mr-1"></i>${esc(prof.location)}</span>` : ''}
+                        ${site ? `<a href="${esc(site)}" target="_blank" rel="noopener noreferrer" class="text-indigo-400 hover:underline"><i class="fas fa-link mr-1"></i>Website</a>` : ''}
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-3 text-center">
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-white">${works.length}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Stories</p></div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-white">${followers ?? '–'}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Followers</p></div>
+                        <div class="bg-slate-950 border border-slate-800 rounded-xl p-3"><p class="text-lg font-bold text-amber-300">${totalVotes}</p><p class="text-[10px] text-slate-500 uppercase font-bold">Votes</p></div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="font-cinzel text-lg font-bold text-white">Stories</h3>
+                        ${works.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${works.map(w => `
+                            <button onclick="closeAuthorPage(); openStoryOverview(${jsArg(w.id)})" class="text-left bg-slate-950 border border-slate-800 hover:border-purple-500/50 rounded-xl p-4 space-y-1">
+                                <p class="font-cinzel text-sm font-bold text-white">${esc(w.title)}</p>
+                                <p class="text-[11px] text-slate-400">${esc(w.type || 'Novel')}${w.genre ? ' · ' + esc(w.genre) : ''} · ${(w.chapters || []).length} chapters · ★ ${w.votes || 0}</p>
+                                <p class="text-[11px] text-slate-400 line-clamp-2">${esc(w.synopsis || 'No synopsis yet.')}</p>
+                            </button>`).join('')}</div>` : `<p class="text-xs text-slate-500 italic">No published stories yet.</p>`}
+                    </div>
+
+                    ${(prof.broadcasts || []).length ? `
+                    <div class="space-y-3">
+                        <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-bullhorn text-purple-400 mr-2"></i>Latest Updates</h3>
+                        ${prof.broadcasts.map(b => `
+                            <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1">
+                                <p class="text-xs text-slate-300 whitespace-pre-wrap">${esc(b.text)}</p>
+                                <p class="text-[10px] text-slate-500">${esc(fmtDate(b.date))}</p>
+                            </div>`).join('')}
+                    </div>` : ''}
+                </div>`;
+        }
+
         /* ================= FIREBASE ACCOUNT SIGN-IN ================= */
 
         function renderAuthButton() {
@@ -2754,7 +3304,8 @@
                 renderCloudStatus();
                 startFollowSync();
                 renderStoryOverview();
-                if (user) mergeWithAccount(); else setSyncStatus('idle');
+                if (user) mergeWithAccount().then(publishPublicProfile); else setSyncStatus('idle');
+                checkAdmin();
                 if (state.activeReaderProject?.isCloud) loadMyVote(state.activeReaderProject.id);
             });
         }
@@ -3197,7 +3748,7 @@
             const rtg = document.getElementById('filter-rating')?.value || 'All';
 
             // Only published works appear in the library (drafts stay private)
-            const filtered = state.publicProjects.filter(p => {
+            const filtered = visibleWorks().filter(p => {
                 const tags = Array.isArray(p.tags) ? p.tags.join(' ') : (p.tags || '');
                 const matchesQuery = !query ||
                     (p.title || '').toLowerCase().includes(query) ||
@@ -3234,7 +3785,7 @@
             const box = document.getElementById('library-sections');
             const heading = document.getElementById('all-stories-heading');
             if (!box) return;
-            const works = state.publicProjects;
+            const works = visibleWorks();
             if (filtersActive || works.length < 2) {
                 box.innerHTML = '';
                 if (heading) heading.classList.toggle('hidden', filtersActive || works.length === 0);
@@ -3291,6 +3842,8 @@
                                 <span class="text-[10px] px-2 py-0.5 rounded ${p.status === 'Completed' ? 'bg-emerald-900/40 text-emerald-300' : 'bg-amber-900/40 text-amber-300'}">${esc(p.status || 'Ongoing')}</span>
                             </div>
                             <h3 onclick="openStoryOverview(${jsArg(p.id)})" class="font-cinzel text-xl font-bold text-white line-clamp-1 cursor-pointer hover:text-purple-300">${esc(p.title)}</h3>
+                            ${p.hidden ? `<p class="text-[10px] font-bold text-red-300 bg-red-950/50 border border-red-800/50 rounded px-2 py-0.5 inline-block"><i class="fas fa-eye-slash mr-1"></i>Hidden by a moderator</p>` : ''}
+                            ${(p.warnings || []).length ? `<p class="text-[10px] font-semibold text-amber-300"><i class="fas fa-triangle-exclamation mr-1"></i>Content warnings: ${esc(p.warnings.join(', '))}</p>` : ''}
                             <p class="text-xs text-slate-400">By ${esc(p.author || 'Author')}${p.genre ? ' · ' + esc(p.genre) : ''}${p.rating ? ' · ' + esc(p.rating) : ''}</p>
                             ${p.synopsis ? `<p class="text-xs text-slate-300 line-clamp-2">${esc(p.synopsis)}</p>` : ''}
                             ${tags.length ? `<div class="flex flex-wrap gap-1">${tags.map(t => `<span class="text-[10px] text-purple-300 bg-purple-950/60 border border-purple-800/40 px-1.5 py-0.5 rounded">#${esc(t)}</span>`).join('')}</div>` : ''}
@@ -3354,6 +3907,8 @@
             setVal('meta-rating', proj?.rating || 'Everyone');
             setVal('meta-tags', Array.isArray(proj?.tags) ? proj.tags.join(', ') : (proj?.tags || ''));
             setVal('meta-synopsis', proj?.synopsis || '');
+            const warns = proj?.warnings || [];
+            document.querySelectorAll('.meta-warning').forEach(cb => cb.checked = warns.includes(cb.value));
             const preview = document.getElementById('metadata-cover-preview');
             const cover = safeImg(proj?.coverUrl);
             if (preview) preview.innerHTML = cover ? `<img src="${esc(cover)}" class="w-full h-full object-cover">` : `<i class="fas fa-image text-slate-700 text-3xl"></i>`;
@@ -3371,6 +3926,7 @@
             proj.rating = document.getElementById('meta-rating').value;
             proj.tags = document.getElementById('meta-tags').value.split(',').map(t => t.trim()).filter(Boolean);
             proj.synopsis = document.getElementById('meta-synopsis').value;
+            proj.warnings = [...document.querySelectorAll('.meta-warning:checked')].map(cb => cb.value);
             scheduleAutosave();
         }
 
@@ -3726,6 +4282,8 @@
                 }
             }
 
+            state.replyTarget = null;
+            renderChapterDiscussion();
             applyReaderPrefs();
             document.getElementById('reader-view')?.scrollTo(0, 0);
         }
@@ -3779,25 +4337,10 @@
 
         function renderParaCommentsList(paraId) {
             const list = document.getElementById('para-comments-list');
-            const cmts = getParaComments(paraId);
-            const proj = state.activeReaderProject;
-            const isWorkOwner = proj?.isCloud && currentUser && proj.ownerUid === currentUser.uid;
             if (!list) return;
-            list.innerHTML = cmts.length === 0 ? `<p class="text-xs text-slate-500 italic">No reactions on this paragraph yet.</p>` :
-                cmts.map(c => {
-                    const canDelete = c.docId && currentUser && (c.uid === currentUser.uid || isWorkOwner);
-                    return `
-                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1">
-                        <div class="flex items-center justify-between gap-2">
-                            <span class="text-xs font-bold text-purple-300">${esc(c.author)}</span>
-                            <span class="flex items-center gap-2">
-                                <span class="text-[10px] text-slate-500">${esc(fmtDate(c.date))}</span>
-                                ${canDelete ? `<button onclick="deleteParaComment(${jsArg(c.docId)})" class="text-[10px] text-red-400 hover:text-red-300" title="Delete comment"><i class="fas fa-trash"></i></button>` : ''}
-                            </span>
-                        </div>
-                        <p class="text-xs text-slate-300 whitespace-pre-wrap">${esc(c.text)}</p>
-                    </div>`;
-                }).join('');
+            list.innerHTML = renderCommentThread(getParaComments(paraId), paraId, 'para') ||
+                `<p class="text-xs text-slate-500 italic">No reactions on this paragraph yet.</p>`;
+            renderReplyIndicator('para');
         }
 
         function openParaCommentsPanel(paraId) {
@@ -3812,39 +4355,8 @@
 
         function closeParaCommentsPanel() { document.getElementById('para-comments-panel')?.classList.add('hidden'); }
 
-        async function postParagraphComment() {
-            const input = document.getElementById('para-comment-input');
-            const text = input ? input.value.trim() : '';
-            if (!text || !state.activeParaId) return;
-            if (text.length > 1000) return alert("Comments can be up to 1,000 characters.");
-            const proj = state.activeReaderProject;
-
-            if (proj?.isCloud) {
-                if (!currentUser) { alert("Sign in to comment."); return openAuthModal(); }
-                try {
-                    await worksRef().doc(proj.id).collection('comments').add({
-                        paraId: state.activeParaId,
-                        text,
-                        author: state.userProfile.name || (currentUser.email || 'Reader').split('@')[0],
-                        uid: currentUser.uid,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
-                    });
-                    if (input) input.value = '';
-                } catch (err) { alert(`Couldn't post your comment: ${err.message}`); }
-                return; // the live listener updates the list and badges
-            }
-
-            // Offline / local work
-            if (!state.paraComments[state.activeParaId]) state.paraComments[state.activeParaId] = [];
-            state.paraComments[state.activeParaId].push({
-                author: state.userProfile.name || 'Reader',
-                text: text,
-                date: new Date().toISOString()
-            });
-            if (input) input.value = '';
-            saveState();
-            renderParaCommentsList(state.activeParaId);
-            refreshReaderBadges();
+        function postParagraphComment() {
+            postComment(state.activeParaId, document.getElementById('para-comment-input'), 'para');
         }
 
         function toggleStoryDetailsPanel() {
