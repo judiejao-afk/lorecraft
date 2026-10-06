@@ -50,12 +50,10 @@
     <header class="bg-slate-900/90 border-b border-slate-800 backdrop-blur sticky top-0 z-40 px-4 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
             
-            <!-- Custom LoreCraft Studio Brand Logo -->
+            <!-- Brand Logo -->
             <div class="flex items-center gap-3">
                 <div class="relative group cursor-pointer" onclick="setMode('reader')">
-                    <!-- Glowing Background aura -->
                     <div class="absolute -inset-0.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 rounded-xl blur opacity-50 group-hover:opacity-100 transition duration-300"></div>
-                    <!-- Logo SVG Emblem -->
                     <svg class="relative w-10 h-10 rounded-xl bg-slate-950 p-1.5 border border-purple-500/30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <defs>
                             <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -65,10 +63,8 @@
                             </linearGradient>
                         </defs>
                         <rect x="5" y="5" width="90" height="90" rx="18" fill="#0f172a" stroke="url(#logo-grad)" stroke-width="3"/>
-                        <!-- Feather Quill Vector -->
                         <path d="M30 75 C 35 45, 55 25, 75 20 C 70 40, 55 55, 30 75 Z" fill="url(#logo-grad)"/>
                         <path d="M30 75 L 42 62 M 45 52 L 57 40" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
-                        <!-- Star Accent -->
                         <circle cx="70" cy="30" r="3" fill="#ffffff" />
                     </svg>
                 </div>
@@ -80,7 +76,7 @@
                 </div>
             </div>
 
-            <!-- Role Selector: Reader Mode vs Writer Studio -->
+            <!-- Role Selector -->
             <div class="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center">
                 <button onclick="setMode('reader')" id="mode-btn-reader" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 bg-purple-600 text-white shadow">
                     <i class="fas fa-book-reader"></i> Reader Mode
@@ -90,7 +86,7 @@
                 </button>
             </div>
 
-            <!-- Navigation Tabs (Writer Studio Tabs) -->
+            <!-- Writer Tabs -->
             <nav id="writer-nav-tabs" class="hidden md:flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800/80">
                 <button onclick="switchTab('studio')" id="tab-studio" class="px-3 py-1.5 rounded-lg text-xs font-medium transition flex items-center gap-1.5 bg-purple-600 text-white shadow">
                     <i class="fas fa-edit"></i> Write Story
@@ -106,11 +102,17 @@
                 </button>
             </nav>
 
-            <!-- User Auth & Data Backup Controls -->
+            <!-- User Auth & Profile Controls -->
             <div class="flex items-center gap-2">
                 <button onclick="openBackupModal()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition text-xs flex items-center gap-1.5 border border-slate-700" title="Backup & Restore">
                     <i class="fas fa-database text-purple-400"></i>
                     <span class="hidden sm:inline">Backup</span>
+                </button>
+
+                <!-- Profile Management Button -->
+                <button id="profile-btn" onclick="openProfileModal()" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-purple-300 transition text-xs flex items-center gap-1.5 border border-slate-700">
+                    <i class="fas fa-user-gear"></i>
+                    <span class="hidden sm:inline">Profile</span>
                 </button>
 
                 <button id="auth-btn" onclick="openAuthModal()" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-semibold shadow flex items-center gap-1.5 transition">
@@ -124,7 +126,7 @@
     <!-- Main Workspace Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6">
 
-        <!-- READER MODE / PUBLIC SHOWCASE SECTION -->
+        <!-- PUBLIC SHOWCASE -->
         <section id="sec-published" class="space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
                 <div>
@@ -133,25 +135,20 @@
                 </div>
             </div>
 
-            <!-- Published Cards Grid -->
-            <div id="published-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Rendered dynamically via JS -->
-            </div>
+            <div id="published-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- WRITER TAB 1: STORY STUDIO EDITOR -->
+        <!-- WRITER TAB 1: STORY STUDIO -->
         <section id="sec-studio" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-4 bg-slate-900/60 p-4 rounded-xl border border-slate-800">
                 <div class="flex flex-wrap items-center gap-3">
                     <div>
                         <label class="text-xs text-slate-400 block mb-1">My Project:</label>
-                        <select id="project-select" onchange="switchProject(this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-purple-300 focus:outline-none focus:border-purple-500">
-                        </select>
+                        <select id="project-select" onchange="switchProject(this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-purple-300 focus:outline-none focus:border-purple-500"></select>
                     </div>
                     <div>
                         <label class="text-xs text-slate-400 block mb-1">Chapter:</label>
-                        <select id="chapter-select" onchange="switchChapter(this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-200 focus:outline-none focus:border-purple-500">
-                        </select>
+                        <select id="chapter-select" onchange="switchChapter(this.value)" class="bg-slate-950 border border-slate-700 rounded-lg px-3 py-1.5 text-sm font-semibold text-slate-200 focus:outline-none focus:border-purple-500"></select>
                     </div>
                     <div class="flex items-end gap-1 pt-5">
                         <button onclick="createNewProject()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-xs rounded-lg border border-slate-700 text-slate-300 flex items-center gap-1 transition">
@@ -173,7 +170,6 @@
                 </div>
             </div>
 
-            <!-- Chapter Editor Area -->
             <div class="bg-slate-900/80 rounded-2xl border border-slate-800 p-6 space-y-4 shadow-xl">
                 <div class="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between border-b border-slate-800 pb-4">
                     <input type="text" id="chapter-title-input" class="bg-slate-950 border border-slate-800 text-xl font-cinzel font-bold text-white px-4 py-2 rounded-xl w-full sm:w-2/3 focus:outline-none focus:border-purple-500" placeholder="Chapter Title">
@@ -195,7 +191,7 @@
             </div>
         </section>
 
-        <!-- WRITER TAB 2: WORLD LIBRARY -->
+        <!-- WRITER TAB 2: LORE VAULT -->
         <section id="sec-library" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
@@ -206,11 +202,10 @@
                     <i class="fas fa-plus"></i> Add New Lore Entry
                 </button>
             </div>
-
             <div id="lore-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- WRITER TAB 3: SUNO & YOUTUBE MEDIA -->
+        <!-- WRITER TAB 3: MEDIA -->
         <section id="sec-media" class="hidden space-y-6">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
@@ -221,11 +216,10 @@
                     <i class="fas fa-plus"></i> Add Media Track
                 </button>
             </div>
-
             <div id="media-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </section>
 
-        <!-- READER PERSPECTIVE MODE SCREEN -->
+        <!-- READER PERSPECTIVE MODE SCREEN WITH COMMENTS -->
         <div id="reader-view" class="hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur overflow-y-auto p-4 md:p-8">
             <div class="max-w-4xl mx-auto space-y-6">
                 
@@ -238,8 +232,7 @@
                         <button id="reader-prev-btn-top" onclick="navigateChapter(-1)" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs font-medium flex items-center gap-1 transition">
                             <i class="fas fa-chevron-left"></i> Previous
                         </button>
-                        <select id="reader-chapter-select" onchange="loadReaderChapter(this.value)" class="bg-slate-950 border border-slate-700 text-purple-300 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none">
-                        </select>
+                        <select id="reader-chapter-select" onchange="loadReaderChapter(this.value)" class="bg-slate-950 border border-slate-700 text-purple-300 rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none"></select>
                         <button id="reader-next-btn-top" onclick="navigateChapter(1)" class="px-3 py-1.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-medium flex items-center gap-1 transition">
                             Next <i class="fas fa-chevron-right"></i>
                         </button>
@@ -274,14 +267,65 @@
                         Next Chapter <i class="fas fa-arrow-right"></i>
                     </button>
                 </div>
+
+                <!-- COMMENT SECTIONS (NOVEL & CHAPTER) -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 space-y-6">
+                    <div class="flex items-center gap-4 border-b border-slate-800 pb-3">
+                        <button onclick="switchCommentTab('chapter')" id="cmt-tab-chapter" class="text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-2">Chapter Comments</button>
+                        <button onclick="switchCommentTab('novel')" id="cmt-tab-novel" class="text-sm font-bold text-slate-400 hover:text-slate-200 pb-2">Novel Discussion</button>
+                    </div>
+
+                    <!-- Post Comment Input -->
+                    <div class="space-y-3">
+                        <textarea id="comment-input" rows="3" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Share your thoughts or feedback..."></textarea>
+                        <div class="flex justify-end">
+                            <button onclick="postComment()" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white font-semibold rounded-xl text-xs shadow flex items-center gap-1.5">
+                                <i class="fas fa-paper-plane"></i> Post Comment
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Comment Feed -->
+                    <div id="comment-list" class="space-y-4 pt-2"></div>
+                </div>
+
             </div>
         </div>
 
     </main>
 
-    <!-- MODALS -->
+    <!-- USER PROFILE MANAGEMENT MODAL -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 class="font-cinzel text-lg font-bold text-white"><i class="fas fa-user-circle text-purple-400 mr-2"></i> User Profile Settings</h3>
+                <button onclick="closeProfileModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
+            </div>
 
-    <!-- LORE ENTRY MODAL -->
+            <form onsubmit="saveUserProfile(event)" class="space-y-4">
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Author / Reader Display Name</label>
+                    <input type="text" id="prof-name" required class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Your Pseudonym">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Author Bio / Tagline</label>
+                    <input type="text" id="prof-bio" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="Fantasy author, worldbuilder...">
+                </div>
+                <div>
+                    <label class="text-xs text-slate-400 block mb-1">Avatar Image URL</label>
+                    <input type="url" id="prof-avatar" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500" placeholder="https://...">
+                </div>
+
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-800">
+                    <button type="button" onclick="closeProfileModal()" class="px-4 py-2 bg-slate-800 text-slate-300 rounded-lg text-xs font-semibold">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-purple-600 hover:bg-purple-500 text-white rounded-lg text-xs font-semibold shadow">Save Profile</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODALS (Lore, Media, Auth, Backup) -->
+
     <div id="lore-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -347,7 +391,6 @@
         </div>
     </div>
 
-    <!-- MEDIA MODAL -->
     <div id="media-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -392,7 +435,6 @@
         </div>
     </div>
 
-    <!-- BACKUP MODAL -->
     <div id="backup-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -415,7 +457,6 @@
         </div>
     </div>
 
-    <!-- AUTH MODAL -->
     <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
@@ -467,9 +508,12 @@
         }
 
         let state = {
-            mode: 'reader', // 'reader' or 'writer'
+            mode: 'reader',
+            userProfile: { name: 'Guest Storyteller', bio: 'Worldbuilder & Writer', avatar: '' },
             projects: [],
             publicProjects: [],
+            comments: [], // { id, targetType: 'novel'|'chapter', targetId, author, avatar, text, date }
+            activeCommentType: 'chapter',
             currentProjectId: null,
             currentChapterId: null,
             loreEntries: [],
@@ -509,9 +553,14 @@
         }
 
         function loadLocalData() {
+            const savedProfile = localStorage.getItem('lorecraft_profile');
             const savedProjects = localStorage.getItem('lorecraft_projects');
             const savedLore = localStorage.getItem('lorecraft_lore');
             const savedMedia = localStorage.getItem('lorecraft_media');
+            const savedComments = localStorage.getItem('lorecraft_comments');
+
+            if (savedProfile) state.userProfile = JSON.parse(savedProfile);
+            if (savedComments) state.comments = JSON.parse(savedComments);
 
             if (savedProjects) {
                 state.projects = JSON.parse(savedProjects);
@@ -540,17 +589,40 @@
         }
 
         function saveState() {
+            localStorage.setItem('lorecraft_profile', JSON.stringify(state.userProfile));
             localStorage.setItem('lorecraft_projects', JSON.stringify(state.projects));
             localStorage.setItem('lorecraft_lore', JSON.stringify(state.loreEntries));
             localStorage.setItem('lorecraft_media', JSON.stringify(state.mediaTracks));
+            localStorage.setItem('lorecraft_comments', JSON.stringify(state.comments));
 
             if (currentUser && db) {
                 db.collection('users').doc(currentUser.uid).set({
+                    profile: state.userProfile,
                     projects: state.projects,
                     loreEntries: state.loreEntries,
-                    mediaTracks: state.mediaTracks
+                    mediaTracks: state.mediaTracks,
+                    comments: state.comments
                 }, { merge: true });
             }
+        }
+
+        function openProfileModal() {
+            document.getElementById('prof-name').value = state.userProfile.name || '';
+            document.getElementById('prof-bio').value = state.userProfile.bio || '';
+            document.getElementById('prof-avatar').value = state.userProfile.avatar || '';
+            document.getElementById('profile-modal').classList.remove('hidden');
+        }
+
+        function closeProfileModal() { document.getElementById('profile-modal').classList.add('hidden'); }
+
+        function saveUserProfile(e) {
+            e.preventDefault();
+            state.userProfile.name = document.getElementById('prof-name').value;
+            state.userProfile.bio = document.getElementById('prof-bio').value;
+            state.userProfile.avatar = document.getElementById('prof-avatar').value;
+            saveState();
+            closeProfileModal();
+            alert("Profile updated!");
         }
 
         function loadPublicWorksFromCloud() {
@@ -673,7 +745,7 @@
             if (!title) return;
             const newProj = {
                 id: 'proj_' + Date.now(),
-                author: currentUser ? currentUser.email.split('@')[0] : 'Guest Writer',
+                author: state.userProfile.name || 'Guest Writer',
                 title: title,
                 type: 'Novel',
                 chapters: [{ id: 'chap_' + Date.now(), title: 'Chapter 1', soundtrackId: '', content: '' }]
@@ -731,7 +803,6 @@
             setMode('reader');
         }
 
-        // PUBLISHED WORKS SHOWCASE
         function renderPublishedWorks() {
             const grid = document.getElementById('published-grid');
             const allWorks = [...state.projects, ...state.publicProjects.filter(pub => !state.projects.some(p => p.id === pub.id))];
@@ -769,7 +840,6 @@
             }
         }
 
-        // READER VIEW
         function openReaderView(projId) {
             const allWorks = [...state.projects, ...state.publicProjects];
             const proj = allWorks.find(p => p.id === projId);
@@ -813,6 +883,8 @@
             document.getElementById('reader-prev-btn-bottom').disabled = isFirst;
             document.getElementById('reader-next-btn-top').disabled = isLast;
             document.getElementById('reader-next-btn-bottom').disabled = isLast;
+
+            renderComments();
         }
 
         function navigateChapter(dir) {
@@ -820,6 +892,75 @@
             if (newIndex >= 0 && newIndex < state.activeReaderProject.chapters.length) {
                 loadReaderChapter(newIndex);
             }
+        }
+
+        // COMMENT SYSTEM
+        function switchCommentTab(type) {
+            state.activeCommentType = type;
+            const chapBtn = document.getElementById('cmt-tab-chapter');
+            const novBtn = document.getElementById('cmt-tab-novel');
+
+            if (type === 'chapter') {
+                chapBtn.className = "text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-2";
+                novBtn.className = "text-sm font-bold text-slate-400 hover:text-slate-200 pb-2";
+            } else {
+                novBtn.className = "text-sm font-bold text-purple-400 border-b-2 border-purple-500 pb-2";
+                chapBtn.className = "text-sm font-bold text-slate-400 hover:text-slate-200 pb-2";
+            }
+            renderComments();
+        }
+
+        function postComment() {
+            const text = document.getElementById('comment-input').value.trim();
+            if (!text) return alert("Please type a comment.");
+
+            const proj = state.activeReaderProject;
+            const chap = proj.chapters[state.activeReaderChapterIndex];
+            const targetId = state.activeCommentType === 'chapter' ? chap.id : proj.id;
+
+            const newCmt = {
+                id: 'cmt_' + Date.now(),
+                targetType: state.activeCommentType,
+                targetId: targetId,
+                author: state.userProfile.name || 'Anonymous Reader',
+                avatar: state.userProfile.avatar || '',
+                text: text,
+                date: new Date().toLocaleDateString()
+            };
+
+            state.comments.unshift(newCmt);
+            document.getElementById('comment-input').value = '';
+            saveState();
+            renderComments();
+        }
+
+        function renderComments() {
+            const list = document.getElementById('comment-list');
+            const proj = state.activeReaderProject;
+            if (!proj) return;
+
+            const chap = proj.chapters[state.activeReaderChapterIndex];
+            const currentTargetId = state.activeCommentType === 'chapter' ? chap.id : proj.id;
+
+            const filtered = state.comments.filter(c => c.targetType === state.activeCommentType && c.targetId === currentTargetId);
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<p class="text-xs text-slate-500 italic">No comments yet. Be the first to start the discussion!</p>`;
+                return;
+            }
+
+            list.innerHTML = filtered.map(c => `
+                <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            ${c.avatar ? `<img src="${c.avatar}" class="w-5 h-5 rounded-full object-cover">` : `<i class="fas fa-user-circle text-purple-400 text-sm"></i>`}
+                            <span class="text-xs font-bold text-white">${c.author}</span>
+                        </div>
+                        <span class="text-[10px] text-slate-500">${c.date}</span>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed font-sans pl-7">${c.text}</p>
+                </div>
+            `).join('');
         }
 
         // IMAGE & LORE
