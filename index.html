@@ -947,7 +947,7 @@
     <div id="auth-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
             <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                <h3 class="font-cinzel text-lg font-bold text-white">Cloud Account Sign In</h3>
+                <h3 id="auth-modal-title" class="font-cinzel text-lg font-bold text-white">Cloud Account Sign In</h3>
                 <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white"><i class="fas fa-times text-lg"></i></button>
             </div>
             
@@ -972,7 +972,7 @@
                 </div>
             </form>
 
-            <div class="text-center pt-2 border-t border-slate-800">
+            <div id="auth-guest-row" class="text-center pt-2 border-t border-slate-800">
                 <button onclick="closeAuthModal()" class="text-xs text-slate-400 hover:text-purple-300">Continue as Guest (Read Only / Local)</button>
             </div>
         </div>
@@ -1993,7 +1993,9 @@
 
         function renderAuthButton() {
             const btnText = document.getElementById('auth-btn-text');
-            if (btnText) btnText.innerText = currentUser ? (currentUser.email || 'Account').split('@')[0] : 'Sign In';
+            if (btnText) btnText.innerText = currentUser ? `Account: ${(currentUser.email || 'user').split('@')[0]}` : 'Sign In';
+            const btn = document.getElementById('auth-btn');
+            if (btn) btn.title = currentUser ? `Signed in as ${currentUser.email || ''} (click to sign out)` : 'Sign in or create an account';
         }
 
         function initAuthListener() {
@@ -2035,6 +2037,9 @@
             document.getElementById('auth-form').classList.toggle('hidden', signedIn);
             const emailEl = document.getElementById('auth-user-email');
             if (emailEl) emailEl.innerText = currentUser?.email || '';
+            const titleEl = document.getElementById('auth-modal-title');
+            if (titleEl) titleEl.innerText = signedIn ? 'Your Account' : 'Cloud Account Sign In';
+            document.getElementById('auth-guest-row')?.classList.toggle('hidden', signedIn);
             document.getElementById('auth-modal').classList.remove('hidden');
         }
         function closeAuthModal() { document.getElementById('auth-modal').classList.add('hidden'); }
