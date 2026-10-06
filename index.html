@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoreCraft Studio - Storyteller & Visual World Studio</title>
+    <!-- Favicon Logo for Browser Tab -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='f' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%239333ea'/><stop offset='50%' stop-color='%234f46e5'/><stop offset='100%' stop-color='%23ec4899'/></linearGradient></defs><rect width='100' height='100' rx='24' fill='%230f172a'/><rect width='92' height='92' x='4' y='4' rx='20' fill='none' stroke='url(%23f)' stroke-width='3'/><path d='M30 75 C 35 45, 55 25, 75 20 C 70 40, 55 55, 30 75 Z' fill='url(%23f)'/><path d='M30 75 L 42 62 M 45 52 L 57 40' stroke='%23ffffff' stroke-width='2' stroke-linecap='round'/></svg>">
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -46,14 +49,34 @@
     <!-- Top Navigation Header -->
     <header class="bg-slate-900/90 border-b border-slate-800 backdrop-blur sticky top-0 z-40 px-4 py-3">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
-            <!-- Brand Logo -->
+            
+            <!-- Custom LoreCraft Studio Brand Logo -->
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                    <i class="fas fa-feather-alt text-white text-lg"></i>
+                <div class="relative group cursor-pointer" onclick="setMode('reader')">
+                    <!-- Glowing Background aura -->
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-purple-600 via-indigo-600 to-pink-500 rounded-xl blur opacity-50 group-hover:opacity-100 transition duration-300"></div>
+                    <!-- Logo SVG Emblem -->
+                    <svg class="relative w-10 h-10 rounded-xl bg-slate-950 p-1.5 border border-purple-500/30" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="logo-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#a855f7" />
+                                <stop offset="50%" stop-color="#6366f1" />
+                                <stop offset="100%" stop-color="#ec4899" />
+                            </linearGradient>
+                        </defs>
+                        <rect x="5" y="5" width="90" height="90" rx="18" fill="#0f172a" stroke="url(#logo-grad)" stroke-width="3"/>
+                        <!-- Feather Quill Vector -->
+                        <path d="M30 75 C 35 45, 55 25, 75 20 C 70 40, 55 55, 30 75 Z" fill="url(#logo-grad)"/>
+                        <path d="M30 75 L 42 62 M 45 52 L 57 40" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+                        <!-- Star Accent -->
+                        <circle cx="70" cy="30" r="3" fill="#ffffff" />
+                    </svg>
                 </div>
                 <div>
-                    <h1 class="font-cinzel font-bold text-lg text-white tracking-wide">LoreCraft <span class="text-xs px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 font-sans border border-purple-500/30">Studio</span></h1>
-                    <p class="text-xs text-slate-400">Storyteller & Visual World Studio</p>
+                    <h1 class="font-cinzel font-bold text-lg text-white tracking-wide flex items-center gap-1.5">
+                        LoreCraft <span class="text-[10px] px-2 py-0.5 rounded-full bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-purple-300 font-sans border border-purple-500/30 uppercase tracking-widest font-semibold">Studio</span>
+                    </h1>
+                    <p class="text-[11px] text-slate-400 font-medium tracking-tight">Storyteller & Visual World Studio</p>
                 </div>
             </div>
 
