@@ -1277,14 +1277,19 @@
         };
 
         // Firebase App Check: proves requests come from this website (blocks bots and copies).
-        // Paste the reCAPTCHA v3 SITE key here (the public one, never the secret key).
+        // Uses Google Fraud Defense (reCAPTCHA Enterprise). This is the public SITE key, never the secret key.
         const RECAPTCHA_V3_SITE_KEY = '6Lf1QuMtAAAAALlT3Gwwg7CD3ILH-VHT8gXqsk1N';
 
         let auth, db;
         try {
             firebase.initializeApp(firebaseConfig);
             if (RECAPTCHA_V3_SITE_KEY && firebase.appCheck) {
-                try { firebase.appCheck().activate(RECAPTCHA_V3_SITE_KEY, true); }
+                try {
+                    const provider = firebase.appCheck.ReCaptchaEnterpriseProvider
+                        ? new firebase.appCheck.ReCaptchaEnterpriseProvider(RECAPTCHA_V3_SITE_KEY)
+                        : RECAPTCHA_V3_SITE_KEY;
+                    firebase.appCheck().activate(provider, true);
+                }
                 catch (e) { console.warn('App Check could not start:', e); }
             }
             auth = firebase.auth();
